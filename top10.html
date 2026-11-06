@@ -1,0 +1,3341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FC_VOLT — Top 10 Best Players Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Montserrat:ital,wght@0,700;0,800;0,900;1,900&family=Outfit:wght@700;800;900&family=Teko:wght@600;700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #06080d;
+    --panel-bg: #0c121c;
+    --panel-border: #1e2c40;
+    --accent-yellow: #ffee00;
+    --accent-pink: #ff0092;
+    --accent-purple: #8800f5;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #04060a;
+    color: #f0f4fc;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  body {
+    padding: 14px;
+    background: radial-gradient(ellipse at 50% 0%, #151d30 0%, #030509 80%);
+    background-attachment: fixed;
+  }
+  .app-container {
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+
+  /* TOP TOOLBAR */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: rgba(12, 17, 28, 0.9);
+    border: 1px solid #1f2d42;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    margin-bottom: 12px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+  }
+  .brand-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brandmark {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ff0092, #ffee00);
+    color: #050608;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 24px;
+    font-style: italic;
+    box-shadow: 0 0 18px rgba(255, 0, 146, 0.45);
+    user-select: none;
+  }
+  .brand-area h1 {
+    font-size: 19px;
+    letter-spacing: 2px;
+    margin: 0;
+    font-weight: 900;
+    background: linear-gradient(90deg, #ffffff, #d9e5f5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .brand-area small {
+    display: block;
+    color: #ff33aa;
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+
+  /* TEMPLATE SWITCHER TABS */
+  .template-nav {
+    display: flex;
+    background: #080d16;
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid #1c2738;
+    gap: 4px;
+  }
+  .nav-tab {
+    padding: 7px 13px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #8c9eb5;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.16s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+  }
+  .nav-tab:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .nav-tab.active {
+    background: linear-gradient(135deg, #ff0092, #9400d3);
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(255, 0, 146, 0.4);
+  }
+
+  /* ACTIONS & BUTTONS */
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  button, .btn {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: 1px solid #29384e;
+    background: #101726;
+    color: #e4edf8;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  button:hover, .btn:hover {
+    background: #1b263b;
+    border-color: #ff0099;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(255, 0, 153, 0.25);
+    transform: translateY(-1px);
+  }
+  button:active, .btn:active { transform: translateY(0); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #ff0092, #ff5500);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 0 14px rgba(255, 0, 146, 0.4);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #ff1a9e, #ff6611);
+    box-shadow: 0 0 20px rgba(255, 0, 146, 0.65);
+    color: #fff;
+  }
+
+  .btn-export {
+    background: linear-gradient(135deg, #ffee00, #ff8800);
+    color: #000;
+    border: none;
+    box-shadow: 0 0 14px rgba(255, 238, 0, 0.4);
+    font-weight: 900;
+  }
+  .btn-export:hover {
+    background: linear-gradient(135deg, #ffff22, #ff9900);
+    box-shadow: 0 0 22px rgba(255, 238, 0, 0.7);
+    color: #000;
+  }
+
+  .btn-pdf {
+    background: linear-gradient(135deg, #00d2ff, #0066ff);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 0 14px rgba(0, 210, 255, 0.4);
+    font-weight: 900;
+  }
+  .btn-pdf:hover {
+    background: linear-gradient(135deg, #33dcff, #1a75ff);
+    box-shadow: 0 0 22px rgba(0, 210, 255, 0.7);
+    color: #ffffff;
+  }
+
+  .btn-danger {
+    background: #1a0a10;
+    border-color: #44141f;
+    color: #ff6677;
+  }
+  .btn-danger:hover {
+    background: #2b0e17;
+    border-color: #ff3344;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 51, 68, 0.35);
+  }
+  .btn-remove-all {
+    background: linear-gradient(135deg, #2e0915 0%, #17040a 100%);
+    border: 1.5px solid #ff2a55;
+    color: #ff6688;
+    font-weight: 900;
+  }
+  .btn-remove-all:hover {
+    background: linear-gradient(135deg, #ff1a44 0%, #c40026 100%);
+    border-color: #ff4466;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(255, 26, 68, 0.55);
+    transform: translateY(-1px);
+  }
+
+  .btn-bg-remover {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: #ffffff;
+    border: 1.5px solid #c084fc;
+    font-weight: 900;
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.45);
+  }
+  .btn-bg-remover:hover {
+    background: linear-gradient(135deg, #a855f7 0%, #818cf8 100%);
+    border-color: #e9d5ff;
+    color: #ffffff;
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.7);
+    transform: translateY(-1px);
+  }
+
+  /* CUSTOM IN-APP CONFIRMATION MODAL */
+  .custom-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 5, 10, 0.88);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  }
+  .custom-modal-backdrop.hidden {
+    display: none !important;
+  }
+  .custom-modal {
+    background: #0d1422;
+    border: 1.5px solid #ff2a55;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.85), 0 0 30px rgba(255, 42, 85, 0.35);
+    border-radius: 16px;
+    padding: 26px 28px;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    animation: modalPop 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  @keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-icon {
+    font-size: 38px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 10px rgba(255, 42, 85, 0.5));
+  }
+  .custom-modal h3 {
+    margin: 0 0 8px;
+    font-family: 'Titan One', 'Montserrat', sans-serif;
+    font-size: 21px;
+    color: #ffffff;
+    letter-spacing: 0.8px;
+  }
+  .custom-modal p {
+    margin: 0 0 22px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #9cb0cc;
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .modal-btn-cancel {
+    background: #151e2e;
+    border: 1px solid #293a52;
+    color: #ccd9eb;
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal-btn-cancel:hover {
+    background: #1f2b40;
+    color: #fff;
+    border-color: #3b506e;
+  }
+  .modal-btn-confirm {
+    background: linear-gradient(135deg, #ff1a44, #c40026);
+    border: 1px solid #ff4466;
+    color: #ffffff;
+    padding: 10px 22px;
+    font-size: 12px;
+    font-weight: 900;
+    border-radius: 8px;
+    box-shadow: 0 0 16px rgba(255, 26, 68, 0.5);
+    cursor: pointer;
+  }
+  .modal-btn-confirm:hover {
+    background: linear-gradient(135deg, #ff335a, #e6002e);
+    box-shadow: 0 0 24px rgba(255, 26, 68, 0.8);
+    transform: translateY(-1px);
+    color: #fff;
+  }
+
+  /* ========================================================
+     REMOVE BACKGROUND STUDIO MODAL STYLES
+     ======================================================== */
+  .bg-studio-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 12, 0.92);
+    backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    padding: 16px;
+  }
+  .bg-studio-backdrop.hidden {
+    display: none !important;
+  }
+  .bg-studio-modal {
+    background: #080d16;
+    border: 1.5px solid #a855f7;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(168, 85, 247, 0.35);
+    border-radius: 18px;
+    width: 1040px;
+    max-width: 96vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  .bg-studio-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: #0d1524;
+    border-bottom: 1px solid #1f2b40;
+  }
+  .bg-studio-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bg-studio-title h3 {
+    margin: 0;
+    font-family: 'Titan One', 'Montserrat', sans-serif;
+    font-size: 19px;
+    letter-spacing: 0.8px;
+    background: linear-gradient(90deg, #c084fc, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .bg-studio-title small {
+    display: block;
+    color: #8fa5c5;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .bg-studio-close {
+    background: #141f30;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    line-height: 1;
+    padding: 0;
+  }
+  .bg-studio-close:hover {
+    background: #ff2a55;
+    border-color: #ff4466;
+    color: #fff;
+    transform: scale(1.1);
+  }
+  .bg-studio-body {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+  @media (max-width: 860px) {
+    .bg-studio-body {
+      grid-template-columns: 1fr;
+    }
+  }
+  .bg-preview-stage {
+    background: #060a12;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-right: 1px solid #1a2436;
+    gap: 12px;
+  }
+  .bg-canvas-container {
+    flex: 1;
+    width: 100%;
+    min-height: 320px;
+    max-height: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 12px;
+    border: 1px solid #1e2c42;
+    overflow: hidden;
+    background-color: #0c121d;
+    background-image: 
+      linear-gradient(45deg, #151e2c 25%, transparent 25%),
+      linear-gradient(-45deg, #151e2c 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #151e2c 75%),
+      linear-gradient(-45deg, transparent 75%, #151e2c 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    transition: background 0.2s ease;
+  }
+  .bg-canvas-container.theme-stadium {
+    background: url('stadium_pitch.jpg') center/cover no-repeat !important;
+  }
+  .bg-canvas-container.theme-black {
+    background: #000000 !important;
+  }
+  .bg-canvas-container.theme-white {
+    background: #ffffff !important;
+  }
+  #bgStudioCanvas {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.85));
+    transition: transform 0.1s ease;
+    cursor: crosshair;
+  }
+  .canvas-stage-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #0c1320;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #1a2538;
+  }
+  .stage-theme-toggles {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .theme-btn {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 5px;
+    background: #151e2e;
+    border: 1px solid #25354c;
+    color: #9cb1cb;
+    cursor: pointer;
+  }
+  .theme-btn.active {
+    background: #c084fc;
+    color: #040810;
+    border-color: #d8b4fe;
+    font-weight: 900;
+  }
+  .zoom-toggles {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #9cb1cb;
+    font-weight: 700;
+  }
+  .zoom-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 4px;
+    background: #151e2e;
+    border: 1px solid #25354c;
+    color: #cbd5e1;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .bg-controls-panel {
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+  }
+  .bg-section-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #c084fc;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .card-picker-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .card-picker-select {
+    flex: 1;
+    background: #101726;
+    border: 1.5px solid #2c3c54;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    outline: none;
+  }
+  .btn-sample-card {
+    background: linear-gradient(135deg, #d4af37, #996515);
+    color: #000;
+    font-weight: 900;
+    border: 1px solid #fff2a1;
+    font-size: 11px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .mode-card {
+    background: #101726;
+    border: 1.5px solid #1f2c40;
+    border-radius: 8px;
+    padding: 9px 10px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .mode-card:hover {
+    border-color: #a855f7;
+    background: #141e32;
+  }
+  .mode-card.active {
+    border-color: #c084fc;
+    background: rgba(168, 85, 247, 0.16);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+  }
+  .mode-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .mode-desc {
+    font-size: 9.5px;
+    color: #8c9eb5;
+    line-height: 1.3;
+  }
+  .slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 7px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    color: #cbd5e1;
+  }
+  .slider-val {
+    color: #c084fc;
+    font-weight: 900;
+  }
+  .bg-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #1a2538;
+    outline: none;
+  }
+  .bg-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #c084fc;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
+    border: 1.5px solid #fff;
+  }
+  .touchup-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #0f1624;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid #1e2c40;
+    width: 100%;
+  }
+  .touchup-btn {
+    padding: 5px 9px;
+    font-size: 10.5px;
+    font-weight: 800;
+    border-radius: 6px;
+    background: #162032;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .touchup-btn.active {
+    background: #9333ea;
+    border-color: #c084fc;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+  }
+  .bg-studio-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 22px;
+    background: #0b111c;
+    border-top: 1px solid #1a2538;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .footer-actions-left, .footer-actions-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn-apply-one {
+    background: linear-gradient(135deg, #00e676, #00b4d8);
+    color: #030810;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 14px rgba(0, 230, 118, 0.4);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-apply-all {
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    color: #ffffff;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.45);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-download-cutout {
+    background: #151e2e;
+    border: 1px solid #2b3e59;
+    color: #cbd5e1;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .btn-reset-original {
+    background: #1c1117;
+    border: 1px solid #3d1a25;
+    color: #ff8899;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .slot-btn-magic:hover, .bench-magic-btn:hover {
+    background: #a855f7 !important;
+    transform: scale(1.18);
+  }
+
+  /* CUSTOMIZATION CONTROLS BAR */
+  .controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: #090e17;
+    border: 1px solid #192436;
+    border-radius: 10px;
+    padding: 8px 14px;
+    margin-bottom: 14px;
+    font-size: 11px;
+    color: #9cb0cc;
+  }
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .control-group label {
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: #7b8fa8;
+    text-transform: uppercase;
+    font-size: 10px;
+  }
+  .custom-input {
+    background: #0f1624;
+    border: 1px solid #233249;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  .custom-input:focus {
+    border-color: #ff0092;
+  }
+  .theme-select {
+    background: #0f1624;
+    border: 1px solid #233249;
+    color: #ff00aa;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+  }
+  .color-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .color-picker-wrap input[type="color"] {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1px solid #29384e;
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+  }
+  .color-picker-wrap input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  .color-picker-wrap input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+
+  /* ========================================================
+     TOP 10 BOARD (The Main Visual Template)
+     ======================================================== */
+  .board-outer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  
+  .top10-board {
+    width: 100%;
+    max-width: 1060px;
+    border-radius: 20px;
+    padding: 38px 24px 44px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.7);
+    /* Default exact screenshot background: Neon Pink to Electric Purple */
+    background: radial-gradient(circle at 18% 18%, rgba(255, 90, 200, 0.45) 0%, transparent 60%),
+                linear-gradient(135deg, #ff0092 0%, #ea007e 26%, #b500c8 62%, #8200ed 100%);
+    transition: background 0.3s ease;
+  }
+
+  /* Board Glow Accents */
+  .top10-board::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, transparent 70%);
+    pointer-events: none;
+    filter: blur(20px);
+  }
+
+  /* TITLE AREA */
+  .title-wrapper {
+    text-align: center;
+    position: relative;
+    z-index: 5;
+    margin-bottom: 32px;
+  }
+  .rank-title {
+    font-family: 'Titan One', 'Montserrat', 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 44px;
+    color: #ffffff;
+    text-align: center;
+    margin: 0;
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+    /* Thick black stroke and outline exactly like screenshot */
+    -webkit-text-stroke: 3.5px #000000;
+    paint-order: stroke fill;
+    text-shadow: 
+      3.5px 3.5px 0 #000000,
+      -3.5px -3.5px 0 #000000,
+      3.5px -3.5px 0 #000000,
+      -3.5px 3.5px 0 #000000,
+      0 6px 14px rgba(0, 0, 0, 0.75);
+    outline: none;
+    cursor: text;
+    display: inline-block;
+    padding: 2px 14px;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .rank-title:hover {
+    background: rgba(0, 0, 0, 0.15);
+  }
+  .rank-title:focus {
+    background: rgba(0, 0, 0, 0.3);
+    outline: 2px dashed rgba(255, 255, 255, 0.5);
+  }
+
+  /* CARDS GRID (Row 1: 3, Row 2: 3, Row 3: 4) */
+  .cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    position: relative;
+    z-index: 4;
+  }
+
+  .grid-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+
+  /* Row 3 has 4 cards across */
+  .grid-row.row-3 {
+    gap: 22px;
+  }
+
+  /* CARD SLOT */
+  .card-slot {
+    position: relative;
+    width: 200px;
+    height: 270px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.2s ease;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .grid-row.row-3 .card-slot {
+    width: 182px;
+    height: 246px;
+  }
+
+  /* NUMERIC BADGE (Yellow circle with bold black number) */
+  .numeric-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent-yellow);
+    border: 3.5px solid #000000;
+    color: #000000;
+    font-family: 'Titan One', 'Montserrat', 'Inter', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    line-height: 1;
+    transform: translateZ(0);
+  }
+  .card-slot[data-rank="10"] .numeric-badge {
+    width: 52px;
+    font-size: 23px;
+    letter-spacing: -1.5px;
+  }
+  .grid-row.row-3 .numeric-badge {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+    border-width: 3px;
+  }
+  .grid-row.row-3 .card-slot[data-rank="10"] .numeric-badge {
+    width: 48px;
+    height: 44px;
+    font-size: 21px;
+  }
+
+  /* Empty Slot State */
+  .card-slot.empty {
+    border: 2px dashed rgba(255, 255, 255, 0.45);
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+  }
+  .card-slot.empty:hover {
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+  }
+  .card-slot.empty.dragover {
+    border-color: #ffee00 !important;
+    border-style: solid !important;
+    background: rgba(255, 238, 0, 0.25) !important;
+    box-shadow: 0 0 20px rgba(255, 238, 0, 0.7);
+    transform: scale(1.05);
+  }
+  .card-slot.target-selected {
+    border-color: #00ff88 !important;
+    border-style: solid !important;
+    background: rgba(0, 255, 136, 0.25) !important;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+    animation: pulseBorder 1.2s infinite alternate;
+  }
+  @keyframes pulseBorder {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.04); }
+  }
+
+  .slot-empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    text-align: center;
+    pointer-events: none;
+  }
+  .slot-empty-content .plus-icon {
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .slot-empty-content .label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .slot-empty-content .sub {
+    font-size: 8.5px;
+    opacity: 0.7;
+  }
+
+  /* Filled Slot State */
+  .card-slot.filled {
+    border: none;
+    background: transparent;
+    cursor: grab;
+  }
+  .card-slot.filled:active {
+    cursor: grabbing;
+  }
+  .card-slot.filled .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.55));
+    transition: transform 0.18s ease, filter 0.18s ease;
+    pointer-events: auto;
+  }
+  .card-slot.filled:hover .card-img {
+    transform: scale(1.03);
+    filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.7)) brightness(1.04);
+  }
+
+  /* Slot Overlay Controls (Remove / Replace) */
+  .slot-controls {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    display: none;
+    gap: 4px;
+    z-index: 15;
+  }
+  .card-slot.filled:hover .slot-controls {
+    display: flex;
+  }
+  .slot-btn-remove {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ff2233;
+    color: #ffffff;
+    border: 1.5px solid #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    line-height: 1;
+    padding: 0;
+  }
+  .slot-btn-remove:hover {
+    background: #ff4757;
+    transform: scale(1.15);
+  }
+
+  /* Clean View Mode (hides dashed placeholders & controls on screen) */
+  .top10-board.clean-view .card-slot.empty {
+    opacity: 0.15;
+    border-style: solid;
+  }
+  .top10-board.clean-view .slot-controls {
+    display: none !important;
+  }
+
+  /* ========================================================
+     PLAYER CARDS BENCH (Upload & Pool Tray)
+     ======================================================== */
+  .cards-tray-section {
+    background: #090e17;
+    border: 1px solid #1a273b;
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    margin-bottom: 14px;
+  }
+  .tray-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #162233;
+  }
+  .tray-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tray-title h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #ff33aa;
+    text-transform: uppercase;
+  }
+  .tray-badge {
+    background: #141f30;
+    color: #9eb2d0;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid #28374d;
+  }
+  .tray-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Bench Pool container */
+  .bench-pool {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    min-height: 120px;
+    padding: 12px;
+    background: rgba(4, 7, 12, 0.7);
+    border: 1.5px dashed #202e42;
+    border-radius: 8px;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  .bench-pool.drag-active {
+    border-color: #ff0092;
+    background: rgba(255, 0, 146, 0.1);
+  }
+
+  .bench-empty-hint {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #55677d;
+    padding: 20px;
+    text-align: center;
+    user-select: none;
+  }
+  .bench-empty-hint svg {
+    width: 36px;
+    height: 36px;
+    stroke: #394a61;
+  }
+  .bench-empty-hint span {
+    font-size: 12px;
+    font-weight: 700;
+    color: #8c9eb5;
+  }
+  .bench-empty-hint small {
+    font-size: 10px;
+    color: #4f6077;
+  }
+
+  /* Bench Card */
+  .tray-card {
+    width: 86px;
+    height: 116px;
+    border-radius: 8px;
+    border: 1.5px solid #28384e;
+    background: #0a0f18;
+    padding: 3px;
+    position: relative;
+    cursor: grab;
+    transition: all 0.16s ease;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tray-card:hover {
+    border-color: #ff0092;
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 6px 18px rgba(255, 0, 146, 0.35);
+  }
+  .tray-card:active { cursor: grabbing; }
+  .tray-card.selected {
+    border-color: #ffee00;
+    box-shadow: 0 0 18px rgba(255, 238, 0, 0.8);
+    transform: translateY(-4px) scale(1.06);
+    outline: 2px solid #ffee00;
+  }
+  .tray-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+    pointer-events: none;
+  }
+  .tray-card .tray-card-remove {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ff2233;
+    color: #fff;
+    border: 1px solid #fff;
+    font-size: 10px;
+    font-weight: bold;
+    display: none;
+    place-items: center;
+    cursor: pointer;
+    line-height: 1;
+    z-index: 5;
+  }
+  .tray-card:hover .tray-card-remove { display: grid; }
+  .tray-card .tray-card-remove:hover { background: #ff4757; }
+
+  /* Drag Ghost */
+  .is-dragging {
+    opacity: 0.3;
+    transform: scale(0.95);
+  }
+
+  .hidden { display: none !important; }
+
+  /* TOAST */
+  #toast {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffee00;
+    color: #050608;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(255, 238, 0, 0.45);
+    animation: toastPop 0.2s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  @keyframes toastPop {
+    from { opacity: 0; transform: translate(-50%, 15px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  /* FOOTER */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 8px 4px;
+    font-size: 11px;
+    color: #4b5a6e;
+    font-weight: 600;
+  }
+  .footer a {
+    color: #ff33aa;
+    text-decoration: none;
+  }
+  .footer a:hover { text-decoration: underline; }
+
+  /* RESPONSIVE DESIGN */
+  @media (max-width: 960px) {
+    .top10-board { padding: 28px 16px 36px; }
+    .rank-title { font-size: 34px; -webkit-text-stroke: 2.8px #000; }
+    .card-slot { width: 165px; height: 225px; }
+    .grid-row.row-3 .card-slot { width: 145px; height: 198px; }
+    .numeric-badge { width: 42px; height: 42px; font-size: 22px; }
+    .grid-row { gap: 20px; }
+    .grid-row.row-3 { gap: 14px; }
+  }
+  @media (max-width: 720px) {
+    body { padding: 8px; }
+    .rank-title { font-size: 26px; -webkit-text-stroke: 2px #000; }
+    .card-slot { width: 125px; height: 172px; }
+    .grid-row.row-3 .card-slot { width: 110px; height: 152px; }
+    .numeric-badge { width: 36px; height: 36px; font-size: 19px; border-width: 2.5px; }
+    .card-slot[data-rank="10"] .numeric-badge { width: 40px; font-size: 17px; }
+    .grid-row { gap: 12px; }
+    .grid-row.row-3 { gap: 8px; }
+  }
+  @media (max-width: 480px) {
+    .rank-title { font-size: 21px; -webkit-text-stroke: 1.8px #000; }
+    .card-slot { width: 95px; height: 132px; }
+    .grid-row.row-3 .card-slot { width: 78px; height: 110px; }
+    .numeric-badge { width: 30px; height: 30px; font-size: 15px; border-width: 2px; top: -6px; right: -6px; }
+    .card-slot[data-rank="10"] .numeric-badge { width: 33px; font-size: 14px; }
+    .slot-empty-content .plus-icon { font-size: 18px; }
+    .slot-empty-content .label { font-size: 8px; }
+    .grid-row { gap: 8px; }
+    .grid-row.row-3 { gap: 6px; }
+  }
+
+  /* PRINT STYLES */
+  @media print {
+    @page {
+      size: landscape;
+      margin: 8mm;
+    }
+    body {
+      background: #04060a !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .toolbar, .controls-bar, .cards-tray-section, .footer, .slot-controls, #toast {
+      display: none !important;
+    }
+    .board-outer {
+      margin: 0 !important;
+      padding: 0 !important;
+      display: flex !important;
+      justify-content: center !important;
+      width: 100% !important;
+    }
+    .top10-board {
+      width: 100% !important;
+      max-width: 1020px !important;
+      box-shadow: none !important;
+      padding: 26px 20px 30px !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+  }
+</style>
+<script src="html2canvas.min.js"></script>
+<script src="jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- TOP TOOLBAR -->
+  <header class="toolbar">
+    <div class="brand-area">
+      <div class="brandmark">10</div>
+      <div>
+        <h1>FC_VOLT</h1>
+        <small>TOP 10 BEST PLAYERS TEMPLATE</small>
+      </div>
+    </div>
+
+    <!-- TEMPLATE SWITCHER TABS -->
+    <nav class="template-nav">
+      <a href="index.html" class="nav-tab" title="Go to Tier List Template (Super/Good/Avg/Bad)">
+        📊 Tier List (4 Tiers)
+      </a>
+      <button class="nav-tab active" title="Current: Top 10 Ranking Template">
+        🔟 Top 10 Ranking
+      </button>
+      <a href="team11.html" class="nav-tab" title="Go to Best Team 11 Squad Builder">
+        ⚽ Best Team 11
+      </a>
+      <a href="shards.html" class="nav-tab" title="Go to Football Shard Comparison Template">
+        💎 Shard Comparison
+      </a>
+    </nav>
+
+    <!-- ACTION BUTTONS -->
+    <div class="actions">
+      <button id="cleanViewBtn" title="Toggle Clean Preview (hide dashed borders on screen)">
+        👁️ CLEAN VIEW
+      </button>
+      <button id="bgRemoverBtn" class="btn-bg-remover" title="Open Background & Outliers Remover Studio">
+        🪄 REMOVE BACKGROUND
+      </button>
+      <button id="saveBtn" title="Save this ranking in your browser">
+        💾 SAVE
+      </button>
+      <button id="pdfBtn" class="btn-pdf" title="Export as High-Resolution PDF Document">
+        📄 EXPORT PDF
+      </button>
+      <button id="exportBtn" class="btn-export" title="Export High-Resolution PNG Image for YouTube/Instagram/Discord">
+        📸 EXPORT PNG
+      </button>
+      <button id="printBtn" title="Print or Save as PDF via Browser">
+        🖨️ PRINT
+      </button>
+      <button id="clearBoardBtn" title="Return cards from the ranking board back to the bench">
+        🔄 RESET BOARD
+      </button>
+      <button id="removeAllBtn" class="btn-remove-all" title="Remove all cards completely from board and bench">
+        🗑️ REMOVE ALL
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTROLS & CUSTOMIZATION BAR -->
+  <section class="controls-bar">
+    <!-- Title Editor -->
+    <div class="control-group">
+      <label for="titleInput">Title:</label>
+      <input type="text" id="titleInput" class="custom-input" value="Top 10 Best CB In FC Mobile" style="width: 240px;" placeholder="e.g. Top 10 Best ST In FC Mobile">
+    </div>
+
+    <!-- Quick Preset Titles -->
+    <div class="control-group">
+      <label>Position:</label>
+      <select id="quickPosSelect" class="theme-select" style="color: #fff;">
+        <option value="CB" selected>CB (Center Back)</option>
+        <option value="ST">ST (Striker)</option>
+        <option value="CM">CM (Midfielder)</option>
+        <option value="GK">GK (Goalkeeper)</option>
+        <option value="LW">LW (Left Wing)</option>
+        <option value="RW">RW (Right Wing)</option>
+        <option value="CAM">CAM (Attacking Mid)</option>
+        <option value="CDM">CDM (Defensive Mid)</option>
+        <option value="LB">LB (Left Back)</option>
+        <option value="RB">RB (Right Back)</option>
+        <option value="Players">All Players</option>
+      </select>
+    </div>
+
+    <!-- Background Color Theme -->
+    <div class="control-group">
+      <label>Background:</label>
+      <select id="themeSelect" class="theme-select">
+        <option value="magenta-purple" selected>💖 Neon Magenta / Purple (Screenshot match)</option>
+        <option value="deep-violet">💜 Deep Violet / Neon</option>
+        <option value="electric-blue">💙 Electric Cyan / Royal Blue</option>
+        <option value="dark-esports">🖤 Dark Esports / Carbon</option>
+        <option value="fiery-gold">🔥 Fiery Flame / Gold</option>
+        <option value="emerald-matrix">💚 Cyber Emerald / Lime</option>
+        <option value="custom">🎨 Custom Colors...</option>
+      </select>
+      <div id="customColorWrap" class="color-picker-wrap hidden">
+        <input type="color" id="color1" value="#ff0092" title="Gradient Top Color">
+        <input type="color" id="color2" value="#8200ed" title="Gradient Bottom Color">
+      </div>
+    </div>
+
+    <!-- Numeric Badge Style -->
+    <div class="control-group">
+      <label>Badge Color:</label>
+      <select id="badgeColorSelect" class="theme-select" style="color: #ffee00;">
+        <option value="#ffee00" selected>🟡 Neon Yellow (Default)</option>
+        <option value="#ffffff">⚪ Clean White</option>
+        <option value="#ff9900">🟠 Gold / Amber</option>
+        <option value="#00ffcc">🟢 Cyan Neon</option>
+        <option value="#ff3366">🔴 Vivid Pink/Red</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       TOP 10 BOARD (The Visual Template)
+       ======================================================== -->
+  <div class="board-outer">
+    <main class="top10-board" id="rankingBoard">
+      
+      <!-- Editable Title -->
+      <div class="title-wrapper">
+        <h2 class="rank-title" id="displayTitle" contenteditable="true" spellcheck="false" title="Click directly to edit title text">
+          Top 10 Best CB In FC Mobile
+        </h2>
+      </div>
+
+      <!-- 3-ROW GRID (3 + 3 + 4 = 10) -->
+      <div class="cards-grid">
+        
+        <!-- ROW 1: Ranks 1, 2, 3 -->
+        <div class="grid-row row-1" data-row="1">
+          <div class="card-slot empty" data-rank="1" id="slot-1"></div>
+          <div class="card-slot empty" data-rank="2" id="slot-2"></div>
+          <div class="card-slot empty" data-rank="3" id="slot-3"></div>
+        </div>
+
+        <!-- ROW 2: Ranks 4, 5, 6 -->
+        <div class="grid-row row-2" data-row="2">
+          <div class="card-slot empty" data-rank="4" id="slot-4"></div>
+          <div class="card-slot empty" data-rank="5" id="slot-5"></div>
+          <div class="card-slot empty" data-rank="6" id="slot-6"></div>
+        </div>
+
+        <!-- ROW 3: Ranks 7, 8, 9, 10 -->
+        <div class="grid-row row-3" data-row="3">
+          <div class="card-slot empty" data-rank="7" id="slot-7"></div>
+          <div class="card-slot empty" data-rank="8" id="slot-8"></div>
+          <div class="card-slot empty" data-rank="9" id="slot-9"></div>
+          <div class="card-slot empty" data-rank="10" id="slot-10"></div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ========================================================
+       PLAYER CARDS BENCH (Upload & Pool Tray)
+       ======================================================== -->
+  <section class="cards-tray-section" id="traySection">
+    <div class="tray-header">
+      <div class="tray-title">
+        <h3>Player Cards Bench</h3>
+        <span class="tray-badge" id="benchCountBadge">0 Cards</span>
+      </div>
+
+      <div class="tray-controls">
+        <label for="multiUploadInput" class="btn btn-primary" title="Upload player cards from your computer or phone">
+          ＋ UPLOAD PLAYER PICTURES
+        </label>
+        <input type="file" id="multiUploadInput" class="hidden" accept="image/*" multiple>
+
+        <button id="autoFillBtn" title="Auto-place bench cards into empty slots 1 to 10 in order">
+          ⚡ AUTO-FILL 1-10
+        </button>
+
+        <button id="demoBtn" title="Load the 10 CB cards matching the reference image">
+          ⚡ PREVIEW 10 DEMO CARDS
+        </button>
+
+        <button id="clearBenchBtn" title="Clear all unplaced cards from the bench">
+          Clear Bench
+        </button>
+      </div>
+    </div>
+
+    <!-- POOL CONTAINER -->
+    <div class="bench-pool" id="benchPool">
+      <div class="bench-empty-hint" id="benchEmptyHint">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        <span>No player cards on bench yet</span>
+        <small>Click <b>＋ UPLOAD PLAYER PICTURES</b>, drag images directly onto slots 1-10, or test with <b>⚡ PREVIEW 10 DEMO CARDS</b></small>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>FC_VOLT · FC Mobile Top 10 Best Players Template</span>
+    <span>
+      Switch to <a href="index.html">4-Tier List Template</a> · High-Resolution PNG Export Supported
+    </span>
+  </footer>
+
+</div>
+
+<!-- TOAST MESSAGE -->
+<div id="toast"></div>
+
+<!-- CONFIRM REMOVE ALL CUSTOM MODAL -->
+<div class="custom-modal-backdrop hidden" id="removeAllModal">
+  <div class="custom-modal">
+    <div class="modal-icon">⚠️</div>
+    <h3>REMOVE ALL CARDS?</h3>
+    <p>Are you sure you want to completely remove all cards from both the ranking board and bench? This gives you an empty ranking board.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn modal-btn-cancel" id="cancelRemoveAllBtn">CANCEL</button>
+      <button type="button" class="btn modal-btn-confirm" id="confirmRemoveAllBtn">YES, REMOVE ALL</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMOVE BACKGROUND & OUTLIERS STUDIO MODAL -->
+<div class="custom-modal-backdrop bg-studio-backdrop hidden" id="bgStudioModal">
+  <div class="bg-studio-modal">
+    <div class="bg-studio-header">
+      <div class="bg-studio-title">
+        <span style="font-size: 26px;">🪄</span>
+        <div>
+          <h3>REMOVE BACKGROUND & OUTLIERS STUDIO</h3>
+          <small>Clean rectangular margins, black/white borders & isolate cards like FC Mobile transparent cutouts</small>
+        </div>
+      </div>
+      <button type="button" class="bg-studio-close" id="closeBgStudioBtn" title="Close Studio">&times;</button>
+    </div>
+
+    <div class="bg-studio-body">
+      <!-- Left: Interactive Canvas Preview Stage -->
+      <div class="bg-preview-stage">
+        <div class="canvas-stage-bar">
+          <div class="stage-theme-toggles">
+            <span style="font-size: 10px; color: #8fa5c5; font-weight: 800; margin-right: 4px;">BACKDROP:</span>
+            <button type="button" class="theme-btn active" data-stage="checker" id="stageBtnChecker" title="Checkered transparency pattern">🏁 Grid</button>
+            <button type="button" class="theme-btn" data-stage="stadium" id="stageBtnStadium" title="Live Stadium Grass">🏟️ Pitch</button>
+            <button type="button" class="theme-btn" data-stage="black" id="stageBtnBlack" title="Solid Dark">⬛ Black</button>
+            <button type="button" class="theme-btn" data-stage="white" id="stageBtnWhite" title="Solid Light">⬜ White</button>
+          </div>
+          <div class="zoom-toggles">
+            <button type="button" class="zoom-btn" id="zoomOutBtn" title="Zoom Out">−</button>
+            <span id="zoomLevelDisplay">100%</span>
+            <button type="button" class="zoom-btn" id="zoomInBtn" title="Zoom In">＋</button>
+            <button type="button" class="zoom-btn" id="zoomResetBtn" title="Reset Zoom">↺</button>
+          </div>
+        </div>
+
+        <div class="bg-canvas-container" id="bgCanvasContainer">
+          <canvas id="bgStudioCanvas"></canvas>
+        </div>
+
+        <div class="touchup-bar">
+          <span style="font-size: 11px; font-weight: 800; color: #c084fc;">TOOLS:</span>
+          <button type="button" class="touchup-btn active" id="toolPanBtn">🖐️ Inspect</button>
+          <button type="button" class="touchup-btn" id="toolEyedropperBtn">🎨 Eyedropper</button>
+          <button type="button" class="touchup-btn" id="toolEraserBtn">🧹 Eraser</button>
+          <div id="eraserSizeWrap" style="display: none; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; color: #8fa5c5;">Size:</span>
+            <input type="range" id="eraserSizeRange" min="4" max="60" value="18" style="width: 75px;">
+            <span id="eraserSizeVal" style="font-size: 10px; color: #c084fc; font-weight: 800;">18px</span>
+          </div>
+          <div style="margin-left: auto; font-size: 11px; color: #8fa5c5; font-weight: 700;" id="canvasInfoBadge">256 × 256 px</div>
+        </div>
+      </div>
+
+      <!-- Right: Controls Panel -->
+      <div class="bg-controls-panel">
+        <div>
+          <div class="bg-section-title"><span>🎴</span> 1. Select Card To Clean</div>
+          <div class="card-picker-row">
+            <select id="bgCardSelect" class="card-picker-select">
+              <!-- Dynamically populated with Rank 1-10 & Bench cards -->
+            </select>
+            <button type="button" id="loadRonaldoSampleBtn" class="btn-sample-card" title="Load Ronaldo 124 ST reference card">
+              ⭐ Sample R9
+            </button>
+          </div>
+          <div style="margin-top: 8px;">
+            <label for="bgUploadInput" class="btn" style="padding: 6px 12px; font-size: 11px; background: #151e2e; border: 1px dashed #304460; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+              📁 Upload New Image To Studio
+            </label>
+            <input type="file" id="bgUploadInput" class="hidden" accept="image/*">
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>⚙️</span> 2. Background & Outliers Removal Mode</div>
+          <div class="mode-grid">
+            <div class="mode-card active" data-mode="auto" id="modeAuto">
+              <div class="mode-header">🪄 Auto Detect</div>
+              <div class="mode-desc">Flood fills from borders inward. Protects white/dark kits and details inside.</div>
+            </div>
+            <div class="mode-card" data-mode="white" id="modeWhite">
+              <div class="mode-header">⚪ Remove White</div>
+              <div class="mode-desc">Removes bright/white screenshot backgrounds and rectangular margins.</div>
+            </div>
+            <div class="mode-card" data-mode="black" id="modeBlack">
+              <div class="mode-header">⚫ Remove Black</div>
+              <div class="mode-desc">Cleans black screenshot bars, letterboxing & dark margins.</div>
+            </div>
+            <div class="mode-card" data-mode="color" id="modeColor">
+              <div class="mode-header">🎨 Picked Color</div>
+              <div class="mode-desc">Click eyedropper or sample canvas to key out an exact outlier color.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>🎚️</span> 3. Edge & Tolerance Tuning</div>
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Color Tolerance:</span>
+              <span class="slider-val" id="tolValDisplay">28%</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgTolRange" min="5" max="80" value="28">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Fringe Choke / Halo Trim:</span>
+              <span class="slider-val" id="chokeValDisplay">1 px</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgChokeRange" min="0" max="4" value="1">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Edge Feather / Soften:</span>
+              <span class="slider-val" id="featherValDisplay">1 px</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgFeatherRange" min="0" max="5" value="1">
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding: 6px 10px; background: #121927; border-radius: 6px; border: 1px solid #1f2b3e;">
+            <span style="font-size: 11px; font-weight: 700; color: #cbd5e1;">✂️ Auto-Crop Outer Padding:</span>
+            <input type="checkbox" id="bgAutoCropCheck" checked style="accent-color: #a855f7; cursor: pointer;">
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>⚡</span> 4. Instant Clean Presets</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn" id="presetCleanWhite" style="font-size: 10.5px; padding: 6px 10px;">⚪ Clean White</button>
+            <button type="button" class="btn" id="presetCleanBlack" style="font-size: 10.5px; padding: 6px 10px;">⚫ Clean Black</button>
+            <button type="button" class="btn" id="presetRevert" style="font-size: 10.5px; padding: 6px 10px; color: #ff99aa;">↩️ Revert Original</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-studio-footer">
+      <div class="footer-actions-left">
+        <button type="button" class="btn-download-cutout" id="bgDownloadCutoutBtn" title="Download transparent PNG image">
+          💾 DOWNLOAD PNG
+        </button>
+        <button type="button" class="btn-reset-original" id="bgCloseCancelBtn">
+          ✕ CANCEL
+        </button>
+      </div>
+
+      <div class="footer-actions-right">
+        <button type="button" class="btn-apply-all" id="bgApplyAllPitchBtn" title="Clean and update all cards on the ranking board">
+          ✨ APPLY TO ALL 10 RANK CARDS
+        </button>
+        <button type="button" class="btn-apply-one" id="bgApplyCurrentBtn" title="Apply clean cutout to the selected card">
+          ✅ APPLY TO SELECTED CARD
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DIRECT SLOT UPLOAD HIDDEN INPUT -->
+<input type="file" id="singleSlotUploadInput" class="hidden" accept="image/*">
+
+<script>
+/**
+ * FC_VOLT — Top 10 Best Players Engine
+ * Replicates the exact ranking layout (3-3-4) with yellow numeric badges,
+ * rich pink-to-purple background gradient, drag-and-drop, direct slot upload,
+ * local storage, and 2x high-res PNG export.
+ */
+
+// State
+const TOTAL_RANKS = 10;
+let rankCards = {}; // { 1: dataUrl, 2: dataUrl, ... 10: dataUrl }
+let pool = [];      // [ { id, src }, ... ]
+let dragPayload = null; // { type: 'pool'|'rank', id/rank }
+let selectedCard = null; // { type: 'pool'|'rank', id/rank }
+let targetRankForDirectUpload = null;
+let toastTimer = null;
+let isCleanView = false;
+
+// DOM Elements
+const rankingBoard = document.getElementById('rankingBoard');
+const displayTitle = document.getElementById('displayTitle');
+const titleInput = document.getElementById('titleInput');
+const quickPosSelect = document.getElementById('quickPosSelect');
+const themeSelect = document.getElementById('themeSelect');
+const customColorWrap = document.getElementById('customColorWrap');
+const color1Input = document.getElementById('color1');
+const color2Input = document.getElementById('color2');
+const badgeColorSelect = document.getElementById('badgeColorSelect');
+const benchPool = document.getElementById('benchPool');
+const benchEmptyHint = document.getElementById('benchEmptyHint');
+const benchCountBadge = document.getElementById('benchCountBadge');
+const multiUploadInput = document.getElementById('multiUploadInput');
+const singleSlotUploadInput = document.getElementById('singleSlotUploadInput');
+
+// Utility: UID generator
+function uid() {
+  return 'c_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+}
+
+// Utility: Toast notification
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    t.style.display = 'none';
+  }, 2400);
+}
+
+/**
+ * Image Resizer & Compressor (Keeps cards crisp, avoids memory/storage overflow)
+ */
+function compressImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ev => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const maxDim = 520; // High quality for crisp rendering
+        let w = img.width;
+        let h = img.height;
+        if (w > h) {
+          if (w > maxDim) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          }
+        } else {
+          if (h > maxDim) {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/webp', 0.92);
+        resolve(dataUrl);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Handle File Upload (Direct to slot or batch to bench)
+ */
+async function handleFilesUpload(fileList, targetRank = null) {
+  const files = [...fileList].filter(f => {
+    return f.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|gif|svg|bmp|jfif)$/i.test(f.name);
+  });
+
+  if (!files.length) {
+    showToast('Please select valid image files.');
+    return;
+  }
+
+  showToast(`Processing ${files.length} image(s)...`);
+
+  let loaded = 0;
+  for (let i = 0; i < files.length; i++) {
+    try {
+      const compressedData = await compressImageFile(files[i]);
+      if (i === 0 && targetRank) {
+        rankCards[targetRank] = compressedData;
+      } else {
+        pool.push({ id: uid(), src: compressedData });
+      }
+      loaded++;
+    } catch (err) {
+      console.error('Error reading image:', err);
+    }
+  }
+
+  renderBoard();
+  renderBench();
+  showToast(`${loaded} card(s) ready! Drag or click to place.`);
+}
+
+/**
+ * Render Board (Slots 1 to 10)
+ */
+function renderBoard() {
+  for (let rank = 1; rank <= TOTAL_RANKS; rank++) {
+    const slotEl = document.getElementById(`slot-${rank}`);
+    if (!slotEl) continue;
+
+    const cardSrc = rankCards[rank];
+    slotEl.innerHTML = '';
+    slotEl.className = 'card-slot ' + (cardSrc ? 'filled' : 'empty');
+    slotEl.dataset.rank = rank;
+
+    // Check if slot is actively selected for placement
+    if (selectedCard && selectedCard.type === 'rank' && selectedCard.rank === rank) {
+      slotEl.classList.add('target-selected');
+    }
+
+    // Yellow Numeric Badge (1 to 10)
+    const badge = document.createElement('div');
+    badge.className = 'numeric-badge';
+    badge.textContent = rank;
+    slotEl.appendChild(badge);
+
+    if (cardSrc) {
+      // Filled Card Image
+      const img = document.createElement('img');
+      img.className = 'card-img';
+      img.src = cardSrc;
+      img.alt = `Rank ${rank} player card`;
+      img.draggable = true;
+
+      // Drag from filled slot
+      img.addEventListener('dragstart', e => {
+        dragPayload = { type: 'rank', rank };
+        img.classList.add('is-dragging');
+        e.dataTransfer.setData('text/plain', JSON.stringify(dragPayload));
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      img.addEventListener('dragend', () => {
+        img.classList.remove('is-dragging');
+        dragPayload = null;
+      });
+
+      // Quick Controls Overlay
+      const controls = document.createElement('div');
+      controls.className = 'slot-controls';
+
+      // Magic Wand button (Remove background & outliers)
+      const magicBtn = document.createElement('button');
+      magicBtn.className = 'slot-btn-remove slot-btn-magic';
+      magicBtn.innerHTML = '🪄';
+      magicBtn.title = 'Remove background & outliers';
+      magicBtn.style.marginRight = '4px';
+      magicBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        openBgStudioWithCard('rank', rank);
+      });
+
+      // Return to bench button
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'slot-btn-remove';
+      removeBtn.innerHTML = '&times;';
+      removeBtn.title = 'Return card to bench';
+      removeBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        pool.push({ id: uid(), src: rankCards[rank] });
+        delete rankCards[rank];
+        if (selectedCard && selectedCard.type === 'rank' && selectedCard.rank === rank) selectedCard = null;
+        renderBoard();
+        renderBench();
+        showToast(`Rank #${rank} returned to bench.`);
+      });
+
+      controls.appendChild(magicBtn);
+      controls.appendChild(removeBtn);
+
+      slotEl.appendChild(img);
+      slotEl.appendChild(controls);
+
+    } else {
+      // Empty Slot Placeholder
+      const placeholder = document.createElement('div');
+      placeholder.className = 'slot-empty-content';
+      placeholder.innerHTML = `
+        <div class="plus-icon">＋</div>
+        <div class="label">ADD CARD</div>
+        <div class="sub">Rank #${rank}</div>
+      `;
+      slotEl.appendChild(placeholder);
+    }
+
+    // Slot Click Handler (Click-to-place / Select to move)
+    slotEl.onclick = () => handleSlotClick(rank);
+
+    // Setup Drag-and-Drop Drop Target for Slot
+    setupSlotDropTarget(slotEl, rank);
+  }
+}
+
+/**
+ * Handle Slot Click (Click-to-place or select)
+ */
+function handleSlotClick(rank) {
+  // If user already has a card selected:
+  if (selectedCard) {
+    if (selectedCard.type === 'pool') {
+      const cardInPool = pool.find(c => c.id === selectedCard.id);
+      if (cardInPool) {
+        const oldSrc = rankCards[rank];
+        rankCards[rank] = cardInPool.src;
+        if (oldSrc) {
+          cardInPool.src = oldSrc; // Swap into bench
+        } else {
+          pool = pool.filter(c => c.id !== selectedCard.id);
+        }
+        selectedCard = null;
+        renderBoard();
+        renderBench();
+        showToast(`Placed at Rank #${rank}!`);
+        return;
+      }
+    } else if (selectedCard.type === 'rank') {
+      const fromRank = selectedCard.rank;
+      if (fromRank === rank) {
+        selectedCard = null; // Deselect
+        renderBoard();
+        return;
+      }
+      // Swap ranks
+      const temp = rankCards[rank];
+      rankCards[rank] = rankCards[fromRank];
+      if (temp) {
+        rankCards[fromRank] = temp;
+      } else {
+        delete rankCards[fromRank];
+      }
+      selectedCard = null;
+      renderBoard();
+      showToast(`Swapped Rank #${fromRank} with Rank #${rank}!`);
+      return;
+    }
+  }
+
+  // If slot has a card, select it for moving/swapping
+  if (rankCards[rank]) {
+    selectedCard = { type: 'rank', rank };
+    renderBoard();
+    renderBench();
+    showToast(`Rank #${rank} selected. Click another slot to swap or move.`);
+  } else {
+    // Empty slot clicked -> prompt direct file upload!
+    targetRankForDirectUpload = rank;
+    singleSlotUploadInput.click();
+  }
+}
+
+/**
+ * Setup Slot Drag & Drop Target
+ */
+function setupSlotDropTarget(el, targetRank) {
+  el.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    el.classList.add('dragover');
+    e.dataTransfer.dropEffect = 'move';
+  });
+
+  el.addEventListener('dragleave', e => {
+    e.preventDefault();
+    el.classList.remove('dragover');
+  });
+
+  el.addEventListener('drop', async e => {
+    e.preventDefault();
+    e.stopPropagation();
+    el.classList.remove('dragover');
+
+    // Case 1: Files dragged directly from computer
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleFilesUpload(e.dataTransfer.files, targetRank);
+      return;
+    }
+
+    // Case 2: Drag payload from within app
+    let data = dragPayload;
+    if (!data) {
+      try {
+        data = JSON.parse(e.dataTransfer.getData('text/plain'));
+      } catch (err) {}
+    }
+    if (!data) return;
+
+    if (data.type === 'pool') {
+      const card = pool.find(c => c.id === data.id);
+      if (!card) return;
+      const oldSrc = rankCards[targetRank];
+      rankCards[targetRank] = card.src;
+      if (oldSrc) {
+        card.src = oldSrc;
+      } else {
+        pool = pool.filter(c => c.id !== data.id);
+      }
+      dragPayload = null;
+      renderBoard();
+      renderBench();
+      showToast(`Placed at Rank #${targetRank}!`);
+    } else if (data.type === 'rank') {
+      const fromRank = data.rank;
+      if (fromRank === targetRank) return;
+      const temp = rankCards[targetRank];
+      rankCards[targetRank] = rankCards[fromRank];
+      if (temp) {
+        rankCards[fromRank] = temp;
+      } else {
+        delete rankCards[fromRank];
+      }
+      dragPayload = null;
+      renderBoard();
+      showToast(`Moved to Rank #${targetRank}!`);
+    }
+  });
+}
+
+/**
+ * Render Bench Pool
+ */
+function renderBench() {
+  const cards = pool.filter(c => c.src);
+  benchCountBadge.textContent = `${cards.length} Card${cards.length === 1 ? '' : 's'}`;
+
+  benchPool.innerHTML = '';
+  if (cards.length === 0) {
+    benchPool.appendChild(benchEmptyHint);
+    return;
+  }
+
+  cards.forEach(card => {
+    const cardEl = document.createElement('div');
+    cardEl.className = 'tray-card';
+    cardEl.dataset.id = card.id;
+    cardEl.draggable = true;
+
+    if (selectedCard && selectedCard.type === 'pool' && selectedCard.id === card.id) {
+      cardEl.classList.add('selected');
+    }
+
+    const img = document.createElement('img');
+    img.src = card.src;
+    img.alt = 'Bench card';
+    cardEl.appendChild(img);
+
+    // Delete card button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'tray-card-remove';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.title = 'Delete card';
+    removeBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      pool = pool.filter(c => c.id !== card.id);
+      if (selectedCard && selectedCard.id === card.id) selectedCard = null;
+      renderBench();
+    });
+    // Magic Wand button (Remove background & outliers)
+    const magicBtn = document.createElement('button');
+    magicBtn.className = 'bench-magic-btn';
+    magicBtn.innerHTML = '🪄';
+    magicBtn.title = 'Remove background & outliers';
+    magicBtn.style.position = 'absolute';
+    magicBtn.style.top = '4px';
+    magicBtn.style.left = '4px';
+    magicBtn.style.width = '20px';
+    magicBtn.style.height = '20px';
+    magicBtn.style.borderRadius = '50%';
+    magicBtn.style.background = 'rgba(147, 51, 234, 0.9)';
+    magicBtn.style.color = '#fff';
+    magicBtn.style.border = '1px solid #c084fc';
+    magicBtn.style.cursor = 'pointer';
+    magicBtn.style.fontSize = '10px';
+    magicBtn.style.display = 'grid';
+    magicBtn.style.placeItems = 'center';
+    magicBtn.style.zIndex = '10';
+    magicBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openBgStudioWithCard('bench', card.id);
+    });
+    cardEl.appendChild(magicBtn);
+    cardEl.appendChild(removeBtn);
+
+    // Drag start from bench
+    cardEl.addEventListener('dragstart', e => {
+      dragPayload = { type: 'pool', id: card.id };
+      cardEl.classList.add('is-dragging');
+      e.dataTransfer.setData('text/plain', JSON.stringify(dragPayload));
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    cardEl.addEventListener('dragend', () => {
+      cardEl.classList.remove('is-dragging');
+      dragPayload = null;
+    });
+
+    // Click on bench card (Select for placement)
+    cardEl.addEventListener('click', () => {
+      if (selectedCard && selectedCard.id === card.id) {
+        selectedCard = null;
+      } else {
+        selectedCard = { type: 'pool', id: card.id };
+        showToast('Card selected! Click any slot #1 to #10 on the board to place it.');
+      }
+      renderBoard();
+      renderBench();
+    });
+
+    benchPool.appendChild(cardEl);
+  });
+}
+
+/**
+ * Bench Drop Zone Setup (drag slot card back to bench, or drop files)
+ */
+function setupBenchDropZone() {
+  benchPool.addEventListener('dragover', e => {
+    e.preventDefault();
+    benchPool.classList.add('drag-active');
+    e.dataTransfer.dropEffect = 'move';
+  });
+  benchPool.addEventListener('dragleave', e => {
+    if (e.target === benchPool) benchPool.classList.remove('drag-active');
+  });
+  benchPool.addEventListener('drop', async e => {
+    e.preventDefault();
+    benchPool.classList.remove('drag-active');
+
+    // Case 1: Files from desktop
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleFilesUpload(e.dataTransfer.files);
+      return;
+    }
+
+    // Case 2: Slot card returned to bench
+    let data = dragPayload;
+    if (!data) {
+      try {
+        data = JSON.parse(e.dataTransfer.getData('text/plain'));
+      } catch (err) {}
+    }
+    if (!data) return;
+
+    if (data.type === 'rank') {
+      const fromRank = data.rank;
+      if (rankCards[fromRank]) {
+        pool.push({ id: uid(), src: rankCards[fromRank] });
+        delete rankCards[fromRank];
+        dragPayload = null;
+        renderBoard();
+        renderBench();
+        showToast(`Rank #${fromRank} moved back to bench.`);
+      }
+    }
+  });
+}
+
+/**
+ * Background Themes & Color Handlers
+ */
+const THEMES = {
+  'magenta-purple': {
+    bg: 'radial-gradient(circle at 18% 18%, rgba(255, 90, 200, 0.45) 0%, transparent 60%), linear-gradient(135deg, #ff0092 0%, #ea007e 26%, #b500c8 62%, #8200ed 100%)',
+    c1: '#ff0092',
+    c2: '#8200ed'
+  },
+  'deep-violet': {
+    bg: 'radial-gradient(circle at 20% 20%, rgba(200, 50, 255, 0.4) 0%, transparent 60%), linear-gradient(135deg, #a800e0 0%, #6f00c8 50%, #3700b3 100%)',
+    c1: '#a800e0',
+    c2: '#3700b3'
+  },
+  'electric-blue': {
+    bg: 'radial-gradient(circle at 20% 20%, rgba(0, 210, 255, 0.4) 0%, transparent 60%), linear-gradient(135deg, #0052d4 0%, #4364f7 50%, #6fb1fc 100%)',
+    c1: '#0052d4',
+    c2: '#6fb1fc'
+  },
+  'dark-esports': {
+    bg: 'radial-gradient(circle at 50% 10%, rgba(0, 255, 170, 0.15) 0%, transparent 60%), linear-gradient(135deg, #0c1017 0%, #151d2a 60%, #06090e 100%)',
+    c1: '#0c1017',
+    c2: '#06090e'
+  },
+  'fiery-gold': {
+    bg: 'radial-gradient(circle at 20% 20%, rgba(255, 200, 0, 0.4) 0%, transparent 60%), linear-gradient(135deg, #e62200 0%, #f37100 50%, #ffaa00 100%)',
+    c1: '#e62200',
+    c2: '#ffaa00'
+  },
+  'emerald-matrix': {
+    bg: 'radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.4) 0%, transparent 60%), linear-gradient(135deg, #008744 0%, #00b09b 50%, #96c93d 100%)',
+    c1: '#008744',
+    c2: '#96c93d'
+  }
+};
+
+function applyTheme(themeKey) {
+  if (themeKey === 'custom') {
+    customColorWrap.classList.remove('hidden');
+    applyCustomGradient();
+  } else {
+    customColorWrap.classList.add('hidden');
+    const t = THEMES[themeKey] || THEMES['magenta-purple'];
+    rankingBoard.style.background = t.bg;
+    color1Input.value = t.c1;
+    color2Input.value = t.c2;
+  }
+}
+
+function applyCustomGradient() {
+  const c1 = color1Input.value;
+  const c2 = color2Input.value;
+  rankingBoard.style.background = `radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.25) 0%, transparent 60%), linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
+}
+
+themeSelect.addEventListener('change', () => applyTheme(themeSelect.value));
+color1Input.addEventListener('input', applyCustomGradient);
+color2Input.addEventListener('input', applyCustomGradient);
+
+// Badge Color Picker
+badgeColorSelect.addEventListener('change', () => {
+  const col = badgeColorSelect.value;
+  document.documentElement.style.setProperty('--accent-yellow', col);
+  badgeColorSelect.style.color = col;
+});
+
+// Title Synchronization
+titleInput.addEventListener('input', () => {
+  displayTitle.textContent = titleInput.value.trim() || 'Top 10 Best In FC Mobile';
+});
+displayTitle.addEventListener('input', () => {
+  titleInput.value = displayTitle.textContent.trim();
+});
+
+// Quick Position Select
+quickPosSelect.addEventListener('change', () => {
+  const pos = quickPosSelect.value;
+  const newTitle = `Top 10 Best ${pos} In FC Mobile`;
+  titleInput.value = newTitle;
+  displayTitle.textContent = newTitle;
+  showToast(`Updated to ${newTitle}`);
+});
+
+// Clean View Toggle
+const cleanViewBtn = document.getElementById('cleanViewBtn');
+cleanViewBtn.addEventListener('click', () => {
+  isCleanView = !isCleanView;
+  if (isCleanView) {
+    rankingBoard.classList.add('clean-view');
+    cleanViewBtn.textContent = '✏️ EDIT MODE';
+    cleanViewBtn.style.borderColor = '#ffee00';
+    cleanViewBtn.style.color = '#ffee00';
+    showToast('Clean View enabled: Ready to screenshot/preview');
+  } else {
+    rankingBoard.classList.remove('clean-view');
+    cleanViewBtn.textContent = '👁️ CLEAN VIEW';
+    cleanViewBtn.style.borderColor = '';
+    cleanViewBtn.style.color = '';
+    showToast('Edit Mode enabled: Click or drag to add cards');
+  }
+});
+
+// Auto Fill 1-10 Button
+document.getElementById('autoFillBtn').addEventListener('click', () => {
+  if (!pool.length) {
+    showToast('No cards on the bench to auto-fill! Upload pictures first.');
+    return;
+  }
+  let filledCount = 0;
+  for (let rank = 1; rank <= TOTAL_RANKS; rank++) {
+    if (!rankCards[rank] && pool.length > 0) {
+      const nextCard = pool.shift();
+      rankCards[rank] = nextCard.src;
+      filledCount++;
+    }
+  }
+  renderBoard();
+  renderBench();
+  showToast(`Auto-filled ${filledCount} slot(s)!`);
+});
+
+// Clear Board Button (Returns cards to bench)
+document.getElementById('clearBoardBtn').addEventListener('click', () => {
+  const occupied = Object.keys(rankCards).length;
+  if (!occupied) {
+    showToast('Ranking board is already empty.');
+    return;
+  }
+  if (confirm('Return all cards from the ranking board back to the bench?')) {
+    for (let r = 1; r <= TOTAL_RANKS; r++) {
+      if (rankCards[r]) {
+        pool.push({ id: uid(), src: rankCards[r] });
+        delete rankCards[r];
+      }
+    }
+    selectedCard = null;
+    renderBoard();
+    renderBench();
+    showToast('Board reset. Cards returned to bench.');
+  }
+});
+
+// Remove All Custom In-App Modal Dialog
+const removeAllBtn = document.getElementById('removeAllBtn');
+const removeAllModal = document.getElementById('removeAllModal');
+const cancelRemoveAllBtn = document.getElementById('cancelRemoveAllBtn');
+const confirmRemoveAllBtn = document.getElementById('confirmRemoveAllBtn');
+
+if (removeAllBtn && removeAllModal) {
+  removeAllBtn.addEventListener('click', () => {
+    const total = Object.keys(rankCards).length + pool.length;
+    if (!total) {
+      showToast('Ranking board and bench are already empty.');
+      return;
+    }
+    removeAllModal.classList.remove('hidden');
+  });
+
+  cancelRemoveAllBtn.addEventListener('click', () => {
+    removeAllModal.classList.add('hidden');
+  });
+
+  removeAllModal.addEventListener('click', e => {
+    if (e.target === removeAllModal) {
+      removeAllModal.classList.add('hidden');
+    }
+  });
+
+  confirmRemoveAllBtn.addEventListener('click', () => {
+    removeAllModal.classList.add('hidden');
+    rankCards = {};
+    pool = [];
+    selectedCard = null;
+    targetRankForDirectUpload = null;
+    try {
+      localStorage.removeItem('fc_volt_top10_data');
+    } catch(e) {}
+    renderBoard();
+    renderBench();
+    showToast('Removed all cards! Ranking board is now empty.');
+  });
+}
+
+/* ========================================================
+   🪄 REMOVE BACKGROUND & OUTLIERS STUDIO
+   ======================================================== */
+const bgRemoverBtn = document.getElementById('bgRemoverBtn');
+const bgStudioModal = document.getElementById('bgStudioModal');
+const closeBgStudioBtn = document.getElementById('closeBgStudioBtn');
+const bgCloseCancelBtn = document.getElementById('bgCloseCancelBtn');
+const bgCardSelect = document.getElementById('bgCardSelect');
+const loadRonaldoSampleBtn = document.getElementById('loadRonaldoSampleBtn');
+const bgUploadInput = document.getElementById('bgUploadInput');
+const bgTolRange = document.getElementById('bgTolRange');
+const tolValDisplay = document.getElementById('tolValDisplay');
+const bgChokeRange = document.getElementById('bgChokeRange');
+const chokeValDisplay = document.getElementById('chokeValDisplay');
+const bgFeatherRange = document.getElementById('bgFeatherRange');
+const featherValDisplay = document.getElementById('featherValDisplay');
+const bgAutoCropCheck = document.getElementById('bgAutoCropCheck');
+const bgApplyCurrentBtn = document.getElementById('bgApplyCurrentBtn');
+const bgApplyAllPitchBtn = document.getElementById('bgApplyAllPitchBtn');
+const bgDownloadCutoutBtn = document.getElementById('bgDownloadCutoutBtn');
+const bgCanvasContainer = document.getElementById('bgCanvasContainer');
+const bgStudioCanvas = document.getElementById('bgStudioCanvas');
+const canvasInfoBadge = document.getElementById('canvasInfoBadge');
+
+// Mode buttons
+const modeAuto = document.getElementById('modeAuto');
+const modeWhite = document.getElementById('modeWhite');
+const modeBlack = document.getElementById('modeBlack');
+const modeColor = document.getElementById('modeColor');
+
+let studioState = {
+  activeCardType: null, // 'rank' | 'bench' | 'sample' | 'custom'
+  activeCardKey: null,
+  originalImageSrc: null,
+  currentWorkingDataUrl: null,
+  mode: 'auto',
+  tolerance: 0.28,
+  choke: 1,
+  feather: 1,
+  autoCrop: true,
+  pickedColor: { r: 255, g: 255, b: 255 },
+  activeTool: 'pan',
+  eraserSize: 18,
+  zoom: 1,
+  isDrawing: false
+};
+
+function openBgStudioWithCard(type = null, key = null) {
+  populateStudioCardSelect(type, key);
+  bgStudioModal.classList.remove('hidden');
+
+  if (type && key) {
+    loadCardIntoStudio(type, key);
+  } else {
+    const rankKeys = Object.keys(rankCards);
+    if (rankKeys.length > 0) {
+      loadCardIntoStudio('rank', rankKeys[0]);
+    } else if (pool.length > 0) {
+      loadCardIntoStudio('bench', pool[0].id);
+    } else {
+      loadSampleRonaldo();
+    }
+  }
+}
+
+function populateStudioCardSelect(selectedType = null, selectedKey = null) {
+  bgCardSelect.innerHTML = '';
+
+  const rankKeys = Object.keys(rankCards);
+  if (rankKeys.length > 0) {
+    const rankGroup = document.createElement('optgroup');
+    rankGroup.label = '🔟 Ranking Board Cards';
+    rankKeys.sort((a,b) => Number(a)-Number(b)).forEach(rank => {
+      const opt = document.createElement('option');
+      opt.value = `rank_${rank}`;
+      opt.textContent = `Rank #${rank}`;
+      if (selectedType === 'rank' && String(selectedKey) === String(rank)) opt.selected = true;
+      rankGroup.appendChild(opt);
+    });
+    bgCardSelect.appendChild(rankGroup);
+  }
+
+  if (pool.length > 0) {
+    const benchGroup = document.createElement('optgroup');
+    benchGroup.label = '🎴 Bench Tray Cards';
+    pool.forEach((c, idx) => {
+      const opt = document.createElement('option');
+      opt.value = `bench_${c.id}`;
+      opt.textContent = `Bench #${idx + 1}`;
+      if (selectedType === 'bench' && selectedKey === c.id) opt.selected = true;
+      benchGroup.appendChild(opt);
+    });
+    bgCardSelect.appendChild(benchGroup);
+  }
+
+  const sampleGroup = document.createElement('optgroup');
+  sampleGroup.label = '⭐ Reference Samples';
+  const sampleOpt = document.createElement('option');
+  sampleOpt.value = 'sample_ronaldo';
+  sampleOpt.textContent = '⭐ Ronaldo 124 ST (Transparent Reference Card)';
+  if (selectedType === 'sample') sampleOpt.selected = true;
+  sampleGroup.appendChild(sampleOpt);
+  bgCardSelect.appendChild(sampleGroup);
+}
+
+function loadCardIntoStudio(type, key) {
+  studioState.activeCardType = type;
+  studioState.activeCardKey = key;
+
+  if (type === 'rank') {
+    const src = rankCards[key];
+    if (src) {
+      studioState.originalImageSrc = src;
+      bgCardSelect.value = `rank_${key}`;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO RANK #${key}`;
+      runStudioUpdate();
+    }
+  } else if (type === 'bench') {
+    const card = pool.find(c => c.id === key);
+    if (card) {
+      studioState.originalImageSrc = card.src;
+      bgCardSelect.value = `bench_${key}`;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO BENCH CARD`;
+      runStudioUpdate();
+    }
+  } else if (type === 'sample') {
+    loadSampleRonaldo();
+  }
+}
+
+function loadSampleRonaldo() {
+  studioState.activeCardType = 'sample';
+  studioState.activeCardKey = 'ronaldo';
+  studioState.originalImageSrc = 'ronaldo_sample.png';
+  bgCardSelect.value = 'sample_ronaldo';
+  if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY RONALDO TO RANK #1`;
+  runStudioUpdate();
+}
+
+async function runStudioUpdate() {
+  if (!studioState.originalImageSrc) return;
+  canvasInfoBadge.textContent = 'Processing cutout...';
+
+  try {
+    const cleaned = await processImageBackgroundRemoval(studioState.originalImageSrc, {
+      mode: studioState.mode,
+      tolerance: studioState.tolerance,
+      choke: studioState.choke,
+      feather: studioState.feather,
+      crop: studioState.autoCrop,
+      targetColor: studioState.pickedColor
+    });
+
+    studioState.currentWorkingDataUrl = cleaned;
+
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+
+      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Transparent Cutout Ready`;
+    };
+    img.src = cleaned;
+  } catch (err) {
+    console.error('Studio update error:', err);
+    canvasInfoBadge.textContent = 'Error processing image';
+  }
+}
+
+function processImageBackgroundRemoval(imgSource, options = {}) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onerror = reject;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const w = canvas.width;
+      const h = canvas.height;
+      if (w === 0 || h === 0) return resolve(imgSource);
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      const mode = options.mode || 'auto';
+      const tolerance = options.tolerance !== undefined ? options.tolerance : 0.28;
+      const choke = options.choke !== undefined ? options.choke : 1;
+      const crop = options.crop !== undefined ? options.crop : true;
+
+      let tr = 255, tg = 255, tb = 255;
+      if (mode === 'white') {
+        tr = 255; tg = 255; tb = 255;
+      } else if (mode === 'black') {
+        tr = 0; tg = 0; tb = 0;
+      } else if (mode === 'color' && options.targetColor) {
+        tr = options.targetColor.r;
+        tg = options.targetColor.g;
+        tb = options.targetColor.b;
+      } else {
+        const cornerCoords = [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]];
+        let sumR = 0, sumG = 0, sumB = 0, validSamples = 0;
+        cornerCoords.forEach(([cx, cy]) => {
+          const idx = (cy * w + cx) * 4;
+          if (data[idx + 3] > 20) {
+            sumR += data[idx];
+            sumG += data[idx + 1];
+            sumB += data[idx + 2];
+            validSamples++;
+          }
+        });
+        if (validSamples > 0) {
+          tr = Math.round(sumR / validSamples);
+          tg = Math.round(sumG / validSamples);
+          tb = Math.round(sumB / validSamples);
+        }
+      }
+
+      function colorDist(idx) {
+        const dr = data[idx] - tr;
+        const dg = data[idx + 1] - tg;
+        const db = data[idx + 2] - tb;
+        return Math.sqrt(dr * dr + dg * dg + db * db) / 441.673;
+      }
+
+      const visited = new Uint8Array(w * h);
+      const queue = new Int32Array(w * h);
+      let head = 0, tail = 0;
+
+      for (let x = 0; x < w; x++) {
+        [0, h - 1].forEach(y => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+      for (let y = 0; y < h; y++) {
+        [0, w - 1].forEach(x => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+
+      while (head < tail) {
+        const curr = queue[head++];
+        const cx = curr % w;
+        const cy = Math.floor(curr / w);
+
+        const neighbors = [
+          cx > 0 ? curr - 1 : -1,
+          cx < w - 1 ? curr + 1 : -1,
+          cy > 0 ? curr - w : -1,
+          cy < h - 1 ? curr + w : -1
+        ];
+
+        for (let i = 0; i < 4; i++) {
+          const nIdx = neighbors[i];
+          if (nIdx !== -1 && !visited[nIdx]) {
+            const pIdx = nIdx * 4;
+            if (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance) {
+              visited[nIdx] = 1;
+              queue[tail++] = nIdx;
+            }
+          }
+        }
+      }
+
+      for (let i = 0; i < w * h; i++) {
+        if (visited[i]) data[i * 4 + 3] = 0;
+      }
+
+      if (choke > 0) {
+        for (let pass = 0; pass < choke; pass++) {
+          const toErase = [];
+          for (let y = 1; y < h - 1; y++) {
+            for (let x = 1; x < w - 1; x++) {
+              const idx = y * w + x;
+              const pIdx = idx * 4;
+              if (data[pIdx + 3] > 0) {
+                const hasTrans = 
+                  data[(idx - 1) * 4 + 3] === 0 ||
+                  data[(idx + 1) * 4 + 3] === 0 ||
+                  data[(idx - w) * 4 + 3] === 0 ||
+                  data[(idx + w) * 4 + 3] === 0;
+
+                if (hasTrans && colorDist(pIdx) <= tolerance * 1.45) {
+                  toErase.push(pIdx);
+                }
+              }
+            }
+          }
+          toErase.forEach(p => { data[p + 3] = 0; });
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      let outCanvas = canvas;
+      if (crop) {
+        let minX = w, minY = h, maxX = 0, maxY = 0;
+        let hasVisible = false;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const a = data[(y * w + x) * 4 + 3];
+            if (a > 15) {
+              hasVisible = true;
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+        if (hasVisible && (minX > 1 || minY > 1 || maxX < w - 2 || maxY < h - 2)) {
+          const cropW = Math.max(1, maxX - minX + 1);
+          const cropH = Math.max(1, maxY - minY + 1);
+          const croppedCanvas = document.createElement('canvas');
+          croppedCanvas.width = cropW;
+          croppedCanvas.height = cropH;
+          const croppedCtx = croppedCanvas.getContext('2d');
+          croppedCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+          outCanvas = croppedCanvas;
+        }
+      }
+
+      resolve(outCanvas.toDataURL('image/png'));
+    };
+    img.src = imgSource;
+  });
+}
+
+if (bgRemoverBtn) bgRemoverBtn.addEventListener('click', () => openBgStudioWithCard());
+if (closeBgStudioBtn) closeBgStudioBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+if (bgCloseCancelBtn) bgCloseCancelBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+if (bgStudioModal) {
+  bgStudioModal.addEventListener('click', e => {
+    if (e.target === bgStudioModal) bgStudioModal.classList.add('hidden');
+  });
+}
+
+if (bgCardSelect) {
+  bgCardSelect.addEventListener('change', e => {
+    const val = e.target.value;
+    if (val.startsWith('rank_')) {
+      loadCardIntoStudio('rank', val.replace('rank_', ''));
+    } else if (val.startsWith('bench_')) {
+      loadCardIntoStudio('bench', val.replace('bench_', ''));
+    } else if (val === 'sample_ronaldo') {
+      loadSampleRonaldo();
+    }
+  });
+}
+
+function setStudioMode(newMode) {
+  studioState.mode = newMode;
+  [modeAuto, modeWhite, modeBlack, modeColor].forEach(el => {
+    if (el) el.classList.toggle('active', el.dataset.mode === newMode);
+  });
+  runStudioUpdate();
+}
+
+if (modeAuto) modeAuto.addEventListener('click', () => setStudioMode('auto'));
+if (modeWhite) modeWhite.addEventListener('click', () => setStudioMode('white'));
+if (modeBlack) modeBlack.addEventListener('click', () => setStudioMode('black'));
+if (modeColor) modeColor.addEventListener('click', () => setStudioMode('color'));
+
+if (bgTolRange) {
+  bgTolRange.addEventListener('input', e => {
+    studioState.tolerance = parseFloat(e.target.value) / 100;
+    tolValDisplay.textContent = `${e.target.value}%`;
+    runStudioUpdate();
+  });
+}
+if (bgChokeRange) {
+  bgChokeRange.addEventListener('input', e => {
+    studioState.choke = parseInt(e.target.value, 10);
+    chokeValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgFeatherRange) {
+  bgFeatherRange.addEventListener('input', e => {
+    studioState.feather = parseInt(e.target.value, 10);
+    featherValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgAutoCropCheck) {
+  bgAutoCropCheck.addEventListener('change', e => {
+    studioState.autoCrop = e.target.checked;
+    runStudioUpdate();
+  });
+}
+
+if (loadRonaldoSampleBtn) {
+  loadRonaldoSampleBtn.addEventListener('click', () => {
+    loadSampleRonaldo();
+    showToast('Loaded Ronaldo 124 ST reference card!');
+  });
+}
+
+if (bgUploadInput) {
+  bgUploadInput.addEventListener('change', async e => {
+    if (e.target.files && e.target.files.length > 0) {
+      const dataUrl = await compressImageFile(e.target.files[0]);
+      studioState.activeCardType = 'custom';
+      studioState.activeCardKey = 'uploaded_' + Date.now();
+      studioState.originalImageSrc = dataUrl;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = '✅ APPLY TO RANKING';
+      runStudioUpdate();
+      e.target.value = '';
+      showToast('Uploaded image into studio!');
+    }
+  });
+}
+
+const presetCleanWhite = document.getElementById('presetCleanWhite');
+const presetCleanBlack = document.getElementById('presetCleanBlack');
+const presetRevert = document.getElementById('presetRevert');
+
+if (presetCleanWhite) {
+  presetCleanWhite.addEventListener('click', () => {
+    bgTolRange.value = 28;
+    tolValDisplay.textContent = '28%';
+    bgChokeRange.value = 1;
+    chokeValDisplay.textContent = '1 px';
+    setStudioMode('white');
+  });
+}
+if (presetCleanBlack) {
+  presetCleanBlack.addEventListener('click', () => {
+    bgTolRange.value = 28;
+    tolValDisplay.textContent = '28%';
+    bgChokeRange.value = 1;
+    chokeValDisplay.textContent = '1 px';
+    setStudioMode('black');
+  });
+}
+if (presetRevert) {
+  presetRevert.addEventListener('click', () => {
+    if (!studioState.originalImageSrc) return;
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+      studioState.currentWorkingDataUrl = studioState.originalImageSrc;
+      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Reverted Original`;
+      showToast('Reverted to original image.');
+    };
+    img.src = studioState.originalImageSrc;
+  });
+}
+
+['checker', 'stadium', 'black', 'white'].forEach(theme => {
+  const btn = document.querySelector(`.theme-btn[data-stage="${theme}"]`);
+  if (btn) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.theme-btn[data-stage]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      bgCanvasContainer.className = `bg-canvas-container ${theme === 'checker' ? '' : 'theme-' + theme}`;
+    });
+  }
+});
+
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomOutBtn = document.getElementById('zoomOutBtn');
+const zoomResetBtn = document.getElementById('zoomResetBtn');
+const zoomLevelDisplay = document.getElementById('zoomLevelDisplay');
+
+function setStudioZoom(z) {
+  studioState.zoom = Math.max(0.4, Math.min(2.5, z));
+  bgStudioCanvas.style.transform = `scale(${studioState.zoom})`;
+  zoomLevelDisplay.textContent = `${Math.round(studioState.zoom * 100)}%`;
+}
+if (zoomInBtn) zoomInBtn.addEventListener('click', () => setStudioZoom(studioState.zoom + 0.2));
+if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => setStudioZoom(studioState.zoom - 0.2));
+if (zoomResetBtn) zoomResetBtn.addEventListener('click', () => setStudioZoom(1));
+
+const toolPanBtn = document.getElementById('toolPanBtn');
+const toolEyedropperBtn = document.getElementById('toolEyedropperBtn');
+const toolEraserBtn = document.getElementById('toolEraserBtn');
+const eraserSizeWrap = document.getElementById('eraserSizeWrap');
+const eraserSizeRange = document.getElementById('eraserSizeRange');
+const eraserSizeVal = document.getElementById('eraserSizeVal');
+
+function setActiveTool(tool) {
+  studioState.activeTool = tool;
+  toolPanBtn.classList.toggle('active', tool === 'pan');
+  toolEyedropperBtn.classList.toggle('active', tool === 'eyedropper');
+  toolEraserBtn.classList.toggle('active', tool === 'eraser');
+  eraserSizeWrap.style.display = tool === 'eraser' ? 'inline-flex' : 'none';
+
+  if (tool === 'eyedropper') {
+    bgStudioCanvas.style.cursor = 'crosshair';
+  } else if (tool === 'eraser') {
+    bgStudioCanvas.style.cursor = 'cell';
+  } else {
+    bgStudioCanvas.style.cursor = 'default';
+  }
+}
+
+if (toolPanBtn) toolPanBtn.addEventListener('click', () => setActiveTool('pan'));
+if (toolEyedropperBtn) toolEyedropperBtn.addEventListener('click', () => setActiveTool('eyedropper'));
+if (toolEraserBtn) toolEraserBtn.addEventListener('click', () => setActiveTool('eraser'));
+if (eraserSizeRange) {
+  eraserSizeRange.addEventListener('input', e => {
+    studioState.eraserSize = parseInt(e.target.value, 10);
+    eraserSizeVal.textContent = `${e.target.value}px`;
+  });
+}
+
+function getCanvasPos(e) {
+  const rect = bgStudioCanvas.getBoundingClientRect();
+  const scaleX = bgStudioCanvas.width / rect.width;
+  const scaleY = bgStudioCanvas.height / rect.height;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: Math.round((clientX - rect.left) * scaleX),
+    y: Math.round((clientY - rect.top) * scaleY)
+  };
+}
+
+bgStudioCanvas.addEventListener('mousedown', e => {
+  if (studioState.activeTool === 'eyedropper') {
+    const pos = getCanvasPos(e);
+    const ctx = bgStudioCanvas.getContext('2d');
+    const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+    studioState.pickedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
+    setStudioMode('color');
+    showToast(`Sampled color: rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`);
+    setActiveTool('pan');
+  } else if (studioState.activeTool === 'eraser') {
+    studioState.isDrawing = true;
+    eraseAt(e);
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  if (studioState.isDrawing) {
+    studioState.isDrawing = false;
+    studioState.currentWorkingDataUrl = bgStudioCanvas.toDataURL('image/png');
+  }
+});
+
+bgStudioCanvas.addEventListener('mousemove', e => {
+  if (studioState.isDrawing && studioState.activeTool === 'eraser') {
+    eraseAt(e);
+  }
+});
+
+function eraseAt(e) {
+  const pos = getCanvasPos(e);
+  const ctx = bgStudioCanvas.getContext('2d');
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, studioState.eraserSize, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+if (bgApplyCurrentBtn) {
+  bgApplyCurrentBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) return;
+
+    if (studioState.activeCardType === 'rank' && studioState.activeCardKey) {
+      rankCards[studioState.activeCardKey] = studioState.currentWorkingDataUrl;
+      renderBoard();
+      showToast(`Applied clean card to Rank #${studioState.activeCardKey}!`);
+    } else if (studioState.activeCardType === 'bench' && studioState.activeCardKey) {
+      const idx = pool.findIndex(c => c.id === studioState.activeCardKey);
+      if (idx !== -1) {
+        pool[idx].src = studioState.currentWorkingDataUrl;
+        renderBench();
+        showToast('Applied clean card to bench!');
+      }
+    } else {
+      const targetRank = (selectedCard && selectedCard.type === 'rank') ? selectedCard.rank : 1;
+      rankCards[targetRank] = studioState.currentWorkingDataUrl;
+      renderBoard();
+      showToast(`Placed clean card at Rank #${targetRank}!`);
+    }
+
+    bgStudioModal.classList.add('hidden');
+  });
+}
+
+if (bgApplyAllPitchBtn) {
+  bgApplyAllPitchBtn.addEventListener('click', async () => {
+    const keys = Object.keys(rankCards);
+    if (keys.length === 0) {
+      showToast('No cards on the ranking board to clean! Place cards first.');
+      return;
+    }
+
+    showToast(`Cleaning background & outliers for ${keys.length} ranking cards...`);
+
+    for (let i = 0; i < keys.length; i++) {
+      const rank = keys[i];
+      try {
+        const cleaned = await processImageBackgroundRemoval(rankCards[rank], {
+          mode: studioState.mode,
+          tolerance: studioState.tolerance,
+          choke: studioState.choke,
+          feather: studioState.feather,
+          crop: studioState.autoCrop,
+          targetColor: studioState.pickedColor
+        });
+        rankCards[rank] = cleaned;
+      } catch (err) {
+        console.error(`Error cleaning Rank #${rank}:`, err);
+      }
+    }
+
+    renderBoard();
+    bgStudioModal.classList.add('hidden');
+    showToast(`✨ Cleaned all ${keys.length} cards on the ranking board!`);
+  });
+}
+
+if (bgDownloadCutoutBtn) {
+  bgDownloadCutoutBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) return;
+    const a = document.createElement('a');
+    a.download = `FC_VOLT_ranking_card_${Date.now()}.png`;
+    a.href = studioState.currentWorkingDataUrl;
+    a.click();
+    showToast('Downloaded transparent PNG card!');
+  });
+}
+
+// Clear Bench Button
+document.getElementById('clearBenchBtn').addEventListener('click', () => {
+  if (!pool.length) {
+    showToast('Bench is already empty.');
+    return;
+  }
+  if (confirm('Clear all cards from the bench?')) {
+    pool = [];
+    selectedCard = null;
+    renderBench();
+    showToast('Bench cleared.');
+  }
+});
+
+// Save & Load
+function saveRanking() {
+  try {
+    const data = {
+      title: titleInput.value.trim(),
+      rankCards,
+      pool,
+      theme: themeSelect.value,
+      badgeColor: badgeColorSelect.value,
+      c1: color1Input.value,
+      c2: color2Input.value
+    };
+    localStorage.setItem('fcvolt_top10_save', JSON.stringify(data));
+    showToast('Ranking saved in browser!');
+  } catch (err) {
+    console.error('Storage error:', err);
+    showToast('Storage full! Clear old images or compress.');
+  }
+}
+document.getElementById('saveBtn').addEventListener('click', saveRanking);
+
+function loadRanking() {
+  try {
+    const raw = localStorage.getItem('fcvolt_top10_save');
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (data) {
+        if (data.title) {
+          titleInput.value = data.title;
+          displayTitle.textContent = data.title;
+        }
+        if (data.rankCards) rankCards = data.rankCards;
+        if (data.pool) pool = data.pool;
+        if (data.theme) {
+          themeSelect.value = data.theme;
+          applyTheme(data.theme);
+        }
+        if (data.badgeColor) {
+          badgeColorSelect.value = data.badgeColor;
+          document.documentElement.style.setProperty('--accent-yellow', data.badgeColor);
+          badgeColorSelect.style.color = data.badgeColor;
+        }
+        if (data.c1 && data.c2) {
+          color1Input.value = data.c1;
+          color2Input.value = data.c2;
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Error loading ranking:', err);
+  }
+
+  // If no cards were saved yet, load the 10 demo CB cards by default!
+  const hasCards = Object.keys(rankCards).length > 0;
+  if (!hasCards) {
+    loadDemoCBs(true);
+  }
+
+  renderBoard();
+  renderBench();
+}
+
+// File Upload Event Listeners
+multiUploadInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files.length > 0) {
+    await handleFilesUpload(e.target.files);
+    e.target.value = '';
+  }
+});
+
+singleSlotUploadInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files.length > 0) {
+    await handleFilesUpload(e.target.files, targetRankForDirectUpload);
+    targetRankForDirectUpload = null;
+    e.target.value = '';
+  }
+});
+
+// HIGH-RESOLUTION PNG EXPORT (html2canvas)
+document.getElementById('exportBtn').addEventListener('click', async () => {
+  showToast('Generating high-resolution PNG image...');
+
+  // Temporarily hide edit overlays and empty slot placeholders
+  const emptyHolders = rankingBoard.querySelectorAll('.card-slot.empty .slot-empty-content');
+  const slotControls = rankingBoard.querySelectorAll('.slot-controls');
+  emptyHolders.forEach(el => el.style.opacity = '0');
+  slotControls.forEach(el => el.style.display = 'none');
+
+  try {
+    const canvas = await html2canvas(rankingBoard, {
+      scale: 2.5, // Crisp 2.5x retina export
+      useCORS: true,
+      backgroundColor: null,
+      logging: false
+    });
+
+    const link = document.createElement('a');
+    const safeTitle = (titleInput.value.trim() || 'Top10').replace(/[^a-z0-9_-]/gi, '_');
+    link.download = `FC_VOLT_${safeTitle}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    showToast('Downloaded High-Res PNG Image!');
+  } catch (err) {
+    console.error('Export error:', err);
+    showToast('Export failed. Try taking a screenshot or print to PDF.');
+  } finally {
+    emptyHolders.forEach(el => el.style.opacity = '');
+    slotControls.forEach(el => el.style.display = '');
+  }
+});
+
+// HIGH-RESOLUTION PDF EXPORT (jspdf + html2canvas)
+document.getElementById('pdfBtn').addEventListener('click', async () => {
+  showToast('Generating high-resolution PDF document...');
+
+  const emptyHolders = rankingBoard.querySelectorAll('.card-slot.empty .slot-empty-content');
+  const slotControls = rankingBoard.querySelectorAll('.slot-controls');
+  emptyHolders.forEach(el => el.style.opacity = '0');
+  slotControls.forEach(el => el.style.display = 'none');
+
+  try {
+    const canvas = await html2canvas(rankingBoard, {
+      scale: 2.5,
+      useCORS: true,
+      backgroundColor: null,
+      logging: false
+    });
+
+    const { jsPDF } = window.jspdf;
+    const imgWidth = canvas.width;
+    const imgHeight = canvas.height;
+
+    // Landscape A4 (297 x 210 mm)
+    const pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    // Fill dark sleek page background
+    pdf.setFillColor(4, 6, 10);
+    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+
+    // Scale to fit landscape page with 10mm margin
+    const margin = 10;
+    const maxW = pageWidth - (margin * 2);
+    const maxH = pageHeight - (margin * 2);
+    const ratio = Math.min(maxW / imgWidth, maxH / imgHeight);
+    const renderW = imgWidth * ratio;
+    const renderH = imgHeight * ratio;
+    const posX = (pageWidth - renderW) / 2;
+    const posY = (pageHeight - renderH) / 2;
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    pdf.addImage(imgData, 'JPEG', posX, posY, renderW, renderH);
+
+    const safeTitle = (titleInput.value.trim() || 'Top10').replace(/[^a-z0-9_-]/gi, '_');
+    pdf.save(`FC_VOLT_${safeTitle}.pdf`);
+    showToast('Downloaded High-Res PDF Document!');
+  } catch (err) {
+    console.error('PDF error:', err);
+    showToast('PDF export failed. You can use PRINT to save as PDF.');
+  } finally {
+    emptyHolders.forEach(el => el.style.opacity = '');
+    slotControls.forEach(el => el.style.display = '');
+  }
+});
+
+// Print / Save as PDF Button
+document.getElementById('printBtn').addEventListener('click', () => {
+  window.print();
+});
+
+/**
+ * 10 CB Realistic FC Mobile Demo Cards (Matching Screenshot)
+ * Lúcio, Van Dijk, Maldini, Baresi, Blanc, Beckenbauer, Varane, Chiellini, Desailly, Barzagli
+ */
+function loadDemoCBs(silent = false) {
+  const demoCBs = [
+    { rank: 1, name: 'LÚCIO', ovr: '122', nation: '🇧🇷', club: 'Inter', cardType: 'HERO', col1: '#ff0055', col2: '#770022', badge: '🛡️' },
+    { rank: 2, name: 'VAN DIJK', ovr: '122', nation: '🇳🇱', club: 'Liverpool', cardType: 'TOTS', col1: '#d00000', col2: '#550000', badge: '🦁' },
+    { rank: 3, name: 'MALDINI', ovr: '120', nation: '🇮🇹', club: 'Milan', cardType: 'ICON', col1: '#ffd700', col2: '#0055ff', badge: '👑' },
+    { rank: 4, name: 'BARESI', ovr: '122', nation: '🇮🇹', club: 'Milan', cardType: 'ICON', col1: '#cc0022', col2: '#222222', badge: '⭐' },
+    { rank: 5, name: 'BLANC', ovr: '122', nation: '🇫🇷', club: 'France', cardType: 'ICON', col1: '#ffffff', col2: '#0033aa', badge: '⚡' },
+    { rank: 6, name: 'BECKENBAUER', ovr: '124', nation: '🇩🇪', club: 'Bayern', cardType: 'DER KAISER', col1: '#c0a040', col2: '#2a200a', badge: '🦅' },
+    { rank: 7, name: 'VARANE', ovr: '122', nation: '🇫🇷', club: 'Madrid', cardType: 'CHAMPION', col1: '#ff8800', col2: '#aa0000', badge: '🔥' },
+    { rank: 8, name: 'CHIELLINI', ovr: '122', nation: '🇮🇹', club: 'Juventus', cardType: 'GLADIATOR', col1: '#222222', col2: '#555555', badge: '⚔️' },
+    { rank: 9, name: 'DESAILLY', ovr: '121', nation: '🇫🇷', club: 'Chelsea', cardType: 'THE ROCK', col1: '#0044ff', col2: '#001166', badge: '💎' },
+    { rank: 10, name: 'BARZAGLI', ovr: '121', nation: '🇮🇹', club: 'Juventus', cardType: 'WALL', col1: '#e5c158', col2: '#33290b', badge: '🏰' }
+  ];
+
+  demoCBs.forEach(cb => {
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="200" height="270" viewBox="0 0 200 270">
+        <defs>
+          <linearGradient id="g_${cb.rank}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${cb.col1}" />
+            <stop offset="100%" stop-color="${cb.col2}" />
+          </linearGradient>
+          <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fff2a1"/>
+            <stop offset="40%" stop-color="#d4af37"/>
+            <stop offset="70%" stop-color="#aa771c"/>
+            <stop offset="100%" stop-color="#fdf6c7"/>
+          </linearGradient>
+          <radialGradient id="cardGlow_${cb.rank}" cx="50%" cy="40%" r="55%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0.75"/>
+          </radialGradient>
+        </defs>
+
+        <!-- FC Mobile Shield Card Body -->
+        <path d="M 20 16 L 180 16 Q 186 16 186 22 L 186 200 Q 186 235 100 262 Q 14 235 14 200 L 14 22 Q 14 16 20 16 Z" 
+              fill="url(#g_${cb.rank})" stroke="url(#goldBorder)" stroke-width="4.5" />
+        <path d="M 20 16 L 180 16 Q 186 16 186 22 L 186 200 Q 186 235 100 262 Q 14 235 14 200 L 14 22 Q 14 16 20 16 Z" 
+              fill="url(#cardGlow_${cb.rank})" />
+
+        <!-- Card Type / Promo Banner -->
+        <rect x="26" y="24" width="70" height="15" rx="3" fill="#00000088" />
+        <text x="61" y="35" font-family="'Montserrat', sans-serif" font-size="8.5" font-weight="900" fill="#ffd700" text-anchor="middle" letter-spacing="1">${cb.cardType}</text>
+
+        <!-- Rating, Position, Flag -->
+        <text x="28" y="68" font-family="'Titan One', sans-serif" font-size="34" font-weight="900" fill="#ffffff" letter-spacing="-1">${cb.ovr}</text>
+        <text x="28" y="88" font-family="'Montserrat', sans-serif" font-size="16" font-weight="900" fill="#ffffff" opacity="0.95">CB</text>
+        <text x="28" y="108" font-size="16">${cb.nation}</text>
+
+        <!-- Player Graphic Avatar / Silhouette -->
+        <circle cx="125" cy="98" r="42" fill="#ffffff" opacity="0.18" />
+        <path d="M 95 170 C 95 125, 155 125, 155 170 Z" fill="#ffffff" opacity="0.25" />
+        <text x="125" y="108" font-size="38" text-anchor="middle">${cb.badge}</text>
+
+        <!-- Name Banner -->
+        <rect x="22" y="180" width="156" height="30" rx="5" fill="#03060acc" stroke="url(#goldBorder)" stroke-width="1.2" />
+        <text x="100" y="200" font-family="'Titan One', 'Montserrat', sans-serif" font-size="14.5" font-weight="900" text-anchor="middle" fill="#ffffff" letter-spacing="1.2">${cb.name}</text>
+
+        <!-- Bottom Club & Tier Ribbon -->
+        <text x="100" y="232" font-family="'Montserrat', sans-serif" font-size="9" font-weight="800" text-anchor="middle" fill="#ffe600" letter-spacing="1.5">FC MOBILE • SPECIAL</text>
+      </svg>
+    `;
+
+    const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.trim());
+    rankCards[cb.rank] = dataUrl;
+  });
+
+  if (!silent) {
+    titleInput.value = 'Top 10 Best CB In FC Mobile';
+    displayTitle.textContent = 'Top 10 Best CB In FC Mobile';
+    quickPosSelect.value = 'CB';
+    renderBoard();
+    showToast('10 CB cards loaded matching the screenshot!');
+  }
+}
+
+document.getElementById('demoBtn').addEventListener('click', () => {
+  loadDemoCBs(false);
+});
+
+// Initialize on Load
+setupBenchDropZone();
+loadRanking();
+</script>
+</body>
+</html>

@@ -1,0 +1,3830 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FC_VOLT — Best Team 11 Squad Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Montserrat:ital,wght@0,700;0,800;0,900;1,900&family=Outfit:wght@700;800;900&family=Teko:wght@600;700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #05070c;
+    --panel-bg: #0b111a;
+    --panel-border: #1a273b;
+    --accent-gold: #ffdd00;
+    --accent-green: #00e676;
+    --accent-blue: #00b4d8;
+    --accent-pink: #ff007f;
+    --card-w: 154px;
+    --card-h: 206px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #030508;
+    color: #f0f4fc;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  body {
+    padding: 12px;
+    background: radial-gradient(ellipse at 50% 0%, #101a2e 0%, #030509 75%);
+    background-attachment: fixed;
+  }
+  .app-container {
+    max-width: 1360px;
+    margin: 0 auto;
+  }
+
+  /* TOP TOOLBAR */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: rgba(11, 17, 27, 0.92);
+    border: 1px solid #1c2b40;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    margin-bottom: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  }
+  .brand-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brandmark {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #00e676, #00b4d8);
+    color: #050608;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 24px;
+    font-style: italic;
+    box-shadow: 0 0 20px rgba(0, 230, 118, 0.45);
+    user-select: none;
+  }
+  .brand-area h1 {
+    font-size: 19px;
+    letter-spacing: 2px;
+    margin: 0;
+    font-weight: 900;
+    background: linear-gradient(90deg, #ffffff, #a8d5ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .brand-area small {
+    display: block;
+    color: #00e676;
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+
+  /* TEMPLATE SWITCHER TABS */
+  .template-nav {
+    display: flex;
+    background: #080d16;
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid #1c2738;
+    gap: 4px;
+  }
+  .nav-tab {
+    padding: 7px 13px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #8c9eb5;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.16s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+  }
+  .nav-tab:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .nav-tab.active {
+    background: linear-gradient(135deg, #00e676, #00a2ff);
+    color: #040912;
+    box-shadow: 0 2px 10px rgba(0, 230, 118, 0.45);
+    font-weight: 900;
+  }
+
+  /* ACTIONS & BUTTONS */
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  button, .btn {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: 1px solid #23354d;
+    background: #101726;
+    color: #e4edf8;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  button:hover, .btn:hover {
+    background: #19263e;
+    border-color: #00e676;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(0, 230, 118, 0.25);
+    transform: translateY(-1px);
+  }
+  button:active, .btn:active { transform: translateY(0); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #00e676, #00a2ff);
+    color: #040912;
+    border: none;
+    font-weight: 900;
+    box-shadow: 0 0 14px rgba(0, 230, 118, 0.4);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #26ff91, #24b2ff);
+    box-shadow: 0 0 20px rgba(0, 230, 118, 0.65);
+    color: #000;
+  }
+
+  .btn-demo {
+    background: linear-gradient(135deg, #ff007f, #9400d3);
+    color: #fff;
+    border: none;
+    font-weight: 900;
+    box-shadow: 0 0 14px rgba(255, 0, 127, 0.4);
+  }
+  .btn-demo:hover {
+    background: linear-gradient(135deg, #ff2a96, #b11aff);
+    box-shadow: 0 0 20px rgba(255, 0, 127, 0.7);
+    color: #fff;
+  }
+
+  .btn-export {
+    background: linear-gradient(135deg, #ffee00, #ff8800);
+    color: #000;
+    border: none;
+    box-shadow: 0 0 14px rgba(255, 238, 0, 0.4);
+    font-weight: 900;
+  }
+  .btn-export:hover {
+    background: linear-gradient(135deg, #ffff33, #ff9900);
+    box-shadow: 0 0 22px rgba(255, 238, 0, 0.7);
+    color: #000;
+  }
+
+  .btn-pdf {
+    background: linear-gradient(135deg, #00d2ff, #0066ff);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 0 14px rgba(0, 210, 255, 0.4);
+    font-weight: 900;
+  }
+  .btn-pdf:hover {
+    background: linear-gradient(135deg, #33dcff, #1a75ff);
+    box-shadow: 0 0 22px rgba(0, 210, 255, 0.7);
+    color: #ffffff;
+  }
+
+  .btn-danger {
+    background: #1a0a10;
+    border-color: #44141f;
+    color: #ff6677;
+  }
+  .btn-danger:hover {
+    background: #2b0e17;
+    border-color: #ff3344;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 51, 68, 0.35);
+  }
+  .btn-remove-all {
+    background: linear-gradient(135deg, #2e0915 0%, #17040a 100%);
+    border: 1.5px solid #ff2a55;
+    color: #ff6688;
+    font-weight: 900;
+  }
+  .btn-remove-all:hover {
+    background: linear-gradient(135deg, #ff1a44 0%, #c40026 100%);
+    border-color: #ff4466;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(255, 26, 68, 0.55);
+    transform: translateY(-1px);
+  }
+
+  .btn-bg-remover {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: #ffffff;
+    border: 1.5px solid #c084fc;
+    font-weight: 900;
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.45);
+  }
+  .btn-bg-remover:hover {
+    background: linear-gradient(135deg, #a855f7 0%, #818cf8 100%);
+    border-color: #e9d5ff;
+    color: #ffffff;
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.7);
+    transform: translateY(-1px);
+  }
+
+  /* CUSTOM IN-APP CONFIRMATION MODAL */
+  .custom-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 5, 10, 0.88);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  }
+  .custom-modal-backdrop.hidden {
+    display: none !important;
+  }
+  .custom-modal {
+    background: #0d1422;
+    border: 1.5px solid #ff2a55;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.85), 0 0 30px rgba(255, 42, 85, 0.35);
+    border-radius: 16px;
+    padding: 26px 28px;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    animation: modalPop 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  @keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-icon {
+    font-size: 38px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 10px rgba(255, 42, 85, 0.5));
+  }
+  .custom-modal h3 {
+    margin: 0 0 8px;
+    font-family: 'Titan One', 'Montserrat', sans-serif;
+    font-size: 21px;
+    color: #ffffff;
+    letter-spacing: 0.8px;
+  }
+  .custom-modal p {
+    margin: 0 0 22px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #9cb0cc;
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .modal-btn-cancel {
+    background: #151e2e;
+    border: 1px solid #293a52;
+    color: #ccd9eb;
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal-btn-cancel:hover {
+    background: #1f2b40;
+    color: #fff;
+    border-color: #3b506e;
+  }
+  .modal-btn-confirm {
+    background: linear-gradient(135deg, #ff1a44, #c40026);
+    border: 1px solid #ff4466;
+    color: #ffffff;
+    padding: 10px 22px;
+    font-size: 12px;
+    font-weight: 900;
+    border-radius: 8px;
+    box-shadow: 0 0 16px rgba(255, 26, 68, 0.5);
+    cursor: pointer;
+  }
+  .modal-btn-confirm:hover {
+    background: linear-gradient(135deg, #ff335a, #e6002e);
+    box-shadow: 0 0 24px rgba(255, 26, 68, 0.8);
+    transform: translateY(-1px);
+    color: #fff;
+  }
+
+  /* ========================================================
+     REMOVE BACKGROUND STUDIO MODAL STYLES
+     ======================================================== */
+  .bg-studio-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 12, 0.92);
+    backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    padding: 16px;
+  }
+  .bg-studio-backdrop.hidden {
+    display: none !important;
+  }
+  .bg-studio-modal {
+    background: #080d16;
+    border: 1.5px solid #a855f7;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(168, 85, 247, 0.35);
+    border-radius: 18px;
+    width: 1040px;
+    max-width: 96vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  .bg-studio-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: #0d1524;
+    border-bottom: 1px solid #1f2b40;
+  }
+  .bg-studio-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bg-studio-title h3 {
+    margin: 0;
+    font-family: 'Titan One', 'Montserrat', sans-serif;
+    font-size: 19px;
+    letter-spacing: 0.8px;
+    background: linear-gradient(90deg, #c084fc, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .bg-studio-title small {
+    display: block;
+    color: #8fa5c5;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .bg-studio-close {
+    background: #141f30;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    line-height: 1;
+    padding: 0;
+  }
+  .bg-studio-close:hover {
+    background: #ff2a55;
+    border-color: #ff4466;
+    color: #fff;
+    transform: scale(1.1);
+  }
+
+  .bg-studio-body {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+  @media (max-width: 860px) {
+    .bg-studio-body {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* LEFT PREVIEW STAGE */
+  .bg-preview-stage {
+    background: #060a12;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-right: 1px solid #1a2436;
+    gap: 12px;
+  }
+  .bg-canvas-container {
+    flex: 1;
+    width: 100%;
+    min-height: 320px;
+    max-height: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 12px;
+    border: 1px solid #1e2c42;
+    overflow: hidden;
+    /* Dark checkered transparency pattern */
+    background-color: #0c121d;
+    background-image: 
+      linear-gradient(45deg, #151e2c 25%, transparent 25%),
+      linear-gradient(-45deg, #151e2c 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #151e2c 75%),
+      linear-gradient(-45deg, transparent 75%, #151e2c 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    transition: background 0.2s ease;
+  }
+  .bg-canvas-container.theme-stadium {
+    background: url('stadium_pitch.jpg') center/cover no-repeat !important;
+  }
+  .bg-canvas-container.theme-black {
+    background: #000000 !important;
+  }
+  .bg-canvas-container.theme-white {
+    background: #ffffff !important;
+  }
+
+  #bgStudioCanvas {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.85));
+    transition: transform 0.1s ease;
+    cursor: crosshair;
+  }
+
+  .canvas-stage-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #0c1320;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #1a2538;
+  }
+  .stage-theme-toggles {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .theme-btn {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 5px;
+    background: #151e2e;
+    border: 1px solid #25354c;
+    color: #9cb1cb;
+    cursor: pointer;
+  }
+  .theme-btn.active {
+    background: #c084fc;
+    color: #040810;
+    border-color: #d8b4fe;
+    font-weight: 900;
+  }
+  .zoom-toggles {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #9cb1cb;
+    font-weight: 700;
+  }
+  .zoom-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 4px;
+    background: #151e2e;
+    border: 1px solid #25354c;
+    color: #cbd5e1;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  /* RIGHT CONTROLS PANEL */
+  .bg-controls-panel {
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+  }
+  .bg-section-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #c084fc;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .card-picker-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .card-picker-select {
+    flex: 1;
+    background: #101726;
+    border: 1.5px solid #2c3c54;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    outline: none;
+  }
+  .btn-sample-card {
+    background: linear-gradient(135deg, #d4af37, #996515);
+    color: #000;
+    font-weight: 900;
+    border: 1px solid #fff2a1;
+    font-size: 11px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  /* REMOVAL MODE CARDS */
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .mode-card {
+    background: #101726;
+    border: 1.5px solid #1f2c40;
+    border-radius: 8px;
+    padding: 9px 10px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .mode-card:hover {
+    border-color: #a855f7;
+    background: #141e32;
+  }
+  .mode-card.active {
+    border-color: #c084fc;
+    background: rgba(168, 85, 247, 0.16);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+  }
+  .mode-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .mode-desc {
+    font-size: 9.5px;
+    color: #8c9eb5;
+    line-height: 1.3;
+  }
+
+  /* SLIDERS */
+  .slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 7px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    color: #cbd5e1;
+  }
+  .slider-val {
+    color: #c084fc;
+    font-weight: 900;
+  }
+  .bg-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #1a2538;
+    outline: none;
+  }
+  .bg-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #c084fc;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
+    border: 1.5px solid #fff;
+  }
+
+  /* TOUCH UP TOOLS */
+  .touchup-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #0f1624;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid #1e2c40;
+    width: 100%;
+  }
+  .touchup-btn {
+    padding: 5px 9px;
+    font-size: 10.5px;
+    font-weight: 800;
+    border-radius: 6px;
+    background: #162032;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .touchup-btn.active {
+    background: #9333ea;
+    border-color: #c084fc;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+  }
+
+  /* STUDIO FOOTER ACTIONS */
+  .bg-studio-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 22px;
+    background: #0b111c;
+    border-top: 1px solid #1a2538;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .footer-actions-left {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .footer-actions-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn-apply-one {
+    background: linear-gradient(135deg, #00e676, #00b4d8);
+    color: #030810;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 14px rgba(0, 230, 118, 0.4);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-apply-all {
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    color: #ffffff;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.45);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-download-cutout {
+    background: #151e2e;
+    border: 1px solid #2b3e59;
+    color: #cbd5e1;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .btn-reset-original {
+    background: #1c1117;
+    border: 1px solid #3d1a25;
+    color: #ff8899;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  /* CUSTOMIZATION CONTROLS BAR */
+  .controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: #090e17;
+    border: 1px solid #19273c;
+    border-radius: 10px;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    color: #9cb0cc;
+  }
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .control-group label {
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: #7b8fa8;
+    text-transform: uppercase;
+    font-size: 10px;
+  }
+  .custom-input, .custom-select {
+    background: #0f1624;
+    border: 1px solid #23354d;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  .custom-input:focus, .custom-select:focus {
+    border-color: #00e676;
+  }
+  .custom-select {
+    cursor: pointer;
+    font-weight: 800;
+    color: #00e676;
+  }
+  .custom-select option {
+    background: #0b111a;
+    color: #fff;
+  }
+
+  /* ========================================================
+     PITCH ARENA (The Football Field & Stadium Backdrop)
+     ======================================================== */
+  .arena-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 14px;
+    user-select: none;
+  }
+
+  .squad-pitch-container {
+    width: 100%;
+    max-width: 1240px;
+    min-height: 960px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 230, 118, 0.15);
+    border: 1px solid #22374e;
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 20px 30px;
+  }
+
+  /* Default Stadium Background */
+  .theme-stadium {
+    background-image: 
+      radial-gradient(circle at 50% 15%, rgba(0, 230, 118, 0.12) 0%, transparent 60%),
+      radial-gradient(circle at 50% 0%, rgba(0, 162, 255, 0.2) 0%, transparent 50%),
+      url('stadium_pitch.jpg');
+    background-color: #07121c;
+  }
+  .theme-emerald {
+    background: 
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, #186828 0px, #186828 40px, #1c732c 40px, #1c732c 80px);
+  }
+  .theme-neon {
+    background: 
+      radial-gradient(circle at 50% 30%, rgba(0, 230, 118, 0.2) 0%, transparent 60%),
+      linear-gradient(180deg, #07101e 0%, #062b1b 45%, #051a14 100%);
+  }
+  .theme-galaxy {
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(255, 0, 128, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(0, 162, 255, 0.3) 0%, transparent 50%),
+      linear-gradient(135deg, #060919 0%, #170d30 50%, #051824 100%);
+  }
+  .theme-champions {
+    background: 
+      radial-gradient(circle at 50% 10%, rgba(255, 221, 0, 0.25) 0%, transparent 65%),
+      linear-gradient(180deg, #091322 0%, #0c203b 50%, #071526 100%);
+  }
+
+  /* Pitch Lines Vector Overlay */
+  .pitch-lines-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.65;
+    transition: opacity 0.2s ease;
+  }
+
+  /* TOP HEADER BAR ON PITCH */
+  .pitch-header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 20px;
+    background: rgba(4, 9, 16, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    backdrop-filter: blur(14px);
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .team-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .team-title {
+    font-family: 'Titan One', 'Montserrat', sans-serif;
+    font-size: 26px;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0, 230, 118, 0.4);
+    cursor: text;
+    outline: none;
+  }
+  .formation-badge {
+    background: linear-gradient(135deg, #00e676, #00a2ff);
+    color: #03080e;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(0, 230, 118, 0.4);
+  }
+  .team-ovr-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ovr-shield {
+    background: linear-gradient(135deg, #ffd700, #ff8800);
+    color: #000;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: 'Titan One', sans-serif;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 0 16px rgba(255, 215, 0, 0.5);
+    border: 1px solid #fff275;
+  }
+  .ovr-shield small {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: #3b2200;
+  }
+
+  /* PITCH SQUAD BOARD (11 Positions Grid) */
+  .pitch-squad-board {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px 0 20px;
+    gap: 22px;
+  }
+
+  /* TACTICAL ROWS */
+  .formation-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 28px;
+    position: relative;
+  }
+  .row-attackers { gap: 76px; margin-top: 6px; }
+  .row-midfield { gap: 54px; margin-top: 14px; margin-bottom: 6px; }
+  .row-defenders { gap: 24px; margin-top: 14px; margin-bottom: 6px; }
+  .row-gk { gap: 0; margin-bottom: 22px; }
+
+  /* Slightly lift CAM in 4-3-3 Attack */
+  .formation-row .cam-slot-offset {
+    margin-top: -18px;
+  }
+
+  /* ========================================================
+     PLAYER CARD SLOT (Each of the 11 Positions)
+     ======================================================== */
+  .player-slot {
+    width: var(--card-w);
+    height: var(--card-h);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    transition: transform 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  .player-slot:hover {
+    transform: translateY(-4px) scale(1.03);
+    z-index: 20;
+  }
+
+  /* EMPTY SLOT STYLING */
+  .player-slot.empty {
+    border: 2px dashed rgba(0, 230, 118, 0.55);
+    background: radial-gradient(circle at 50% 50%, rgba(4, 18, 22, 0.75) 0%, rgba(2, 8, 12, 0.9) 100%);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6), inset 0 0 14px rgba(0, 230, 118, 0.15);
+    backdrop-filter: blur(8px);
+  }
+  .player-slot.empty:hover {
+    border-color: #00e676;
+    box-shadow: 0 0 22px rgba(0, 230, 118, 0.45), inset 0 0 20px rgba(0, 230, 118, 0.25);
+  }
+  .player-slot.empty.drag-over {
+    border-color: #ffd700;
+    transform: scale(1.08);
+    box-shadow: 0 0 28px rgba(255, 215, 0, 0.7);
+  }
+  .player-slot.empty.target-selected {
+    border-color: #ffd700;
+    box-shadow: 0 0 26px rgba(255, 215, 0, 0.6);
+    animation: pulseBorder 1.2s infinite;
+  }
+  @keyframes pulseBorder {
+    0%, 100% { border-color: #ffd700; }
+    50% { border-color: #00e676; }
+  }
+
+  .slot-empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+    padding: 8px;
+  }
+  .slot-empty-content .plus-icon {
+    font-size: 32px;
+    font-weight: 900;
+    color: #00e676;
+    line-height: 1;
+    margin-bottom: 5px;
+    text-shadow: 0 0 12px rgba(0, 230, 118, 0.6);
+  }
+  .slot-empty-content .slot-action {
+    font-size: 11.5px;
+    font-weight: 900;
+    letter-spacing: 0.9px;
+    color: #e2f0fc;
+    margin-bottom: 3px;
+  }
+  .slot-empty-content .slot-pos-hint {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #78a1c9;
+  }
+
+  /* FILLED SLOT STYLING */
+  .player-slot.filled {
+    border: none;
+    background: transparent;
+    filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.88));
+  }
+  .player-slot.filled.target-selected {
+    outline: 3px solid #ffd700;
+    outline-offset: 4px;
+    border-radius: 12px;
+    box-shadow: 0 0 24px rgba(255, 215, 0, 0.65);
+  }
+
+  .player-slot.filled .card-img-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 0;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-img-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 10px;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    transition: transform 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.7));
+  }
+  .card-img.cover-fit {
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .card-img.contain-fit {
+    object-fit: contain;
+  }
+  .player-slot:hover .card-img {
+    transform: scale(1.05) translateY(-2px);
+  }
+  .card-img.is-dragging {
+    opacity: 0.4;
+  }
+
+  /* FC MOBILE GREEN POSITION BADGE (Under Card) */
+  .pos-tag-pill {
+    position: absolute;
+    bottom: -20px;
+    background: linear-gradient(180deg, #0d381b 0%, #041f0d 100%);
+    border: 1.5px solid #00e676;
+    color: #00ff73;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 0.8px;
+    padding: 2px 10px;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 230, 118, 0.45);
+    z-index: 15;
+    pointer-events: none;
+    text-transform: uppercase;
+  }
+
+  /* FC MOBILE RANK 30 BADGE (Bottom Edge of Card) */
+  .rank-badge-pill {
+    position: absolute;
+    bottom: -1px;
+    background: linear-gradient(135deg, #d4af37, #996515);
+    border: 1px solid #fff2a1;
+    color: #ffffff;
+    font-family: 'Titan One', sans-serif;
+    font-size: 9.5px;
+    padding: 1px 7px;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+    z-index: 14;
+    pointer-events: none;
+  }
+
+  /* SLOT QUICK CONTROLS */
+  .slot-controls {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: none;
+    gap: 4px;
+    z-index: 25;
+  }
+  .player-slot.filled:hover .slot-controls {
+    display: flex;
+  }
+  .slot-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(10, 15, 25, 0.88);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    padding: 0;
+    transition: transform 0.1s, background 0.1s;
+  }
+  .slot-btn:hover {
+    background: #ff2244;
+    border-color: #ff5566;
+    transform: scale(1.15);
+  }
+  .slot-btn-change:hover {
+    background: #00b4d8;
+    border-color: #33dcff;
+  }
+  .slot-btn-magic:hover {
+    background: #9333ea;
+    border-color: #c084fc;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+  }
+
+  /* BOTTOM RIGHT TEAM CREST */
+  .pitch-corner-crest {
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+    z-index: 12;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .pitch-corner-crest:hover {
+    transform: scale(1.06);
+  }
+  .crest-shield {
+    width: 68px;
+    height: 76px;
+    background: linear-gradient(135deg, #1c2635 0%, #0d121c 100%);
+    border: 3px solid #d4af37;
+    border-radius: 6px 6px 34px 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.8), 0 0 15px rgba(212, 175, 55, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .crest-shield::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 4px 4px 30px 30px;
+    pointer-events: none;
+  }
+  .crest-crown {
+    font-size: 28px;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+  }
+  .crest-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 8px;
+    color: #ffdd00;
+    letter-spacing: 0.8px;
+    margin-top: 3px;
+  }
+
+  /* ========================================================
+     PLAYER CARDS BENCH (Upload & Pool Tray)
+     ======================================================== */
+  .cards-tray-section {
+    background: rgba(11, 16, 26, 0.94);
+    border: 1px solid #1c2c42;
+    border-radius: 16px;
+    padding: 16px 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  }
+  .tray-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #1a273b;
+  }
+  .tray-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tray-title-wrap h2 {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin: 0;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-count-badge {
+    background: #142033;
+    border: 1px solid #283e5c;
+    color: #00e676;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .tray-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .bench-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 14px;
+    min-height: 140px;
+    padding: 12px;
+    background: #080d15;
+    border: 2px dashed #1c293c;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+  .bench-cards-grid.drag-over {
+    border-color: #00e676;
+    background: rgba(0, 230, 118, 0.05);
+  }
+
+  .bench-card {
+    width: 100%;
+    aspect-ratio: 116 / 156;
+    border-radius: 10px;
+    position: relative;
+    cursor: grab;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+    overflow: hidden;
+    background: #0c1421;
+    border: 1px solid #1e3047;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  .bench-card:hover {
+    transform: translateY(-4px) scale(1.04);
+    border-color: #00e676;
+    box-shadow: 0 6px 18px rgba(0, 230, 118, 0.35);
+    z-index: 10;
+  }
+  .bench-card.selected {
+    outline: 3px solid #ffd700;
+    outline-offset: 2px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  }
+  .bench-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    user-select: none;
+  }
+  .bench-card .bench-remove-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    display: none;
+    place-items: center;
+    font-size: 11px;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .bench-card:hover .bench-remove-btn {
+    display: grid;
+  }
+  .bench-card .bench-remove-btn:hover {
+    background: #ff2244;
+  }
+  .bench-card .bench-magic-btn {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(147, 51, 234, 0.9);
+    color: #fff;
+    border: 1px solid #c084fc;
+    display: none;
+    place-items: center;
+    font-size: 11px;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.1s, background 0.1s;
+  }
+  .bench-card:hover .bench-magic-btn {
+    display: grid;
+  }
+  .bench-card .bench-magic-btn:hover {
+    background: #a855f7;
+    transform: scale(1.18);
+  }
+
+  .bench-empty-hint {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 10px;
+    color: #637794;
+    text-align: center;
+  }
+  .bench-empty-hint .hint-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+  .bench-empty-hint p {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* TOAST NOTIFICATIONS */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+  }
+  .toast {
+    background: #0f192b;
+    border: 1px solid #00e676;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 15px rgba(0, 230, 118, 0.35);
+    animation: toastIn 0.25s ease, toastOut 0.25s 2.7s ease forwards;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-8px); } }
+
+  /* CLEAN VIEW MODE */
+  body.clean-view .player-slot.empty {
+    opacity: 0.15;
+    border-style: solid;
+  }
+  body.clean-view .slot-empty-content {
+    display: none;
+  }
+  body.clean-view .slot-controls {
+    display: none !important;
+  }
+
+  /* PRINT STYLES */
+  @media print {
+    body {
+      background: #000 !important;
+      padding: 0 !important;
+    }
+    .toolbar, .controls-bar, .cards-tray-section, .toast-container, .slot-controls {
+      display: none !important;
+    }
+    .squad-pitch-container {
+      max-width: 100% !important;
+      box-shadow: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+    }
+    .player-slot.empty {
+      display: none !important;
+    }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    :root {
+      --card-w: 92px;
+      --card-h: 126px;
+    }
+    .squad-pitch-container { min-height: 720px; padding: 14px 10px; }
+    .formation-row { gap: 16px; }
+    .row-attackers { gap: 24px; }
+    .row-midfield { gap: 18px; }
+    .row-defenders { gap: 10px; }
+    .team-title { font-size: 20px; }
+  }
+  @media (max-width: 600px) {
+    :root {
+      --card-w: 78px;
+      --card-h: 108px;
+    }
+    .squad-pitch-container { min-height: 650px; }
+    .formation-row { gap: 8px; }
+    .row-attackers { gap: 12px; }
+    .row-midfield { gap: 10px; }
+    .row-defenders { gap: 6px; }
+    .pos-tag-pill { font-size: 9px; padding: 1px 5px; bottom: -10px; }
+    .rank-badge-pill { font-size: 8px; }
+    .team-title { font-size: 16px; }
+    .ovr-shield { font-size: 15px; padding: 4px 8px; }
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- TOP NAVIGATION TOOLBAR -->
+  <header class="toolbar">
+    <div class="brand-area">
+      <div class="brandmark">⚡</div>
+      <div>
+        <h1>FC_VOLT</h1>
+        <small>BEST TEAM 11 • SQUAD BUILDER</small>
+      </div>
+    </div>
+
+    <!-- TEMPLATE SWITCHER TABS -->
+    <nav class="template-nav">
+      <a href="index.html" class="nav-tab" title="Go to Tier List Template (Super/Good/Avg/Bad)">
+        📊 Tier List (4 Tiers)
+      </a>
+      <a href="top10.html" class="nav-tab" title="Go to Top 10 Best Players Template">
+        🔟 Top 10 Ranking
+      </a>
+      <button class="nav-tab active" title="Current: Best Team 11 Template">
+        ⚽ Best Team 11
+      </button>
+      <a href="shards.html" class="nav-tab" title="Go to Football Shard Comparison Template">
+        💎 Shard Comparison
+      </a>
+    </nav>
+
+    <!-- ACTION BUTTONS -->
+    <div class="actions">
+      <button id="cleanViewBtn" title="Toggle Clean Preview (hide dashed borders on screen)">
+        👁️ CLEAN VIEW
+      </button>
+      <button id="bgRemoverBtn" class="btn-bg-remover" title="Open Background & Outliers Remover Studio">
+        🪄 REMOVE BACKGROUND
+      </button>
+      <button id="demoBtn" class="btn-demo" title="Load the 11 players from the reference screenshot">
+        ⚡ LOAD DEMO XI
+      </button>
+      <button id="saveBtn" title="Save this squad in your browser">
+        💾 SAVE SQUAD
+      </button>
+      <button id="pdfBtn" class="btn-pdf" title="Export as High-Resolution PDF Document">
+        📄 EXPORT PDF
+      </button>
+      <button id="exportBtn" class="btn-export" title="Export High-Resolution PNG Image for YouTube/Instagram/Discord">
+        📸 EXPORT PNG
+      </button>
+      <button id="printBtn" title="Print or Save as PDF via Browser">
+        🖨️ PRINT
+      </button>
+      <button id="clearPitchBtn" title="Return cards from the pitch back to the bench">
+        🔄 RESET PITCH
+      </button>
+      <button id="removeAllBtn" class="btn-remove-all" title="Remove all cards completely from pitch and bench">
+        🗑️ REMOVE ALL
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTROLS & CUSTOMIZATION BAR -->
+  <section class="controls-bar">
+    <!-- Title Editor -->
+    <div class="control-group">
+      <label for="titleInput">Title:</label>
+      <input type="text" id="titleInput" class="custom-input" value="BEST TEAM 11" style="width: 200px;" placeholder="e.g. ULTIMATE TEAM 11">
+    </div>
+
+    <!-- Formation Selector -->
+    <div class="control-group">
+      <label for="formationSelect">Formation:</label>
+      <select id="formationSelect" class="custom-select">
+        <option value="4-3-3 Attack" selected>4-3-3 Attack (Screenshot)</option>
+        <option value="4-3-3 Holding">4-3-3 Holding</option>
+        <option value="4-3-3 Flat">4-3-3 Flat</option>
+        <option value="4-4-2">4-4-2 Flat</option>
+        <option value="4-1-2-1-2 Wide">4-1-2-1-2 Wide</option>
+        <option value="4-2-3-1">4-2-3-1 Wide</option>
+        <option value="3-4-3">3-4-3 Attack</option>
+        <option value="5-2-2-1">5-2-2-1 Counter</option>
+      </select>
+    </div>
+
+    <!-- Team Overall (OVR) -->
+    <div class="control-group">
+      <label for="ovrInput">Team OVR:</label>
+      <input type="number" id="ovrInput" class="custom-input" value="126" min="60" max="150" style="width: 75px;">
+    </div>
+
+    <!-- Pitch Background Theme -->
+    <div class="control-group">
+      <label for="themeSelect">Pitch Theme:</label>
+      <select id="themeSelect" class="custom-select" style="color: #00b4d8;">
+        <option value="theme-stadium" selected>🏟️ EA Stadium Night</option>
+        <option value="theme-emerald">🌿 Emerald Turf</option>
+        <option value="theme-neon">⚡ Neon Esports Arena</option>
+        <option value="theme-galaxy">🌌 Midnight Galaxy</option>
+        <option value="theme-champions">🔥 Golden Champions</option>
+      </select>
+    </div>
+
+    <!-- Toggles -->
+    <div class="control-group">
+      <label for="posBadgeToggle">Positions:</label>
+      <select id="posBadgeToggle" class="custom-select" style="color: #00e676;">
+        <option value="show" selected>Show Badges</option>
+        <option value="hide">Hide Badges</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="rank30Toggle">Rank 30:</label>
+      <select id="rank30Toggle" class="custom-select" style="color: #ffdd00;">
+        <option value="show" selected>Show Rank 30</option>
+        <option value="hide">Hide Rank</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="autoBgSelect">Auto Clean:</label>
+      <select id="autoBgSelect" class="custom-select" style="color: #c084fc;">
+        <option value="auto" selected>🪄 Auto-Clean Uploads</option>
+        <option value="white">⚪ Remove White</option>
+        <option value="black">⚫ Remove Black</option>
+        <option value="off">Off (Original)</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="cardFitSelect">Image Fit:</label>
+      <select id="cardFitSelect" class="custom-select" style="color: #ffffff;">
+        <option value="contain" selected>Contain (Authentic Shape)</option>
+        <option value="cover">Cover (Fill Slot Box)</option>
+      </select>
+    </div>
+
+    <!-- Card Size Selector -->
+    <div class="control-group">
+      <label for="cardSizeSelect">Card Size:</label>
+      <select id="cardSizeSelect" class="custom-select" style="color: #ffd700;">
+        <option value="compact">Compact (132px)</option>
+        <option value="normal">Normal (144px)</option>
+        <option value="large" selected>✨ Large (154px - Default)</option>
+        <option value="xlarge">🔥 Extra Large (168px)</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       THE FOOTBALL PITCH STAGE (Best Team 11 Arena)
+       ======================================================== -->
+  <div class="arena-wrapper">
+    <main class="squad-pitch-container theme-stadium" id="pitchContainer">
+      
+      <!-- SVG Pitch Field Lines Overlay -->
+      <svg class="pitch-lines-overlay" viewBox="0 0 1000 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="pitchLineGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+            <stop offset="60%" stop-color="#ffffff" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0.75"/>
+          </linearGradient>
+        </defs>
+        <!-- Sidelines / Touchlines in 3D Perspective -->
+        <polygon points="120,40 880,40 960,780 40,780" fill="none" stroke="url(#pitchLineGrad)" stroke-width="2.5" />
+        <!-- Halfway line -->
+        <line x1="90" y1="280" x2="910" y2="280" stroke="url(#pitchLineGrad)" stroke-width="2.5" />
+        <!-- Center circle in 3D perspective -->
+        <ellipse cx="500" cy="280" rx="140" ry="46" fill="none" stroke="url(#pitchLineGrad)" stroke-width="2.5" />
+        <circle cx="500" cy="280" r="4" fill="#ffffff" opacity="0.8" />
+        <!-- Penalty Box (Defensive / Bottom) -->
+        <polygon points="250,560 750,560 790,780 210,780" fill="none" stroke="url(#pitchLineGrad)" stroke-width="2.5" />
+        <!-- 6-yard Goal Box -->
+        <polygon points="360,670 640,670 655,780 345,780" fill="none" stroke="url(#pitchLineGrad)" stroke-width="2" />
+        <!-- Penalty Spot & Arc -->
+        <circle cx="500" cy="625" r="3.5" fill="#ffffff" opacity="0.8" />
+        <path d="M 430,560 A 75,32 0 0,1 570,560" fill="none" stroke="url(#pitchLineGrad)" stroke-width="2" />
+      </svg>
+
+      <!-- PITCH TOP HEADER -->
+      <div class="pitch-header" id="pitchHeader">
+        <div class="team-title-wrap">
+          <h2 class="team-title" id="displayTitle" contenteditable="true" spellcheck="false" title="Click to edit title">BEST TEAM 11</h2>
+          <span class="formation-badge" id="displayFormation">4-3-3 Attack</span>
+        </div>
+        <div class="team-ovr-wrap">
+          <div class="ovr-shield">
+            <span id="displayOvr">126</span>
+            <small>OVR</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- SQUAD FORMATION BOARD (11 Dynamic Position Slots) -->
+      <div class="pitch-squad-board" id="squadBoard">
+        <!-- Rendered dynamically by JavaScript based on active formation -->
+      </div>
+
+      <!-- BOTTOM-RIGHT GOLD CROWN CREST -->
+      <div class="pitch-corner-crest" id="cornerCrest" title="FC Mobile Crown Crest">
+        <svg width="74" height="84" viewBox="0 0 74 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="crestGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fff8cc"/>
+              <stop offset="30%" stop-color="#d4af37"/>
+              <stop offset="70%" stop-color="#996a14"/>
+              <stop offset="100%" stop-color="#ffea88"/>
+            </linearGradient>
+            <radialGradient id="crestBg" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#1f2c3d"/>
+              <stop offset="100%" stop-color="#0a0e14"/>
+            </radialGradient>
+            <pattern id="crestPat" width="6" height="6" patternUnits="userSpaceOnUse">
+              <path d="M0 3 L3 0 L6 3 L3 6 Z" fill="#141d29"/>
+              <path d="M0 3 L3 0 L6 3 L3 6 Z" fill="none" stroke="#080d14" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <!-- Outer Shield Contour -->
+          <path d="M 7 6 L 67 6 Q 69 6 69 13 L 69 50 Q 69 77 37 81 Q 5 77 5 50 L 5 13 Q 5 6 7 6 Z" 
+                fill="url(#crestBg)" stroke="url(#crestGold)" stroke-width="3" filter="drop-shadow(0 6px 14px rgba(0,0,0,0.85))" />
+          <!-- Carbon Texture -->
+          <path d="M 9 8 L 65 8 Q 66 8 66 14 L 66 48 Q 66 74 37 78 Q 8 74 8 48 L 8 14 Q 8 8 9 8 Z" 
+                fill="url(#crestPat)" opacity="0.75" />
+          <!-- Inner Gold Border -->
+          <path d="M 12 11 L 62 11 L 62 48 Q 62 70 37 74 Q 12 70 12 48 Z" 
+                fill="none" stroke="url(#crestGold)" stroke-width="1.2" opacity="0.6" />
+          <!-- 3D Gold Crown -->
+          <path d="M 19 44 L 23 27 L 31 36 L 37 23 L 43 36 L 51 27 L 55 44 Z" 
+                fill="url(#crestGold)" stroke="#593c00" stroke-width="1.2" />
+          <rect x="19" y="44" width="36" height="7" rx="2" fill="url(#crestGold)" stroke="#593c00" stroke-width="0.8" />
+          <!-- Emerald Gemstone -->
+          <polygon points="37,45 39.5,47.5 37,50 34.5,47.5" fill="#00e676" stroke="#003816" stroke-width="0.5" />
+          <circle cx="24" cy="47.5" r="1.5" fill="#ffd700" />
+          <circle cx="50" cy="47.5" r="1.5" fill="#ffd700" />
+          <!-- Jewels on Crown Spikes -->
+          <circle cx="23" cy="26" r="2.2" fill="#fff7c2" stroke="#593c00" stroke-width="0.6" />
+          <circle cx="37" cy="22" r="2.6" fill="#00e676" stroke="#003816" stroke-width="0.6" />
+          <circle cx="51" cy="26" r="2.2" fill="#fff7c2" stroke="#593c00" stroke-width="0.6" />
+          <!-- Stars Below Crown -->
+          <path d="M 28 58 L 29 60 L 31 60 L 29.5 61.5 L 30 63.5 L 28 62 L 26 63.5 L 26.5 61.5 L 25 60 L 27 60 Z" fill="url(#crestGold)" />
+          <path d="M 46 58 L 47 60 L 49 60 L 47.5 61.5 L 48 63.5 L 46 62 L 44 63.5 L 44.5 61.5 L 43 60 L 45 60 Z" fill="url(#crestGold)" />
+          <path d="M 37 55 L 38.2 57.5 L 41 57.5 L 39 59.5 L 39.7 62 L 37 60.2 L 34.3 62 L 35 59.5 L 33 57.5 L 35.8 57.5 Z" fill="url(#crestGold)" />
+        </svg>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ========================================================
+       PLAYER CARDS BENCH (Upload & Pool Tray)
+       ======================================================== -->
+  <section class="cards-tray-section" id="traySection">
+    <div class="tray-header">
+      <div class="tray-title-wrap">
+        <h2>
+          <span>🎴</span> PLAYER CARDS BENCH
+          <span class="card-count-badge" id="benchCountBadge">0 CARDS</span>
+        </h2>
+      </div>
+
+      <div class="tray-actions">
+        <!-- Multi Upload Button -->
+        <label for="multiUploadInput" class="btn btn-primary" title="Upload multiple player card screenshots at once">
+          <span>＋</span> UPLOAD PLAYER PICTURES
+        </label>
+        <input type="file" id="multiUploadInput" class="hidden" accept="image/*" multiple>
+
+        <!-- Auto-fill button -->
+        <button id="autoFillBtn" title="Automatically fill empty pitch positions using bench cards">
+          ⚡ AUTO-FILL SQUAD
+        </button>
+
+        <!-- Clear Bench -->
+        <button id="clearBenchBtn" class="btn-danger" title="Remove all cards from bench">
+          🗑️ CLEAR BENCH
+        </button>
+      </div>
+    </div>
+
+    <!-- Instructions / Tips -->
+    <div style="font-size: 11px; color: #7f95b0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+      <span>💡</span>
+      <span><b>Pro Tip:</b> Click directly on any position on the pitch to upload a card screenshot instantly, or upload pictures to the bench and drag them into position!</span>
+    </div>
+
+    <!-- Bench Cards Container -->
+    <div class="bench-cards-grid" id="benchCardsGrid">
+      <div class="bench-empty-hint" id="benchEmptyHint">
+        <div class="hint-icon">📂</div>
+        <p>No cards on the bench yet.</p>
+        <p style="color: #4a5c73; margin-top: 4px; font-size: 11px;">Upload screenshots or return cards from the pitch.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- DIRECT SINGLE SLOT UPLOAD HIDDEN INPUT -->
+<input type="file" id="singleSlotUploadInput" class="hidden" accept="image/*">
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- CONFIRM REMOVE ALL CUSTOM MODAL -->
+<div class="custom-modal-backdrop hidden" id="removeAllModal">
+  <div class="custom-modal">
+    <div class="modal-icon">⚠️</div>
+    <h3>REMOVE ALL CARDS?</h3>
+    <p>Are you sure you want to completely remove all cards from both the pitch and bench? This will give you an empty squad.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn modal-btn-cancel" id="cancelRemoveAllBtn">CANCEL</button>
+      <button type="button" class="btn modal-btn-confirm" id="confirmRemoveAllBtn">YES, REMOVE ALL</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMOVE BACKGROUND & OUTLIERS STUDIO MODAL -->
+<div class="custom-modal-backdrop bg-studio-backdrop hidden" id="bgStudioModal">
+  <div class="bg-studio-modal">
+    <!-- Studio Header -->
+    <div class="bg-studio-header">
+      <div class="bg-studio-title">
+        <span style="font-size: 26px;">🪄</span>
+        <div>
+          <h3>REMOVE BACKGROUND & OUTLIERS STUDIO</h3>
+          <small>Clean rectangular margins, black/white borders & isolate cards like FC Mobile transparent cutouts</small>
+        </div>
+      </div>
+      <button type="button" class="bg-studio-close" id="closeBgStudioBtn" title="Close Studio">&times;</button>
+    </div>
+
+    <!-- Studio Body: Split View -->
+    <div class="bg-studio-body">
+      <!-- Left: Interactive Canvas Preview Stage -->
+      <div class="bg-preview-stage">
+        <div class="canvas-stage-bar">
+          <div class="stage-theme-toggles">
+            <span style="font-size: 10px; color: #8fa5c5; font-weight: 800; margin-right: 4px;">BACKDROP:</span>
+            <button type="button" class="theme-btn active" data-stage="checker" id="stageBtnChecker" title="Checkered transparency pattern">🏁 Grid</button>
+            <button type="button" class="theme-btn" data-stage="stadium" id="stageBtnStadium" title="Live Stadium Grass">🏟️ Pitch</button>
+            <button type="button" class="theme-btn" data-stage="black" id="stageBtnBlack" title="Solid Dark">⬛ Black</button>
+            <button type="button" class="theme-btn" data-stage="white" id="stageBtnWhite" title="Solid Light">⬜ White</button>
+          </div>
+          <div class="zoom-toggles">
+            <button type="button" class="zoom-btn" id="zoomOutBtn" title="Zoom Out">−</button>
+            <span id="zoomLevelDisplay">100%</span>
+            <button type="button" class="zoom-btn" id="zoomInBtn" title="Zoom In">＋</button>
+            <button type="button" class="zoom-btn" id="zoomResetBtn" title="Reset Zoom">↺</button>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="bg-canvas-container" id="bgCanvasContainer">
+          <canvas id="bgStudioCanvas"></canvas>
+        </div>
+
+        <!-- Touch-up Tools & Dimensions info -->
+        <div class="touchup-bar">
+          <span style="font-size: 11px; font-weight: 800; color: #c084fc;">TOOLS:</span>
+          <button type="button" class="touchup-btn active" id="toolPanBtn">🖐️ Inspect</button>
+          <button type="button" class="touchup-btn" id="toolEyedropperBtn">🎨 Eyedropper</button>
+          <button type="button" class="touchup-btn" id="toolEraserBtn">🧹 Eraser</button>
+          <div id="eraserSizeWrap" style="display: none; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; color: #8fa5c5;">Size:</span>
+            <input type="range" id="eraserSizeRange" min="4" max="60" value="18" style="width: 75px;">
+            <span id="eraserSizeVal" style="font-size: 10px; color: #c084fc; font-weight: 800;">18px</span>
+          </div>
+          <div style="margin-left: auto; font-size: 11px; color: #8fa5c5; font-weight: 700;" id="canvasInfoBadge">256 × 256 px</div>
+        </div>
+      </div>
+
+      <!-- Right: Controls Panel -->
+      <div class="bg-controls-panel">
+        
+        <!-- Target Card Selection -->
+        <div>
+          <div class="bg-section-title"><span>🎴</span> 1. Select Card To Clean</div>
+          <div class="card-picker-row">
+            <select id="bgCardSelect" class="card-picker-select">
+              <!-- Dynamically populated with Pitch & Bench cards -->
+            </select>
+            <button type="button" id="loadRonaldoSampleBtn" class="btn-sample-card" title="Load Ronaldo 124 ST reference card">
+              ⭐ Sample R9
+            </button>
+          </div>
+          <div style="margin-top: 8px;">
+            <label for="bgUploadInput" class="btn" style="padding: 6px 12px; font-size: 11px; background: #151e2e; border: 1px dashed #304460; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+              📁 Upload New Image To Studio
+            </label>
+            <input type="file" id="bgUploadInput" class="hidden" accept="image/*">
+          </div>
+        </div>
+
+        <!-- Removal Modes -->
+        <div>
+          <div class="bg-section-title"><span>⚙️</span> 2. Background & Outliers Removal Mode</div>
+          <div class="mode-grid">
+            <div class="mode-card active" data-mode="auto" id="modeAuto">
+              <div class="mode-header">🪄 Auto Detect</div>
+              <div class="mode-desc">Flood fills from borders inward. Protects white/dark kits and details inside.</div>
+            </div>
+            <div class="mode-card" data-mode="white" id="modeWhite">
+              <div class="mode-header">⚪ Remove White</div>
+              <div class="mode-desc">Removes bright/white screenshot backgrounds and rectangular margins.</div>
+            </div>
+            <div class="mode-card" data-mode="black" id="modeBlack">
+              <div class="mode-header">⚫ Remove Black</div>
+              <div class="mode-desc">Cleans black screenshot bars, letterboxing & dark margins.</div>
+            </div>
+            <div class="mode-card" data-mode="color" id="modeColor">
+              <div class="mode-header">🎨 Picked Color</div>
+              <div class="mode-desc">Click eyedropper or sample canvas to key out an exact outlier color.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tuning Sliders -->
+        <div>
+          <div class="bg-section-title"><span>🎚️</span> 3. Edge & Tolerance Tuning</div>
+          
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Color Tolerance:</span>
+              <span class="slider-val" id="tolValDisplay">28%</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgTolRange" min="5" max="80" value="28">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Fringe Choke / Halo Trim:</span>
+              <span class="slider-val" id="chokeValDisplay">1 px</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgChokeRange" min="0" max="4" value="1">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Edge Feather / Soften:</span>
+              <span class="slider-val" id="featherValDisplay">1 px</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgFeatherRange" min="0" max="5" value="1">
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding: 6px 10px; background: #121927; border-radius: 6px; border: 1px solid #1f2b3e;">
+            <span style="font-size: 11px; font-weight: 700; color: #cbd5e1;">✂️ Auto-Crop Outer Padding:</span>
+            <input type="checkbox" id="bgAutoCropCheck" checked style="accent-color: #a855f7; cursor: pointer;">
+          </div>
+        </div>
+
+        <!-- Instant Actions -->
+        <div>
+          <div class="bg-section-title"><span>⚡</span> 4. Instant Clean Presets</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn" id="presetCleanWhite" style="font-size: 10.5px; padding: 6px 10px;">⚪ Clean White</button>
+            <button type="button" class="btn" id="presetCleanBlack" style="font-size: 10.5px; padding: 6px 10px;">⚫ Clean Black</button>
+            <button type="button" class="btn" id="presetRevert" style="font-size: 10.5px; padding: 6px 10px; color: #ff99aa;">↩️ Revert Original</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Studio Footer Actions -->
+    <div class="bg-studio-footer">
+      <div class="footer-actions-left">
+        <button type="button" class="btn-download-cutout" id="bgDownloadCutoutBtn" title="Download transparent PNG image">
+          💾 DOWNLOAD PNG
+        </button>
+        <button type="button" class="btn-reset-original" id="bgCloseCancelBtn">
+          ✕ CANCEL
+        </button>
+      </div>
+
+      <div class="footer-actions-right">
+        <button type="button" class="btn-apply-all" id="bgApplyAllPitchBtn" title="Clean and update all cards on the pitch">
+          ✨ APPLY TO ALL 11 PITCH CARDS
+        </button>
+        <button type="button" class="btn-apply-one" id="bgApplyCurrentBtn" title="Apply clean cutout to the selected card">
+          ✅ APPLY TO SELECTED CARD
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIBRARIES (html2canvas & jsPDF for high-res offline exports) -->
+<script src="html2canvas.min.js"></script>
+<script src="jspdf.umd.min.js"></script>
+
+<script>
+/**
+ * FC_VOLT — Best Team 11 Squad Builder
+ * Formation logic, drag-and-drop, direct slot upload, bench pooling,
+ * high-res PNG / PDF exports, and demo XI matching the user's screenshot.
+ */
+
+// FORMATION CONFIGURATIONS
+const FORMATIONS = {
+  '4-3-3 Attack': {
+    name: '4-3-3 Attack',
+    rows: [
+      { id: 'attack', className: 'row-attackers', positions: ['LW', 'ST', 'RW'] },
+      { id: 'midfield', className: 'row-midfield', positions: ['LCM', 'CAM', 'RCM'], offsets: { 'CAM': 'cam-slot-offset' } },
+      { id: 'defense', className: 'row-defenders', positions: ['LB', 'LCB', 'RCB', 'RB'] },
+      { id: 'gk', className: 'row-gk', positions: ['GK'] }
+    ]
+  },
+  '4-3-3 Holding': {
+    name: '4-3-3 Holding',
+    rows: [
+      { id: 'attack', className: 'row-attackers', positions: ['LW', 'ST', 'RW'] },
+      { id: 'midfield', className: 'row-midfield', positions: ['LCM', 'CDM', 'RCM'], offsets: { 'CDM': 'cdm-slot-offset' } },
+      { id: 'defense', className: 'row-defenders', positions: ['LB', 'LCB', 'RCB', 'RB'] },
+      { id: 'gk', className: 'row-gk', positions: ['GK'] }
+    ]
+  },
+  '4-3-3 Flat': {
+    name: '4-3-3 Flat',
+    rows: [
+      { id: 'attack', className: 'row-attackers', positions: ['LW', 'ST', 'RW'] },
+      { id: 'midfield', className: 'row-midfield', positions: ['LCM', 'CM', 'RCM'] },
+      { id: 'defense', className: 'row-defenders', positions: ['LB', 'LCB', 'RCB', 'RB'] },
+      { id: 'gk', className: 'row-gk', positions: ['GK'] }
+    ]
+  },
+  '4-4-2': {
+    name: '4-4-2 Flat',
+    rows: [
+      { id: 'attack', className: 'row-attackers', positions: ['LST', 'RST'] },
+      { id: 'midfield', className: 'row-midfield', positions: ['LM', 'LCM', 'RCM', 'RM'] },
+      { id: 'defense', className: 'row-defenders', positions: ['LB', 'LCB', 'RCB', 'RB'] },
+      { id: 'gk', className: 'row-gk', positions: ['GK'] }
+    ]
+  },
+  '4-1-2-1-2 Wide': {
+    name: '4-1-2-1-2 Wide',
+    rows: [
+      { id: 'attack', className: 'row-attackers', positions: ['LST', 'RST'] },
+      { id: 'cam', className: 'row-midfield', positions: ['CAM'] },
+      { id: 'mid-sides', className: 'row-midfield', positions: ['LM', 'RM'] },
+      { id: 'cdm', className: 'row-midfield', positions: ['CDM'] },
+      { id: 'defense', className: 'row-defenders', positions: ['LB', 'LCB', 'RCB', 'RB'] },
+      { id: 'gk', className: 'row-gk', positions: ['GK'] }
+    ]
+  },
+  '4-2-3-1': {
+    name: '4-2-3-1 Wide',
+    rows: [
+      { id: 'attack', className: 'row-attackers', positions: ['ST'] },
+      { id: 'am', className: 'row-midfield', positions: ['LAM', 'CAM', 'RAM'] },
+      { id: 'cdm', className: 'row-midfield', positions: ['LCDM', 'RCDM'] },
+      { id: 'defense', className: 'row-defenders', positions: ['LB', 'LCB', 'RCB', 'RB'] },
+      { id: 'gk', className: 'row-gk', positions: ['GK'] }
+    ]
+  },
+  '3-4-3': {
+    name: '3-4-3 Attack',
+    rows: [
+      { id: 'attack', className: 'row-attackers', positions: ['LW', 'ST', 'RW'] },
+      { id: 'midfield', className: 'row-midfield', positions: ['LM', 'LCM', 'RCM', 'RM'] },
+      { id: 'defense', className: 'row-defenders', positions: ['LCB', 'CB', 'RCB'] },
+      { id: 'gk', className: 'row-gk', positions: ['GK'] }
+    ]
+  },
+  '5-2-2-1': {
+    name: '5-2-2-1 Counter',
+    rows: [
+      { id: 'attack', className: 'row-attackers', positions: ['LW', 'ST', 'RW'] },
+      { id: 'midfield', className: 'row-midfield', positions: ['LCM', 'RCM'] },
+      { id: 'defense', className: 'row-defenders', positions: ['LWB', 'LCB', 'CB', 'RCB', 'RWB'] },
+      { id: 'gk', className: 'row-gk', positions: ['GK'] }
+    ]
+  }
+};
+
+// APPLICATION STATE
+let currentFormationKey = '4-3-3 Attack';
+let pitchCards = {}; // Maps positionKey (e.g. 'ST', 'LW', 'GK') -> { id, src, name, ovr, pos }
+let benchCards = [];  // Array of { id, src }
+let selectedCard = null; // { type: 'bench'|'pitch', id, posKey, src }
+let targetPosForDirectUpload = null;
+let dragPayload = null;
+
+// DOM ELEMENTS
+const squadBoard = document.getElementById('squadBoard');
+const pitchContainer = document.getElementById('pitchContainer');
+const benchCardsGrid = document.getElementById('benchCardsGrid');
+const benchEmptyHint = document.getElementById('benchEmptyHint');
+const benchCountBadge = document.getElementById('benchCountBadge');
+const titleInput = document.getElementById('titleInput');
+const displayTitle = document.getElementById('displayTitle');
+const formationSelect = document.getElementById('formationSelect');
+const displayFormation = document.getElementById('displayFormation');
+const ovrInput = document.getElementById('ovrInput');
+const displayOvr = document.getElementById('displayOvr');
+const themeSelect = document.getElementById('themeSelect');
+const posBadgeToggle = document.getElementById('posBadgeToggle');
+const rank30Toggle = document.getElementById('rank30Toggle');
+const cardFitSelect = document.getElementById('cardFitSelect');
+const cardSizeSelect = document.getElementById('cardSizeSelect');
+const multiUploadInput = document.getElementById('multiUploadInput');
+const singleSlotUploadInput = document.getElementById('singleSlotUploadInput');
+const toastContainer = document.getElementById('toastContainer');
+
+// HELPER: Generate Unique ID
+function uid() {
+  return 'card_' + Math.random().toString(36).substr(2, 9);
+}
+
+// HELPER: Toast Notification
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span>⚡</span> ${msg}`;
+  toastContainer.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// HELPER: Clean Position Label (e.g. 'LCM' -> 'CM', 'LCB' -> 'CB')
+function displayPosLabel(posKey) {
+  if (posKey === 'LCM' || posKey === 'RCM') return 'CM';
+  if (posKey === 'LCB' || posKey === 'RCB') return 'CB';
+  if (posKey === 'LST' || posKey === 'RST') return 'ST';
+  if (posKey === 'LAM' || posKey === 'RAM') return 'CAM';
+  if (posKey === 'LCDM' || posKey === 'RCDM') return 'CDM';
+  return posKey;
+}
+
+/**
+ * Client-side Image Compression / Normalization
+ * Preserves crisp player card details while preventing browser storage bloat.
+ */
+function compressImageFile(file, maxDimension = 720) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ev => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        let w = img.width;
+        let h = img.height;
+        if (w > maxDimension || h > maxDimension) {
+          if (w > h) {
+            h = Math.round((h * maxDimension) / w);
+            w = maxDimension;
+          } else {
+            w = Math.round((w * maxDimension) / h);
+            h = maxDimension;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, w, h);
+        // Use PNG to retain crisp transparency
+        const dataUrl = canvas.toDataURL('image/png');
+        resolve(dataUrl);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Handle File Upload (Direct to Pitch Position or to Bench)
+ * Automatically strips outer screenshot margins/outliers if Auto Clean is active!
+ */
+async function handleFilesUpload(fileList, targetPosKey = null) {
+  const files = [...fileList].filter(f => {
+    return f.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|gif|svg|bmp|jfif)$/i.test(f.name);
+  });
+
+  if (!files.length) {
+    showToast('Please select valid image files.');
+    return;
+  }
+
+  showToast(`Processing ${files.length} image(s)...`);
+
+  const autoCleanMode = autoBgSelect ? autoBgSelect.value : 'auto';
+
+  let loaded = 0;
+  for (let i = 0; i < files.length; i++) {
+    try {
+      let finalData = await compressImageFile(files[i]);
+
+      // Auto-clean background and outliers if enabled
+      if (autoCleanMode !== 'off') {
+        try {
+          const cleaned = await processImageBackgroundRemoval(finalData, {
+            mode: autoCleanMode === 'auto' ? 'auto' : autoCleanMode,
+            tolerance: 0.28,
+            choke: 1,
+            feather: 1,
+            crop: true
+          });
+          if (cleaned) finalData = cleaned;
+        } catch (e) {
+          console.warn('Auto background clean skipped:', e);
+        }
+      }
+
+      if (i === 0 && targetPosKey) {
+        pitchCards[targetPosKey] = {
+          id: uid(),
+          src: finalData,
+          pos: targetPosKey
+        };
+      } else {
+        benchCards.push({
+          id: uid(),
+          src: finalData
+        });
+      }
+      loaded++;
+    } catch (err) {
+      console.error('Image processing error:', err);
+    }
+  }
+
+  renderSquadPitch();
+  renderBench();
+  showToast(`${loaded} card(s) ready! Outliers cleaned.`);
+}
+
+/**
+ * Render Squad Pitch based on Current Formation
+ */
+function renderSquadPitch() {
+  const formationConfig = FORMATIONS[currentFormationKey] || FORMATIONS['4-3-3 Attack'];
+  squadBoard.innerHTML = '';
+
+  const showPosBadges = posBadgeToggle.value === 'show';
+  const showRank30 = rank30Toggle.value === 'show';
+  const fitClass = cardFitSelect.value === 'contain' ? 'contain-fit' : '';
+
+  formationConfig.rows.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = `formation-row ${row.className}`;
+    rowEl.dataset.rowId = row.id;
+
+    row.positions.forEach(posKey => {
+      const slotEl = document.createElement('div');
+      const cardData = pitchCards[posKey];
+      const isFilled = !!cardData;
+
+      slotEl.className = `player-slot ${isFilled ? 'filled' : 'empty'}`;
+      slotEl.id = `slot-${posKey}`;
+      slotEl.dataset.posKey = posKey;
+
+      // Formation offset (e.g. CAM slightly pushed up in 4-3-3 Attack)
+      if (row.offsets && row.offsets[posKey]) {
+        slotEl.classList.add(row.offsets[posKey]);
+      }
+
+      // Selection state check
+      if (selectedCard && selectedCard.type === 'pitch' && selectedCard.posKey === posKey) {
+        slotEl.classList.add('target-selected');
+      }
+
+      if (isFilled) {
+        // Card Image Container
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'card-img-wrap';
+
+        const img = document.createElement('img');
+        img.className = `card-img ${fitClass}`;
+        img.src = cardData.src;
+        img.alt = `${posKey} player card`;
+        img.draggable = true;
+
+        // Drag from Pitch Slot
+        img.addEventListener('dragstart', e => {
+          dragPayload = { type: 'pitch', posKey, cardData };
+          img.classList.add('is-dragging');
+          e.dataTransfer.setData('text/plain', JSON.stringify(dragPayload));
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        img.addEventListener('dragend', () => {
+          img.classList.remove('is-dragging');
+          dragPayload = null;
+        });
+
+        imgWrap.appendChild(img);
+        slotEl.appendChild(imgWrap);
+
+        // Optional Rank 30 Badge on Card
+        if (showRank30) {
+          const rankEl = document.createElement('div');
+          rankEl.className = 'rank-badge-pill';
+          rankEl.textContent = '30';
+          slotEl.appendChild(rankEl);
+        }
+
+        // Slot Hover Controls (Remove or Replace)
+        const controls = document.createElement('div');
+        controls.className = 'slot-controls';
+
+        // Replace Button
+        const replaceBtn = document.createElement('button');
+        replaceBtn.className = 'slot-btn slot-btn-change';
+        replaceBtn.innerHTML = '🔄';
+        replaceBtn.title = 'Replace screenshot for this position';
+        replaceBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          targetPosForDirectUpload = posKey;
+          singleSlotUploadInput.click();
+        });
+
+        // Remove Button (Returns card to bench)
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'slot-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.title = 'Return card to bench';
+        removeBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          benchCards.push({ id: uid(), src: cardData.src });
+          delete pitchCards[posKey];
+          if (selectedCard && selectedCard.posKey === posKey) selectedCard = null;
+          renderSquadPitch();
+          renderBench();
+          showToast(`${posKey} returned to bench.`);
+        });
+
+        // Magic Wand Studio Button (Remove Background & Outliers)
+        const magicBtn = document.createElement('button');
+        magicBtn.className = 'slot-btn slot-btn-magic';
+        magicBtn.innerHTML = '🪄';
+        magicBtn.title = 'Remove background & outliers for this card';
+        magicBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          openBgStudioWithCard('pitch', posKey);
+        });
+
+        controls.appendChild(magicBtn);
+        controls.appendChild(replaceBtn);
+        controls.appendChild(removeBtn);
+        slotEl.appendChild(controls);
+
+      } else {
+        // Empty Slot Placeholder
+        const emptyWrap = document.createElement('div');
+        emptyWrap.className = 'slot-empty-content';
+        emptyWrap.innerHTML = `
+          <div class="plus-icon">＋</div>
+          <div class="slot-action">ADD CARD</div>
+          <div class="slot-pos-hint">${displayPosLabel(posKey)}</div>
+        `;
+        slotEl.appendChild(emptyWrap);
+      }
+
+      // Green Position Badge Under Card (e.g. ST, LW, CB)
+      if (showPosBadges) {
+        const posBadge = document.createElement('div');
+        posBadge.className = 'pos-tag-pill';
+        posBadge.textContent = displayPosLabel(posKey);
+        slotEl.appendChild(posBadge);
+      }
+
+      // Click to place or upload
+      slotEl.onclick = () => handleSlotClick(posKey);
+
+      // Setup Drag & Drop on Slot
+      setupSlotDropTarget(slotEl, posKey);
+
+      rowEl.appendChild(slotEl);
+    });
+
+    squadBoard.appendChild(rowEl);
+  });
+}
+
+/**
+ * Handle Slot Click (Click-to-place / Select-to-swap / Direct upload)
+ */
+function handleSlotClick(posKey) {
+  // Case 1: A bench card is currently selected -> Place in this slot!
+  if (selectedCard && selectedCard.type === 'bench') {
+    const existing = pitchCards[posKey];
+    pitchCards[posKey] = {
+      id: selectedCard.id,
+      src: selectedCard.src,
+      pos: posKey
+    };
+    // Remove from bench
+    benchCards = benchCards.filter(c => c.id !== selectedCard.id);
+    if (existing) {
+      benchCards.push({ id: uid(), src: existing.src });
+    }
+    selectedCard = null;
+    renderSquadPitch();
+    renderBench();
+    showToast(`Placed card in ${posKey}!`);
+    return;
+  }
+
+  // Case 2: A pitch card is currently selected -> Swap or move!
+  if (selectedCard && selectedCard.type === 'pitch') {
+    if (selectedCard.posKey === posKey) {
+      // Clicked self -> Deselect
+      selectedCard = null;
+      renderSquadPitch();
+      return;
+    }
+    // Swap the two positions
+    const cardA = pitchCards[selectedCard.posKey];
+    const cardB = pitchCards[posKey];
+
+    if (cardB) {
+      pitchCards[selectedCard.posKey] = cardB;
+    } else {
+      delete pitchCards[selectedCard.posKey];
+    }
+    pitchCards[posKey] = cardA;
+
+    selectedCard = null;
+    renderSquadPitch();
+    showToast(`Swapped positions!`);
+    return;
+  }
+
+  // Case 3: Clicked a filled slot with nothing selected -> Select it for moving/swapping
+  if (pitchCards[posKey]) {
+    selectedCard = {
+      type: 'pitch',
+      posKey,
+      cardData: pitchCards[posKey]
+    };
+    renderSquadPitch();
+    renderBench();
+    showToast(`Selected ${posKey}. Click another position to swap, or bench to move.`);
+    return;
+  }
+
+  // Case 4: Clicked empty slot with nothing selected -> Direct file upload!
+  targetPosForDirectUpload = posKey;
+  singleSlotUploadInput.click();
+}
+
+/**
+ * Setup Drag & Drop Handlers for Pitch Slots
+ */
+function setupSlotDropTarget(slotEl, posKey) {
+  slotEl.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    slotEl.classList.add('drag-over');
+  });
+
+  slotEl.addEventListener('dragleave', () => {
+    slotEl.classList.remove('drag-over');
+  });
+
+  slotEl.addEventListener('drop', async e => {
+    e.preventDefault();
+    slotEl.classList.remove('drag-over');
+
+    // Case A: Dropped file directly from Desktop/Explorer
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleFilesUpload(e.dataTransfer.files, posKey);
+      return;
+    }
+
+    // Case B: Dropped card from Bench or another Slot
+    try {
+      const dataStr = e.dataTransfer.getData('text/plain');
+      if (!dataStr) return;
+      const data = JSON.parse(dataStr);
+
+      if (data.type === 'bench') {
+        // Dragged from Bench to Slot
+        const existing = pitchCards[posKey];
+        pitchCards[posKey] = {
+          id: data.card.id,
+          src: data.card.src,
+          pos: posKey
+        };
+        benchCards = benchCards.filter(c => c.id !== data.card.id);
+        if (existing) {
+          benchCards.push({ id: uid(), src: existing.src });
+        }
+        renderSquadPitch();
+        renderBench();
+        showToast(`Assigned to ${posKey}!`);
+      } else if (data.type === 'pitch') {
+        // Dragged from Slot to Slot (Swap)
+        const srcPos = data.posKey;
+        if (srcPos === posKey) return;
+
+        const cardA = pitchCards[srcPos];
+        const cardB = pitchCards[posKey];
+
+        if (cardB) {
+          pitchCards[srcPos] = cardB;
+        } else {
+          delete pitchCards[srcPos];
+        }
+        pitchCards[posKey] = cardA;
+
+        renderSquadPitch();
+        showToast(`Moved to ${posKey}!`);
+      }
+    } catch (err) {
+      console.error('Drop handling error:', err);
+    }
+  });
+}
+
+/**
+ * Render Bench / Pool Tray
+ */
+function renderBench() {
+  benchCardsGrid.innerHTML = '';
+  benchCountBadge.textContent = `${benchCards.length} CARD${benchCards.length === 1 ? '' : 'S'}`;
+
+  if (!benchCards.length) {
+    benchCardsGrid.appendChild(benchEmptyHint);
+    return;
+  }
+
+  benchCards.forEach(card => {
+    const cardEl = document.createElement('div');
+    cardEl.className = 'bench-card';
+    cardEl.dataset.id = card.id;
+
+    if (selectedCard && selectedCard.type === 'bench' && selectedCard.id === card.id) {
+      cardEl.classList.add('selected');
+    }
+
+    const img = document.createElement('img');
+    img.src = card.src;
+    img.alt = 'Bench player card';
+    img.draggable = true;
+
+    // Drag from Bench
+    img.addEventListener('dragstart', e => {
+      dragPayload = { type: 'bench', card };
+      cardEl.style.opacity = '0.5';
+      e.dataTransfer.setData('text/plain', JSON.stringify(dragPayload));
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    img.addEventListener('dragend', () => {
+      cardEl.style.opacity = '1';
+      dragPayload = null;
+    });
+
+    // Remove from Bench
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'bench-remove-btn';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.title = 'Delete card';
+    removeBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      benchCards = benchCards.filter(c => c.id !== card.id);
+      if (selectedCard && selectedCard.id === card.id) selectedCard = null;
+      renderBench();
+    });
+
+    // Magic Wand Button (Clean background & outliers)
+    const magicBtn = document.createElement('button');
+    magicBtn.className = 'bench-magic-btn';
+    magicBtn.innerHTML = '🪄';
+    magicBtn.title = 'Remove background & outliers';
+    magicBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openBgStudioWithCard('bench', card.id);
+    });
+
+    cardEl.appendChild(img);
+    cardEl.appendChild(magicBtn);
+    cardEl.appendChild(removeBtn);
+
+    // Click to select card for placing
+    cardEl.onclick = () => {
+      if (selectedCard && selectedCard.id === card.id) {
+        selectedCard = null;
+      } else {
+        selectedCard = { type: 'bench', id: card.id, src: card.src };
+        showToast('Card selected! Now click any position on the pitch to place it.');
+      }
+      renderBench();
+      renderSquadPitch();
+    };
+
+    benchCardsGrid.appendChild(cardEl);
+  });
+}
+
+/**
+ * Setup Bench Drop Zone (Allows dragging cards from pitch back to bench)
+ */
+function setupBenchDropZone() {
+  benchCardsGrid.addEventListener('dragover', e => {
+    e.preventDefault();
+    benchCardsGrid.classList.add('drag-over');
+  });
+
+  benchCardsGrid.addEventListener('dragleave', () => {
+    benchCardsGrid.classList.remove('drag-over');
+  });
+
+  benchCardsGrid.addEventListener('drop', async e => {
+    e.preventDefault();
+    benchCardsGrid.classList.remove('drag-over');
+
+    // Case 1: Files dropped directly onto bench
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleFilesUpload(e.dataTransfer.files);
+      return;
+    }
+
+    // Case 2: Card dragged from pitch to bench
+    try {
+      const dataStr = e.dataTransfer.getData('text/plain');
+      if (!dataStr) return;
+      const data = JSON.parse(dataStr);
+
+      if (data.type === 'pitch') {
+        const cardData = pitchCards[data.posKey];
+        if (cardData) {
+          benchCards.push({ id: uid(), src: cardData.src });
+          delete pitchCards[data.posKey];
+          renderSquadPitch();
+          renderBench();
+          showToast(`Returned ${data.posKey} to bench.`);
+        }
+      }
+    } catch (err) {
+      console.error('Bench drop error:', err);
+    }
+  });
+}
+
+/**
+ * Auto-fill empty positions with cards from the bench
+ */
+document.getElementById('autoFillBtn').addEventListener('click', () => {
+  if (!benchCards.length) {
+    showToast('No cards on the bench to auto-fill! Upload pictures first.');
+    return;
+  }
+
+  const formationConfig = FORMATIONS[currentFormationKey];
+  let filledCount = 0;
+
+  for (const row of formationConfig.rows) {
+    for (const posKey of row.positions) {
+      if (!pitchCards[posKey] && benchCards.length > 0) {
+        const nextCard = benchCards.shift();
+        pitchCards[posKey] = {
+          id: nextCard.id,
+          src: nextCard.src,
+          pos: posKey
+        };
+        filledCount++;
+      }
+    }
+  }
+
+  renderSquadPitch();
+  renderBench();
+  showToast(`Auto-filled ${filledCount} position(s)!`);
+});
+
+/**
+ * File Upload Event Listeners
+ */
+multiUploadInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files.length > 0) {
+    await handleFilesUpload(e.target.files);
+    e.target.value = '';
+  }
+});
+
+singleSlotUploadInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files.length > 0) {
+    await handleFilesUpload(e.target.files, targetPosForDirectUpload);
+    targetPosForDirectUpload = null;
+    e.target.value = '';
+  }
+});
+
+/**
+ * Formation Switcher
+ */
+formationSelect.addEventListener('change', e => {
+  currentFormationKey = e.target.value;
+  displayFormation.textContent = currentFormationKey;
+  renderSquadPitch();
+  showToast(`Formation set to ${currentFormationKey}`);
+});
+
+/**
+ * Title & OVR Synchronization
+ */
+titleInput.addEventListener('input', e => {
+  displayTitle.textContent = e.target.value.trim() || 'BEST TEAM 11';
+});
+displayTitle.addEventListener('input', () => {
+  titleInput.value = displayTitle.textContent.trim();
+});
+ovrInput.addEventListener('input', e => {
+  displayOvr.textContent = e.target.value || '126';
+});
+
+/**
+ * Theme & Display Toggles
+ */
+themeSelect.addEventListener('change', e => {
+  pitchContainer.className = `squad-pitch-container ${e.target.value}`;
+  showToast(`Pitch theme changed!`);
+});
+
+posBadgeToggle.addEventListener('change', renderSquadPitch);
+rank30Toggle.addEventListener('change', renderSquadPitch);
+cardFitSelect.addEventListener('change', renderSquadPitch);
+
+// Dynamic Card Size Controller
+const cardSizeMap = {
+  compact: { w: '132px', h: '176px' },
+  normal: { w: '144px', h: '192px' },
+  large: { w: '154px', h: '206px' },
+  xlarge: { w: '168px', h: '224px' }
+};
+
+function applyCardSize(sizeKey) {
+  const size = cardSizeMap[sizeKey] || cardSizeMap.large;
+  document.documentElement.style.setProperty('--card-w', size.w);
+  document.documentElement.style.setProperty('--card-h', size.h);
+}
+
+if (cardSizeSelect) {
+  const savedSize = localStorage.getItem('fc_volt_card_size') || 'large';
+  cardSizeSelect.value = savedSize;
+  applyCardSize(savedSize);
+
+  cardSizeSelect.addEventListener('change', e => {
+    applyCardSize(e.target.value);
+    try {
+      localStorage.setItem('fc_volt_card_size', e.target.value);
+    } catch(err) {}
+    showToast(`Card size set to ${e.target.options[e.target.selectedIndex].text}!`);
+  });
+}
+
+// Clean View Toggle
+document.getElementById('cleanViewBtn').addEventListener('click', () => {
+  document.body.classList.toggle('clean-view');
+  showToast(document.body.classList.contains('clean-view') ? 'Clean View ON' : 'Clean View OFF');
+});
+
+// Reset Pitch (Returns pitch cards to bench)
+document.getElementById('clearPitchBtn').addEventListener('click', () => {
+  const occupied = Object.keys(pitchCards).length;
+  if (!occupied) {
+    showToast('Pitch is already empty.');
+    return;
+  }
+  if (!confirm('Return all cards from the pitch back to the bench?')) return;
+  Object.keys(pitchCards).forEach(pos => {
+    benchCards.push({ id: uid(), src: pitchCards[pos].src });
+    delete pitchCards[pos];
+  });
+  selectedCard = null;
+  renderSquadPitch();
+  renderBench();
+  showToast('Pitch reset. Cards moved to bench.');
+});
+
+// Remove All Custom In-App Modal Dialog
+const removeAllBtn = document.getElementById('removeAllBtn');
+const removeAllModal = document.getElementById('removeAllModal');
+const cancelRemoveAllBtn = document.getElementById('cancelRemoveAllBtn');
+const confirmRemoveAllBtn = document.getElementById('confirmRemoveAllBtn');
+
+if (removeAllBtn && removeAllModal) {
+  removeAllBtn.addEventListener('click', () => {
+    const total = Object.keys(pitchCards).length + benchCards.length;
+    if (!total) {
+      showToast('Pitch and bench are already empty.');
+      return;
+    }
+    removeAllModal.classList.remove('hidden');
+  });
+
+  cancelRemoveAllBtn.addEventListener('click', () => {
+    removeAllModal.classList.add('hidden');
+  });
+
+  removeAllModal.addEventListener('click', e => {
+    if (e.target === removeAllModal) {
+      removeAllModal.classList.add('hidden');
+    }
+  });
+
+  confirmRemoveAllBtn.addEventListener('click', () => {
+    removeAllModal.classList.add('hidden');
+    pitchCards = {};
+    benchCards = [];
+    selectedCard = null;
+    targetPosForDirectUpload = null;
+    try {
+      localStorage.removeItem('fc_volt_team11_data');
+    } catch(e) {}
+    renderSquadPitch();
+    renderBench();
+    showToast('Removed all cards! Pitch is now empty.');
+  });
+}
+
+/* ========================================================
+   🪄 REMOVE BACKGROUND & OUTLIERS STUDIO
+   ======================================================== */
+const bgRemoverBtn = document.getElementById('bgRemoverBtn');
+const bgStudioModal = document.getElementById('bgStudioModal');
+const closeBgStudioBtn = document.getElementById('closeBgStudioBtn');
+const bgCloseCancelBtn = document.getElementById('bgCloseCancelBtn');
+const bgCardSelect = document.getElementById('bgCardSelect');
+const loadRonaldoSampleBtn = document.getElementById('loadRonaldoSampleBtn');
+const bgUploadInput = document.getElementById('bgUploadInput');
+const bgTolRange = document.getElementById('bgTolRange');
+const tolValDisplay = document.getElementById('tolValDisplay');
+const bgChokeRange = document.getElementById('bgChokeRange');
+const chokeValDisplay = document.getElementById('chokeValDisplay');
+const bgFeatherRange = document.getElementById('bgFeatherRange');
+const featherValDisplay = document.getElementById('featherValDisplay');
+const bgAutoCropCheck = document.getElementById('bgAutoCropCheck');
+const bgApplyCurrentBtn = document.getElementById('bgApplyCurrentBtn');
+const bgApplyAllPitchBtn = document.getElementById('bgApplyAllPitchBtn');
+const bgDownloadCutoutBtn = document.getElementById('bgDownloadCutoutBtn');
+const bgCanvasContainer = document.getElementById('bgCanvasContainer');
+const bgStudioCanvas = document.getElementById('bgStudioCanvas');
+const canvasInfoBadge = document.getElementById('canvasInfoBadge');
+const autoBgSelect = document.getElementById('autoBgSelect');
+
+// Mode buttons
+const modeAuto = document.getElementById('modeAuto');
+const modeWhite = document.getElementById('modeWhite');
+const modeBlack = document.getElementById('modeBlack');
+const modeColor = document.getElementById('modeColor');
+
+// Studio State
+let studioState = {
+  activeCardType: null, // 'pitch' | 'bench' | 'sample' | 'custom'
+  activeCardKey: null,
+  originalImageSrc: null,
+  currentWorkingDataUrl: null,
+  mode: 'auto',
+  tolerance: 0.28,
+  choke: 1,
+  feather: 1,
+  autoCrop: true,
+  pickedColor: { r: 255, g: 255, b: 255 },
+  activeTool: 'pan', // 'pan' | 'eyedropper' | 'eraser'
+  eraserSize: 18,
+  zoom: 1,
+  isDrawing: false
+};
+
+/**
+ * Open Studio Modal for a specific card or default
+ */
+function openBgStudioWithCard(type = null, key = null) {
+  populateStudioCardSelect(type, key);
+  bgStudioModal.classList.remove('hidden');
+
+  if (type && key) {
+    loadCardIntoStudio(type, key);
+  } else {
+    // Pick first available card or load Ronaldo sample
+    const pitchKeys = Object.keys(pitchCards);
+    if (pitchKeys.length > 0) {
+      loadCardIntoStudio('pitch', pitchKeys[0]);
+    } else if (benchCards.length > 0) {
+      loadCardIntoStudio('bench', benchCards[0].id);
+    } else {
+      loadSampleRonaldo();
+    }
+  }
+}
+
+function populateStudioCardSelect(selectedType = null, selectedKey = null) {
+  bgCardSelect.innerHTML = '';
+
+  // 1. Pitch Cards
+  const pitchKeys = Object.keys(pitchCards);
+  if (pitchKeys.length > 0) {
+    const pitchGroup = document.createElement('optgroup');
+    pitchGroup.label = '⚽ Pitch Position Cards';
+    pitchKeys.forEach(pos => {
+      const opt = document.createElement('option');
+      opt.value = `pitch_${pos}`;
+      opt.textContent = `Pitch: ${pos}`;
+      if (selectedType === 'pitch' && selectedKey === pos) opt.selected = true;
+      pitchGroup.appendChild(opt);
+    });
+    bgCardSelect.appendChild(pitchGroup);
+  }
+
+  // 2. Bench Cards
+  if (benchCards.length > 0) {
+    const benchGroup = document.createElement('optgroup');
+    benchGroup.label = '🎴 Bench Tray Cards';
+    benchCards.forEach((c, idx) => {
+      const opt = document.createElement('option');
+      opt.value = `bench_${c.id}`;
+      opt.textContent = `Bench #${idx + 1}`;
+      if (selectedType === 'bench' && selectedKey === c.id) opt.selected = true;
+      benchGroup.appendChild(opt);
+    });
+    bgCardSelect.appendChild(benchGroup);
+  }
+
+  // 3. Sample Option
+  const sampleGroup = document.createElement('optgroup');
+  sampleGroup.label = '⭐ Reference Samples';
+  const sampleOpt = document.createElement('option');
+  sampleOpt.value = 'sample_ronaldo';
+  sampleOpt.textContent = '⭐ Ronaldo 124 ST (Transparent Reference Card)';
+  if (selectedType === 'sample') sampleOpt.selected = true;
+  sampleGroup.appendChild(sampleOpt);
+  bgCardSelect.appendChild(sampleGroup);
+}
+
+function loadCardIntoStudio(type, key) {
+  studioState.activeCardType = type;
+  studioState.activeCardKey = key;
+
+  if (type === 'pitch') {
+    const card = pitchCards[key];
+    if (card) {
+      studioState.originalImageSrc = card.src;
+      bgCardSelect.value = `pitch_${key}`;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO ${key} ON PITCH`;
+      runStudioUpdate();
+    }
+  } else if (type === 'bench') {
+    const card = benchCards.find(c => c.id === key);
+    if (card) {
+      studioState.originalImageSrc = card.src;
+      bgCardSelect.value = `bench_${key}`;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO BENCH CARD`;
+      runStudioUpdate();
+    }
+  } else if (type === 'sample') {
+    loadSampleRonaldo();
+  }
+}
+
+function loadSampleRonaldo() {
+  studioState.activeCardType = 'sample';
+  studioState.activeCardKey = 'ronaldo';
+  studioState.originalImageSrc = 'ronaldo_sample.png';
+  bgCardSelect.value = 'sample_ronaldo';
+  if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY RONALDO TO ST`;
+  runStudioUpdate();
+}
+
+/**
+ * Update Preview on Canvas based on current studio settings
+ */
+async function runStudioUpdate() {
+  if (!studioState.originalImageSrc) return;
+
+  canvasInfoBadge.textContent = 'Processing cutout...';
+
+  try {
+    const cleaned = await processImageBackgroundRemoval(studioState.originalImageSrc, {
+      mode: studioState.mode,
+      tolerance: studioState.tolerance,
+      choke: studioState.choke,
+      feather: studioState.feather,
+      crop: studioState.autoCrop,
+      targetColor: studioState.pickedColor
+    });
+
+    studioState.currentWorkingDataUrl = cleaned;
+
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+
+      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Transparent Cutout Ready`;
+    };
+    img.src = cleaned;
+  } catch (err) {
+    console.error('Studio update error:', err);
+    canvasInfoBadge.textContent = 'Error processing image';
+  }
+}
+
+// Background removal engine: Edge-connected flood fill & choke
+function processImageBackgroundRemoval(imgSource, options = {}) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onerror = reject;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const w = canvas.width;
+      const h = canvas.height;
+      if (w === 0 || h === 0) return resolve(imgSource);
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      const mode = options.mode || 'auto';
+      const tolerance = options.tolerance !== undefined ? options.tolerance : 0.28;
+      const choke = options.choke !== undefined ? options.choke : 1;
+      const crop = options.crop !== undefined ? options.crop : true;
+
+      // 1. Target color calculation
+      let tr = 255, tg = 255, tb = 255;
+      if (mode === 'white') {
+        tr = 255; tg = 255; tb = 255;
+      } else if (mode === 'black') {
+        tr = 0; tg = 0; tb = 0;
+      } else if (mode === 'color' && options.targetColor) {
+        tr = options.targetColor.r;
+        tg = options.targetColor.g;
+        tb = options.targetColor.b;
+      } else {
+        // Auto-detect corner/border dominant color
+        const cornerCoords = [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]];
+        let sumR = 0, sumG = 0, sumB = 0, validSamples = 0;
+        cornerCoords.forEach(([cx, cy]) => {
+          const idx = (cy * w + cx) * 4;
+          if (data[idx + 3] > 20) {
+            sumR += data[idx];
+            sumG += data[idx + 1];
+            sumB += data[idx + 2];
+            validSamples++;
+          }
+        });
+        if (validSamples > 0) {
+          tr = Math.round(sumR / validSamples);
+          tg = Math.round(sumG / validSamples);
+          tb = Math.round(sumB / validSamples);
+        }
+      }
+
+      function colorDist(idx) {
+        const dr = data[idx] - tr;
+        const dg = data[idx + 1] - tg;
+        const db = data[idx + 2] - tb;
+        return Math.sqrt(dr * dr + dg * dg + db * db) / 441.673;
+      }
+
+      // 2. Perimeter BFS Flood Fill (Inward only, keeping inside safe!)
+      const visited = new Uint8Array(w * h);
+      const queue = new Int32Array(w * h);
+      let head = 0, tail = 0;
+
+      for (let x = 0; x < w; x++) {
+        [0, h - 1].forEach(y => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+      for (let y = 0; y < h; y++) {
+        [0, w - 1].forEach(x => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+
+      while (head < tail) {
+        const curr = queue[head++];
+        const cx = curr % w;
+        const cy = Math.floor(curr / w);
+
+        const n1 = cx > 0 ? curr - 1 : -1;
+        const n2 = cx < w - 1 ? curr + 1 : -1;
+        const n3 = cy > 0 ? curr - w : -1;
+        const n4 = cy < h - 1 ? curr + w : -1;
+
+        const neighbors = [n1, n2, n3, n4];
+        for (let i = 0; i < 4; i++) {
+          const nIdx = neighbors[i];
+          if (nIdx !== -1 && !visited[nIdx]) {
+            const pIdx = nIdx * 4;
+            if (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance) {
+              visited[nIdx] = 1;
+              queue[tail++] = nIdx;
+            }
+          }
+        }
+      }
+
+      // 3. Clear flood-filled background
+      for (let i = 0; i < w * h; i++) {
+        if (visited[i]) {
+          data[i * 4 + 3] = 0;
+        }
+      }
+
+      // 4. Fringe Choke / Halo Trim
+      if (choke > 0) {
+        for (let pass = 0; pass < choke; pass++) {
+          const toErase = [];
+          for (let y = 1; y < h - 1; y++) {
+            for (let x = 1; x < w - 1; x++) {
+              const idx = y * w + x;
+              const pIdx = idx * 4;
+              if (data[pIdx + 3] > 0) {
+                const hasTrans = 
+                  data[(idx - 1) * 4 + 3] === 0 ||
+                  data[(idx + 1) * 4 + 3] === 0 ||
+                  data[(idx - w) * 4 + 3] === 0 ||
+                  data[(idx + w) * 4 + 3] === 0;
+
+                if (hasTrans && colorDist(pIdx) <= tolerance * 1.45) {
+                  toErase.push(pIdx);
+                }
+              }
+            }
+          }
+          toErase.forEach(p => { data[p + 3] = 0; });
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      // 5. Auto-Crop Margins
+      let outCanvas = canvas;
+      if (crop) {
+        let minX = w, minY = h, maxX = 0, maxY = 0;
+        let hasVisible = false;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const a = data[(y * w + x) * 4 + 3];
+            if (a > 15) {
+              hasVisible = true;
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+        if (hasVisible && (minX > 1 || minY > 1 || maxX < w - 2 || maxY < h - 2)) {
+          const cropW = Math.max(1, maxX - minX + 1);
+          const cropH = Math.max(1, maxY - minY + 1);
+          const croppedCanvas = document.createElement('canvas');
+          croppedCanvas.width = cropW;
+          croppedCanvas.height = cropH;
+          const croppedCtx = croppedCanvas.getContext('2d');
+          croppedCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+          outCanvas = croppedCanvas;
+        }
+      }
+
+      resolve(outCanvas.toDataURL('image/png'));
+    };
+    img.src = imgSource;
+  });
+}
+
+// Studio Event Listeners
+if (bgRemoverBtn) {
+  bgRemoverBtn.addEventListener('click', () => openBgStudioWithCard());
+}
+if (closeBgStudioBtn) {
+  closeBgStudioBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+}
+if (bgCloseCancelBtn) {
+  bgCloseCancelBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+}
+if (bgStudioModal) {
+  bgStudioModal.addEventListener('click', e => {
+    if (e.target === bgStudioModal) bgStudioModal.classList.add('hidden');
+  });
+}
+
+// Card select change
+if (bgCardSelect) {
+  bgCardSelect.addEventListener('change', e => {
+    const val = e.target.value;
+    if (val.startsWith('pitch_')) {
+      const pos = val.replace('pitch_', '');
+      loadCardIntoStudio('pitch', pos);
+    } else if (val.startsWith('bench_')) {
+      const id = val.replace('bench_', '');
+      loadCardIntoStudio('bench', id);
+    } else if (val === 'sample_ronaldo') {
+      loadSampleRonaldo();
+    }
+  });
+}
+
+// Mode Selection Buttons
+function setStudioMode(newMode) {
+  studioState.mode = newMode;
+  [modeAuto, modeWhite, modeBlack, modeColor].forEach(el => {
+    if (el) el.classList.toggle('active', el.dataset.mode === newMode);
+  });
+  runStudioUpdate();
+}
+
+if (modeAuto) modeAuto.addEventListener('click', () => setStudioMode('auto'));
+if (modeWhite) modeWhite.addEventListener('click', () => setStudioMode('white'));
+if (modeBlack) modeBlack.addEventListener('click', () => setStudioMode('black'));
+if (modeColor) modeColor.addEventListener('click', () => setStudioMode('color'));
+
+// Sliders
+if (bgTolRange) {
+  bgTolRange.addEventListener('input', e => {
+    studioState.tolerance = parseFloat(e.target.value) / 100;
+    tolValDisplay.textContent = `${e.target.value}%`;
+    runStudioUpdate();
+  });
+}
+if (bgChokeRange) {
+  bgChokeRange.addEventListener('input', e => {
+    studioState.choke = parseInt(e.target.value, 10);
+    chokeValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgFeatherRange) {
+  bgFeatherRange.addEventListener('input', e => {
+    studioState.feather = parseInt(e.target.value, 10);
+    featherValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgAutoCropCheck) {
+  bgAutoCropCheck.addEventListener('change', e => {
+    studioState.autoCrop = e.target.checked;
+    runStudioUpdate();
+  });
+}
+
+// Sample Card Button
+if (loadRonaldoSampleBtn) {
+  loadRonaldoSampleBtn.addEventListener('click', () => {
+    loadSampleRonaldo();
+    showToast('Loaded Ronaldo 124 ST reference card!');
+  });
+}
+
+// Upload direct to Studio
+if (bgUploadInput) {
+  bgUploadInput.addEventListener('change', async e => {
+    if (e.target.files && e.target.files.length > 0) {
+      const dataUrl = await compressImageFile(e.target.files[0]);
+      studioState.activeCardType = 'custom';
+      studioState.activeCardKey = 'uploaded_' + Date.now();
+      studioState.originalImageSrc = dataUrl;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = '✅ APPLY TO SQUAD';
+      runStudioUpdate();
+      e.target.value = '';
+      showToast('Uploaded image into studio!');
+    }
+  });
+}
+
+// Presets
+const presetCleanWhite = document.getElementById('presetCleanWhite');
+const presetCleanBlack = document.getElementById('presetCleanBlack');
+const presetRevert = document.getElementById('presetRevert');
+
+if (presetCleanWhite) {
+  presetCleanWhite.addEventListener('click', () => {
+    bgTolRange.value = 28;
+    tolValDisplay.textContent = '28%';
+    bgChokeRange.value = 1;
+    chokeValDisplay.textContent = '1 px';
+    setStudioMode('white');
+  });
+}
+if (presetCleanBlack) {
+  presetCleanBlack.addEventListener('click', () => {
+    bgTolRange.value = 28;
+    tolValDisplay.textContent = '28%';
+    bgChokeRange.value = 1;
+    chokeValDisplay.textContent = '1 px';
+    setStudioMode('black');
+  });
+}
+if (presetRevert) {
+  presetRevert.addEventListener('click', () => {
+    if (!studioState.originalImageSrc) return;
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+      studioState.currentWorkingDataUrl = studioState.originalImageSrc;
+      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Reverted Original`;
+      showToast('Reverted to original image.');
+    };
+    img.src = studioState.originalImageSrc;
+  });
+}
+
+// Backdrop Theme Toggles
+['checker', 'stadium', 'black', 'white'].forEach(theme => {
+  const btn = document.querySelector(`.theme-btn[data-stage="${theme}"]`);
+  if (btn) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.theme-btn[data-stage]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      bgCanvasContainer.className = `bg-canvas-container ${theme === 'checker' ? '' : 'theme-' + theme}`;
+    });
+  }
+});
+
+// Zoom Controls
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomOutBtn = document.getElementById('zoomOutBtn');
+const zoomResetBtn = document.getElementById('zoomResetBtn');
+const zoomLevelDisplay = document.getElementById('zoomLevelDisplay');
+
+function setStudioZoom(z) {
+  studioState.zoom = Math.max(0.4, Math.min(2.5, z));
+  bgStudioCanvas.style.transform = `scale(${studioState.zoom})`;
+  zoomLevelDisplay.textContent = `${Math.round(studioState.zoom * 100)}%`;
+}
+if (zoomInBtn) zoomInBtn.addEventListener('click', () => setStudioZoom(studioState.zoom + 0.2));
+if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => setStudioZoom(studioState.zoom - 0.2));
+if (zoomResetBtn) zoomResetBtn.addEventListener('click', () => setStudioZoom(1));
+
+// Interactive Tools (Inspect, Eyedropper, Eraser)
+const toolPanBtn = document.getElementById('toolPanBtn');
+const toolEyedropperBtn = document.getElementById('toolEyedropperBtn');
+const toolEraserBtn = document.getElementById('toolEraserBtn');
+const eraserSizeWrap = document.getElementById('eraserSizeWrap');
+const eraserSizeRange = document.getElementById('eraserSizeRange');
+const eraserSizeVal = document.getElementById('eraserSizeVal');
+
+function setActiveTool(tool) {
+  studioState.activeTool = tool;
+  toolPanBtn.classList.toggle('active', tool === 'pan');
+  toolEyedropperBtn.classList.toggle('active', tool === 'eyedropper');
+  toolEraserBtn.classList.toggle('active', tool === 'eraser');
+  eraserSizeWrap.style.display = tool === 'eraser' ? 'inline-flex' : 'none';
+
+  if (tool === 'eyedropper') {
+    bgStudioCanvas.style.cursor = 'crosshair';
+  } else if (tool === 'eraser') {
+    bgStudioCanvas.style.cursor = 'cell';
+  } else {
+    bgStudioCanvas.style.cursor = 'default';
+  }
+}
+
+if (toolPanBtn) toolPanBtn.addEventListener('click', () => setActiveTool('pan'));
+if (toolEyedropperBtn) toolEyedropperBtn.addEventListener('click', () => setActiveTool('eyedropper'));
+if (toolEraserBtn) toolEraserBtn.addEventListener('click', () => setActiveTool('eraser'));
+if (eraserSizeRange) {
+  eraserSizeRange.addEventListener('input', e => {
+    studioState.eraserSize = parseInt(e.target.value, 10);
+    eraserSizeVal.textContent = `${e.target.value}px`;
+  });
+}
+
+// Canvas Click & Touch Handlers
+function getCanvasPos(e) {
+  const rect = bgStudioCanvas.getBoundingClientRect();
+  const scaleX = bgStudioCanvas.width / rect.width;
+  const scaleY = bgStudioCanvas.height / rect.height;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: Math.round((clientX - rect.left) * scaleX),
+    y: Math.round((clientY - rect.top) * scaleY)
+  };
+}
+
+bgStudioCanvas.addEventListener('mousedown', e => {
+  if (studioState.activeTool === 'eyedropper') {
+    const pos = getCanvasPos(e);
+    const ctx = bgStudioCanvas.getContext('2d');
+    const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+    studioState.pickedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
+    setStudioMode('color');
+    showToast(`Sampled color: rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`);
+    setActiveTool('pan');
+  } else if (studioState.activeTool === 'eraser') {
+    studioState.isDrawing = true;
+    eraseAt(e);
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  if (studioState.isDrawing) {
+    studioState.isDrawing = false;
+    studioState.currentWorkingDataUrl = bgStudioCanvas.toDataURL('image/png');
+  }
+});
+
+bgStudioCanvas.addEventListener('mousemove', e => {
+  if (studioState.isDrawing && studioState.activeTool === 'eraser') {
+    eraseAt(e);
+  }
+});
+
+function eraseAt(e) {
+  const pos = getCanvasPos(e);
+  const ctx = bgStudioCanvas.getContext('2d');
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, studioState.eraserSize, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+// Apply to Selected Card
+if (bgApplyCurrentBtn) {
+  bgApplyCurrentBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) return;
+
+    if (studioState.activeCardType === 'pitch' && studioState.activeCardKey) {
+      if (!pitchCards[studioState.activeCardKey]) {
+        pitchCards[studioState.activeCardKey] = { id: uid(), pos: studioState.activeCardKey };
+      }
+      pitchCards[studioState.activeCardKey].src = studioState.currentWorkingDataUrl;
+      renderSquadPitch();
+      showToast(`Applied clean transparent card to ${studioState.activeCardKey}!`);
+    } else if (studioState.activeCardType === 'bench' && studioState.activeCardKey) {
+      const idx = benchCards.findIndex(c => c.id === studioState.activeCardKey);
+      if (idx !== -1) {
+        benchCards[idx].src = studioState.currentWorkingDataUrl;
+        renderBench();
+        showToast('Applied clean transparent card to bench!');
+      }
+    } else {
+      // If sample or custom upload:
+      // Place directly onto ST or currently selected pitch slot!
+      const targetPos = (selectedCard && selectedCard.type === 'pitch') ? selectedCard.posKey : (pitchCards['ST'] ? 'ST' : Object.keys(pitchCards)[0]);
+      if (targetPos) {
+        pitchCards[targetPos] = { id: uid(), src: studioState.currentWorkingDataUrl, pos: targetPos };
+        renderSquadPitch();
+        showToast(`Placed clean transparent card at ${targetPos}!`);
+      } else {
+        benchCards.push({ id: uid(), src: studioState.currentWorkingDataUrl });
+        renderBench();
+        showToast('Added clean cutout to bench! Click or drag onto the pitch.');
+      }
+    }
+
+    bgStudioModal.classList.add('hidden');
+  });
+}
+
+// Apply to ALL 11 Pitch Cards
+if (bgApplyAllPitchBtn) {
+  bgApplyAllPitchBtn.addEventListener('click', async () => {
+    const keys = Object.keys(pitchCards);
+    if (keys.length === 0) {
+      showToast('No cards on the pitch to clean! Place cards first.');
+      return;
+    }
+
+    showToast(`Cleaning background & outliers for ${keys.length} pitch cards...`);
+
+    for (let i = 0; i < keys.length; i++) {
+      const pos = keys[i];
+      try {
+        const cleaned = await processImageBackgroundRemoval(pitchCards[pos].src, {
+          mode: studioState.mode,
+          tolerance: studioState.tolerance,
+          choke: studioState.choke,
+          feather: studioState.feather,
+          crop: studioState.autoCrop,
+          targetColor: studioState.pickedColor
+        });
+        pitchCards[pos].src = cleaned;
+      } catch (err) {
+        console.error(`Error cleaning ${pos}:`, err);
+      }
+    }
+
+    renderSquadPitch();
+    bgStudioModal.classList.add('hidden');
+    showToast(`✨ Successfully cleaned all ${keys.length} cards on the pitch!`);
+  });
+}
+
+// Download Cutout PNG
+if (bgDownloadCutoutBtn) {
+  bgDownloadCutoutBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) return;
+    const a = document.createElement('a');
+    a.download = `FC_VOLT_card_cutout_${Date.now()}.png`;
+    a.href = studioState.currentWorkingDataUrl;
+    a.click();
+    showToast('Downloaded transparent PNG card!');
+  });
+}
+
+// Clear Bench
+document.getElementById('clearBenchBtn').addEventListener('click', () => {
+  if (!benchCards.length) {
+    showToast('Bench is already empty.');
+    return;
+  }
+  if (!confirm('Clear all cards from the bench?')) return;
+  benchCards = [];
+  selectedCard = null;
+  renderBench();
+  showToast('Bench cleared.');
+});
+
+/**
+ * High-Resolution PNG Export (html2canvas)
+ */
+document.getElementById('exportBtn').addEventListener('click', async () => {
+  showToast('Generating high-resolution PNG image...');
+
+  // Hide edit helper elements for a pristine game screenshot
+  const emptyHolders = pitchContainer.querySelectorAll('.player-slot.empty .slot-empty-content');
+  const slotControls = pitchContainer.querySelectorAll('.slot-controls');
+  const emptySlots = pitchContainer.querySelectorAll('.player-slot.empty');
+
+  emptyHolders.forEach(el => el.style.opacity = '0');
+  slotControls.forEach(el => el.style.display = 'none');
+  emptySlots.forEach(el => el.style.border = 'none');
+
+  try {
+    const canvas = await html2canvas(pitchContainer, {
+      scale: 2.5,
+      useCORS: true,
+      backgroundColor: null,
+      logging: false
+    });
+
+    const link = document.createElement('a');
+    const safeTitle = (titleInput.value.trim() || 'Team11').replace(/[^a-z0-9_-]/gi, '_');
+    link.download = `FC_VOLT_${safeTitle}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    showToast('Downloaded High-Res PNG Image!');
+  } catch (err) {
+    console.error('Export error:', err);
+    showToast('Export failed. Try taking a screenshot or use Print to PDF.');
+  } finally {
+    emptyHolders.forEach(el => el.style.opacity = '');
+    slotControls.forEach(el => el.style.display = '');
+    emptySlots.forEach(el => el.style.border = '');
+  }
+});
+
+/**
+ * High-Resolution Landscape PDF Export (jspdf + html2canvas)
+ */
+document.getElementById('pdfBtn').addEventListener('click', async () => {
+  showToast('Generating high-resolution PDF document...');
+
+  const emptyHolders = pitchContainer.querySelectorAll('.player-slot.empty .slot-empty-content');
+  const slotControls = pitchContainer.querySelectorAll('.slot-controls');
+  const emptySlots = pitchContainer.querySelectorAll('.player-slot.empty');
+
+  emptyHolders.forEach(el => el.style.opacity = '0');
+  slotControls.forEach(el => el.style.display = 'none');
+  emptySlots.forEach(el => el.style.border = 'none');
+
+  try {
+    const canvas = await html2canvas(pitchContainer, {
+      scale: 2.5,
+      useCORS: true,
+      backgroundColor: null,
+      logging: false
+    });
+
+    const { jsPDF } = window.jspdf;
+    const imgWidth = canvas.width;
+    const imgHeight = canvas.height;
+
+    // Landscape A4 (297 x 210 mm)
+    const pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    // Fill dark page background
+    pdf.setFillColor(3, 5, 8);
+    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+
+    const margin = 8;
+    const maxW = pageWidth - (margin * 2);
+    const maxH = pageHeight - (margin * 2);
+    const ratio = Math.min(maxW / imgWidth, maxH / imgHeight);
+    const renderW = imgWidth * ratio;
+    const renderH = imgHeight * ratio;
+    const posX = (pageWidth - renderW) / 2;
+    const posY = (pageHeight - renderH) / 2;
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    pdf.addImage(imgData, 'JPEG', posX, posY, renderW, renderH);
+
+    const safeTitle = (titleInput.value.trim() || 'Team11').replace(/[^a-z0-9_-]/gi, '_');
+    pdf.save(`FC_VOLT_${safeTitle}.pdf`);
+    showToast('Downloaded High-Res PDF Document!');
+  } catch (err) {
+    console.error('PDF error:', err);
+    showToast('PDF export failed. You can use PRINT to save as PDF.');
+  } finally {
+    emptyHolders.forEach(el => el.style.opacity = '');
+    slotControls.forEach(el => el.style.display = '');
+    emptySlots.forEach(el => el.style.border = '');
+  }
+});
+
+// Print Button
+document.getElementById('printBtn').addEventListener('click', () => {
+  window.print();
+});
+
+/**
+ * LocalStorage Save & Load
+ */
+function saveSquad() {
+  const squadData = {
+    title: titleInput.value,
+    formation: currentFormationKey,
+    ovr: ovrInput.value,
+    theme: themeSelect.value,
+    posBadge: posBadgeToggle.value,
+    rank30: rank30Toggle.value,
+    cardFit: cardFitSelect.value,
+    cardSize: cardSizeSelect ? cardSizeSelect.value : 'large',
+    pitchCards,
+    benchCards
+  };
+  try {
+    localStorage.setItem('fc_volt_team11_data', JSON.stringify(squadData));
+    showToast('Squad saved successfully in browser!');
+  } catch (err) {
+    console.error('Save error:', err);
+    showToast('Storage full! Clear some bench cards to save.');
+  }
+}
+
+function loadSquad() {
+  const saved = localStorage.getItem('fc_volt_team11_data');
+  if (!saved) return false;
+  try {
+    const data = JSON.parse(saved);
+    if (data.title) {
+      titleInput.value = data.title;
+      displayTitle.textContent = data.title;
+    }
+    if (data.formation && FORMATIONS[data.formation]) {
+      currentFormationKey = data.formation;
+      formationSelect.value = data.formation;
+      displayFormation.textContent = data.formation;
+    }
+    if (data.ovr) {
+      ovrInput.value = data.ovr;
+      displayOvr.textContent = data.ovr;
+    }
+    if (data.theme) {
+      themeSelect.value = data.theme;
+      pitchContainer.className = `squad-pitch-container ${data.theme}`;
+    }
+    if (data.posBadge) posBadgeToggle.value = data.posBadge;
+    if (data.rank30) rank30Toggle.value = data.rank30;
+    if (data.cardFit) cardFitSelect.value = data.cardFit;
+    if (data.cardSize && cardSizeSelect) {
+      cardSizeSelect.value = data.cardSize;
+      applyCardSize(data.cardSize);
+    }
+    if (data.pitchCards) pitchCards = data.pitchCards;
+    if (data.benchCards) benchCards = data.benchCards;
+
+    renderSquadPitch();
+    renderBench();
+    return true;
+  } catch (err) {
+    console.error('Load squad error:', err);
+    return false;
+  }
+}
+
+document.getElementById('saveBtn').addEventListener('click', saveSquad);
+
+/**
+ * ⚡ PREVIEW DEMO SQUAD (Matching Reference Screenshot Exactly!)
+ * 11 Realistic FC Mobile Cards:
+ * LW: Díaz (125)
+ * ST: Haaland (126)
+ * RW: Shevchenko (128)
+ * LCM: Pedri (126)
+ * CAM: Messi (124)
+ * RCM: Pirlo (126)
+ * LB: Lizarazu (124)
+ * LCB: Baresi (127)
+ * RCB: Barzagli (126)
+ * RB: Lahm (127)
+ * GK: Courtois (125)
+ */
+function loadDemoSquad(silent = false) {
+  currentFormationKey = '4-3-3 Attack';
+  formationSelect.value = '4-3-3 Attack';
+  displayFormation.textContent = '4-3-3 Attack';
+
+  const demoPlayers = [
+    { pos: 'LW', name: 'DÍAZ', ovr: '125', nation: '🇨🇴', club: 'Bayern', trait: '⚡', col1: '#dc0032', col2: '#550014', frame: '#ffddaa', borderCol: '#ffaa00' },
+    { pos: 'ST', name: 'HAALAND', ovr: '126', nation: '🇳🇴', club: 'Man City', trait: '💪', col1: '#6cabdd', col2: '#1c2c5b', frame: '#e6f2ff', borderCol: '#00c8ff' },
+    { pos: 'RW', name: 'SHEVCHENKO', ovr: '128', nation: '🇺🇦', club: 'Milan', trait: '🔥', col1: '#c80000', col2: '#1b0000', frame: '#ffd700', borderCol: '#ffcc00' },
+    { pos: 'LCM', name: 'PEDRI', ovr: '126', nation: '🇪🇸', club: 'Barca', trait: '🎯', col1: '#004d98', col2: '#a50044', frame: '#ffd700', borderCol: '#ffc400' },
+    { pos: 'CAM', name: 'MESSI', ovr: '124', nation: '🇦🇷', club: 'Miami', trait: '👑', col1: '#f7b5cd', col2: '#231f20', frame: '#ffd700', borderCol: '#ffe14c' },
+    { pos: 'RCM', name: 'PIRLO', ovr: '126', nation: '🇮🇹', club: 'Juventus', trait: '💎', col1: '#262626', col2: '#6e6e6e', frame: '#d4af37', borderCol: '#ffd700' },
+    { pos: 'LB', name: 'LIZARAZU', ovr: '124', nation: '🇫🇷', club: 'Bayern', trait: '🛡️', col1: '#2a446c', col2: '#0e1826', frame: '#c69c3a', borderCol: '#d4af37' },
+    { pos: 'LCB', name: 'BARESI', ovr: '127', nation: '🇮🇹', club: 'Milan', trait: '🦝', col1: '#a60000', col2: '#140000', frame: '#f0c75e', borderCol: '#ffd700' },
+    { pos: 'RCB', name: 'BARZAGLI', ovr: '126', nation: '🇮🇹', club: 'Juventus', trait: '🦝', col1: '#3a3a3a', col2: '#111111', frame: '#e5be53', borderCol: '#d4af37' },
+    { pos: 'RB', name: 'LAHM', ovr: '127', nation: '🇩🇪', club: 'Bayern', trait: '🦝', col1: '#cc0029', col2: '#47000d', frame: '#f8d168', borderCol: '#ffcc00' },
+    { pos: 'GK', name: 'COURTOIS', ovr: '125', nation: '🇧🇪', club: 'Real Madrid', trait: '🧤', col1: '#00a859', col2: '#003a1f', frame: '#c7b4e2', borderCol: '#aa88ff' }
+  ];
+
+  pitchCards = {};
+
+  demoPlayers.forEach(p => {
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="220" height="295" viewBox="0 0 220 295">
+        <defs>
+          <linearGradient id="bg_${p.pos}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${p.col1}" />
+            <stop offset="100%" stop-color="${p.col2}" />
+          </linearGradient>
+          <linearGradient id="goldFrame_${p.pos}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fff5b8" />
+            <stop offset="35%" stop-color="${p.borderCol}" />
+            <stop offset="70%" stop-color="#996c14" />
+            <stop offset="100%" stop-color="#ffea88" />
+          </linearGradient>
+          <radialGradient id="glow_${p.pos}" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0.8"/>
+          </radialGradient>
+        </defs>
+
+        <!-- FC Mobile Shield Contour -->
+        <path d="M 22 18 L 198 18 Q 206 18 206 26 L 206 218 Q 206 258 110 288 Q 14 258 14 218 L 14 26 Q 14 18 22 18 Z" 
+              fill="url(#bg_${p.pos})" stroke="url(#goldFrame_${p.pos})" stroke-width="5" />
+        <path d="M 22 18 L 198 18 Q 206 18 206 26 L 206 218 Q 206 258 110 288 Q 14 258 14 218 L 14 26 Q 14 18 22 18 Z" 
+              fill="url(#glow_${p.pos})" />
+
+        <!-- Skill Boost Badge (Top Left Diamond) -->
+        <polygon points="32,24 44,24 40,38 28,38" fill="#111722" stroke="url(#goldFrame_${p.pos})" stroke-width="1.2" />
+        <text x="36" y="34" font-size="10" text-anchor="middle">${p.trait}</text>
+
+        <!-- Rating & Position (Top Left Stack) -->
+        <text x="32" y="72" font-family="'Titan One', sans-serif" font-size="36" font-weight="900" fill="#ffffff" letter-spacing="-1.5">${p.ovr}</text>
+        <text x="32" y="92" font-family="'Montserrat', sans-serif" font-size="16" font-weight="900" fill="#ffffff" opacity="0.95">${displayPosLabel(p.pos)}</text>
+        <text x="32" y="112" font-size="16">${p.nation}</text>
+
+        <!-- Player Graphic Avatar / Silhouette -->
+        <circle cx="138" cy="104" r="44" fill="#ffffff" opacity="0.14" />
+        <path d="M 102 185 C 102 135, 174 135, 174 185 Z" fill="#ffffff" opacity="0.22" />
+        <circle cx="138" cy="95" r="26" fill="#ffffff" opacity="0.32" />
+
+        <!-- Player Name Banner -->
+        <rect x="22" y="196" width="176" height="34" rx="6" fill="#040810ee" stroke="url(#goldFrame_${p.pos})" stroke-width="1.4" />
+        <text x="110" y="219" font-family="'Titan One', 'Montserrat', sans-serif" font-size="16" font-weight="900" text-anchor="middle" fill="#ffffff" letter-spacing="1.2">${p.name}</text>
+
+      </svg>
+    `;
+
+    const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.trim());
+    pitchCards[p.pos] = {
+      id: uid(),
+      src: dataUrl,
+      pos: p.pos,
+      name: p.name,
+      ovr: p.ovr
+    };
+  });
+
+  titleInput.value = 'BEST TEAM 11';
+  displayTitle.textContent = 'BEST TEAM 11';
+  ovrInput.value = '126';
+  displayOvr.textContent = '126';
+
+  renderSquadPitch();
+  renderBench();
+
+  if (!silent) {
+    showToast('Loaded 11 players matching your screenshot!');
+  }
+}
+
+document.getElementById('demoBtn').addEventListener('click', () => {
+  loadDemoSquad(false);
+});
+
+// INITIALIZE APP
+setupBenchDropZone();
+const restored = loadSquad();
+if (!restored) {
+  // Pre-load demo squad on first visit so user is instantly wowed!
+  loadDemoSquad(true);
+}
+</script>
+</body>
+</html>

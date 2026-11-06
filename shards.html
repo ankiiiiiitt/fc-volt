@@ -1,0 +1,2865 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FC_VOLT — Football Shard Comparison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Russo+One&family=Anton&display=swap" rel="stylesheet">
+<script src="html2canvas.min.js"></script>
+<script src="jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --bg-dark: #020408;
+    --panel-bg: #070c16;
+    --panel-border: #142033;
+    --accent-cyan: #00e5ff;
+    --accent-gold: #ffbe1a;
+    --accent-green: #00ff66;
+    --accent-red: #ff1744;
+    --glow-cyan: 0 0 20px rgba(0, 229, 255, 0.5);
+    --glow-green: 0 0 20px rgba(0, 255, 102, 0.5);
+    --font-heading: 'Teko', sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-display: 'Montserrat', sans-serif;
+    --font-impact: 'Anton', 'Montserrat', sans-serif;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #020407;
+    color: #edf2f9;
+    font-family: var(--font-body);
+  }
+
+  body {
+    padding: 12px;
+    background: radial-gradient(ellipse at 50% 0%, #0a1324 0%, #020407 80%);
+    background-attachment: fixed;
+  }
+
+  .app-container {
+    max-width: 1720px;
+    margin: 0 auto;
+  }
+
+  /* ========================================================
+     TOP TOOLBAR
+     ======================================================== */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: rgba(7, 12, 22, 0.94);
+    border: 1px solid #16243a;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    margin-bottom: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  }
+
+  .brand-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brandmark {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #00e5ff, #0055ff);
+    color: #020813;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 24px;
+    font-style: italic;
+    box-shadow: 0 0 18px rgba(0, 229, 255, 0.5);
+    user-select: none;
+  }
+
+  .brand-text h1 {
+    font-size: 20px;
+    letter-spacing: 2.5px;
+    margin: 0;
+    font-weight: 900;
+    background: linear-gradient(90deg, #ffffff 20%, #00e5ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+  }
+
+  .brand-text small {
+    display: block;
+    color: #6e86a5;
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+
+  /* Template Switcher Tabs */
+  .template-nav {
+    display: flex;
+    background: #04070d;
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid #131f33;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .nav-tab {
+    padding: 7px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #8c9eb5;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.16s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+  }
+
+  .nav-tab:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .nav-tab.active {
+    background: linear-gradient(135deg, #00e5ff, #0070f3);
+    color: #020813;
+    font-weight: 900;
+    box-shadow: 0 0 16px rgba(0, 229, 255, 0.45);
+  }
+
+  /* Action Buttons */
+  .toolbar-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #20314a;
+    background: #0e1624;
+    color: #c9d8ec;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
+    user-select: none;
+  }
+
+  .btn:hover {
+    background: #162234;
+    color: #fff;
+    border-color: #385175;
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #00e5ff, #0070f3);
+    color: #020813;
+    border: 1px solid #33f0ff;
+    font-weight: 900;
+    box-shadow: 0 0 16px rgba(0, 229, 255, 0.4);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #33f0ff, #1a82ff);
+    box-shadow: 0 0 24px rgba(0, 229, 255, 0.65);
+    color: #020813;
+  }
+
+  .btn-green {
+    background: linear-gradient(135deg, #00ff66, #00aa3e);
+    color: #011406;
+    border: 1px solid #33ff85;
+    font-weight: 900;
+    box-shadow: 0 0 14px rgba(0, 255, 102, 0.35);
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #ff1744, #b30026);
+    color: #ffffff;
+    border: 1px solid #ff4466;
+    font-weight: 900;
+  }
+  .btn-danger:hover {
+    background: linear-gradient(135deg, #ff335e, #d6002f);
+    box-shadow: 0 0 16px rgba(255, 23, 68, 0.6);
+  }
+
+  .btn-download {
+    background: linear-gradient(135deg, #ff0055, #ff5500);
+    color: #ffffff;
+    border: 1px solid #ff4488;
+    font-weight: 900;
+    box-shadow: 0 0 18px rgba(255, 0, 85, 0.45);
+  }
+
+  .btn-download:hover {
+    background: linear-gradient(135deg, #ff1a6c, #ff6a1a);
+    box-shadow: 0 0 26px rgba(255, 0, 85, 0.7);
+    transform: translateY(-1px);
+  }
+
+  /* ========================================================
+     WORKSPACE LAYOUT (Dual Column: Editor + Live Preview)
+     ======================================================== */
+  .workspace-layout {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 1200px) {
+    .workspace-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ========================================================
+     LEFT PANEL: EDITOR & MANAGEMENT
+     ======================================================== */
+  .editor-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .panel-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  }
+
+  .panel-title {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #9cb5d6;
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Main Player Widget */
+  .main-player-widget {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: linear-gradient(135deg, #091222, #040810);
+    border: 1.5px solid #00e5ff;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    border-radius: 12px;
+    padding: 10px 12px;
+    position: relative;
+  }
+
+  .main-player-thumb {
+    width: 60px;
+    height: 78px;
+    border-radius: 6px;
+    object-fit: contain;
+    background: #020408;
+    border: 1px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+
+  .main-player-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .main-player-badge {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #00e5ff;
+    text-transform: uppercase;
+  }
+
+  .main-player-name {
+    font-size: 17px;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .main-player-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #8da4c4;
+  }
+
+  .stat-pill {
+    background: #0f1a2d;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid #1c2e48;
+    color: #ffffff;
+  }
+
+  .shard-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0, 229, 255, 0.12);
+    border: 1px solid rgba(0, 229, 255, 0.4);
+    padding: 2px 7px;
+    border-radius: 5px;
+    color: #00e5ff;
+    font-weight: 900;
+  }
+
+  .shard-pill img {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Quick Form Fields */
+  .quick-config-box {
+    margin-top: 10px;
+    background: #05080e;
+    border: 1px solid #131e2e;
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .form-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: #9cb0cc;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .input-styled {
+    background: #0d1522;
+    border: 1px solid #1f2f45;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 6px 10px;
+    border-radius: 6px;
+    outline: none;
+    transition: border 0.16s ease;
+  }
+
+  .input-styled:focus {
+    border-color: #00e5ff;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+  }
+
+  .shard-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .shard-input-wrap img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .shard-input-wrap input {
+    width: 110px;
+    text-align: right;
+    color: #00e5ff;
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  /* Add Matchup Prominent Button */
+  .btn-add-prominent {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #00e5ff, #0066ff);
+    color: #020813;
+    border: 1.5px solid #33f0ff;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .btn-add-prominent:hover {
+    background: linear-gradient(135deg, #33f0ff, #1a75ff);
+    box-shadow: 0 0 28px rgba(0, 229, 255, 0.7);
+    transform: translateY(-2px);
+  }
+
+  /* Battles Manager List */
+  .battles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .battle-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #080d16;
+    border: 1px solid #162438;
+    border-radius: 8px;
+    padding: 8px 10px;
+    transition: all 0.15s ease;
+  }
+
+  .battle-item:hover {
+    border-color: #243854;
+    background: #0d1522;
+  }
+
+  .battle-pair-thumbs {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 58px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  .thumb-left {
+    width: 32px;
+    height: 42px;
+    border-radius: 4px;
+    object-fit: contain;
+    background: #040810;
+    border: 1px solid rgba(255,255,255,0.2);
+    position: absolute;
+    left: 0;
+    z-index: 1;
+  }
+
+  .thumb-right {
+    width: 32px;
+    height: 42px;
+    border-radius: 4px;
+    object-fit: contain;
+    background: #040810;
+    border: 1.5px solid #00e5ff;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+  }
+
+  .battle-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .battle-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .battle-sub {
+    font-size: 11px;
+    color: #7992b0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .btn-mini {
+    padding: 4px 7px;
+    font-size: 11px;
+    background: #0e1624;
+    border: 1px solid #1f3048;
+    color: #9cb2cf;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 800;
+    transition: all 0.14s ease;
+  }
+
+  .btn-mini:hover {
+    background: #182538;
+    color: #fff;
+    border-color: #3b5275;
+  }
+
+  .btn-mini-toggle {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 900;
+  }
+
+  .btn-mini-toggle.win {
+    background: rgba(0, 255, 102, 0.15);
+    border: 1px solid rgba(0, 255, 102, 0.4);
+    color: #00ff66;
+  }
+
+  .btn-mini-toggle.loss {
+    background: rgba(255, 23, 68, 0.15);
+    border: 1px solid rgba(255, 23, 68, 0.4);
+    color: #ff3355;
+  }
+
+  /* Setting Inputs Grid */
+  .setting-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .select-styled {
+    width: 100%;
+    background: #0d1522;
+    border: 1px solid #1f2f45;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 7px 10px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  /* ========================================================
+     RIGHT PANEL: LIVE GRAPHIC PREVIEW
+     ======================================================== */
+  .preview-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .preview-controls-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: #070c16;
+    border: 1px solid #142033;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #8da2bf;
+    flex-wrap: wrap;
+  }
+
+  .graphic-viewport {
+    width: 100%;
+    max-width: 680px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+    border-radius: 14px;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.9), 0 0 30px rgba(0, 229, 255, 0.15);
+    background: #000205;
+    position: relative;
+  }
+
+  /* ========================================================
+     THE 1080 × 1800 (3:5 RATIO) COMPARISON GRAPHIC
+     ======================================================== */
+  #comparisonGraphic {
+    width: 1080px;
+    height: 1800px;
+    min-width: 1080px;
+    min-height: 1800px;
+    position: relative;
+    background-color: #03060c;
+    overflow: hidden;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    padding: 36px 36px 30px 36px;
+    transform-origin: top center;
+    box-sizing: border-box;
+  }
+
+  /* Stadium Floodlights & Atmosphere Layer */
+  .stadium-lights-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image: 
+      radial-gradient(ellipse at 12% 8%, rgba(255, 0, 128, 0.35) 0%, transparent 45%),
+      radial-gradient(ellipse at 88% 8%, rgba(0, 229, 255, 0.38) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 10%, rgba(255, 255, 255, 0.18) 0%, transparent 60%);
+  }
+
+  /* Diagonal Laser Beams (Top-Left Pink & Top-Right Cyan) */
+  .laser-beam-left {
+    position: absolute;
+    top: -60px;
+    left: -40px;
+    width: 320px;
+    height: 12px;
+    background: linear-gradient(90deg, #ff0077, rgba(255, 0, 119, 0));
+    transform: rotate(38deg);
+    box-shadow: 0 0 35px #ff0077, 0 0 70px #ff0077;
+    filter: blur(2px);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .laser-beam-right {
+    position: absolute;
+    top: -60px;
+    right: -40px;
+    width: 320px;
+    height: 12px;
+    background: linear-gradient(270deg, #00e5ff, rgba(0, 229, 255, 0));
+    transform: rotate(-38deg);
+    box-shadow: 0 0 35px #00e5ff, 0 0 70px #00e5ff;
+    filter: blur(2px);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Green Pitch Grass Floor at Bottom */
+  .stadium-grass-floor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 140px;
+    background: 
+      radial-gradient(ellipse at 50% 100%, rgba(0, 255, 102, 0.35) 0%, transparent 70%),
+      linear-gradient(180deg, transparent 0%, rgba(10, 45, 20, 0.6) 50%, rgba(6, 28, 12, 0.95) 100%);
+    pointer-events: none;
+    z-index: 2;
+    border-top: 1px solid rgba(0, 255, 102, 0.25);
+  }
+
+  /* Center Vertical Neon Divider */
+  .center-neon-divider {
+    position: absolute;
+    top: 220px;
+    bottom: 30px;
+    left: 50%;
+    width: 3px;
+    background: linear-gradient(180deg, #ff007f 0%, #aa00ff 50%, #00e5ff 100%);
+    box-shadow: 0 0 16px rgba(255, 0, 127, 0.8), 0 0 30px rgba(0, 229, 255, 0.6);
+    transform: translateX(-50%);
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  /* ========================================================
+     HEADER (CROWN, LAURELS, METALLIC TITLES & GREEN PILL)
+     ======================================================== */
+  .comparison-header-area {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 22px;
+  }
+
+  /* Crown */
+  .header-crown-wrap {
+    position: relative;
+    margin-bottom: -10px;
+    z-index: 2;
+  }
+
+  .header-crown-img {
+    height: 48px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 14px rgba(255, 200, 0, 0.8));
+  }
+
+  /* Main Title Banner with Laurels */
+  .header-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    position: relative;
+    width: 100%;
+  }
+
+  .title-laurel {
+    width: 50px;
+    height: 70px;
+    flex-shrink: 0;
+  }
+
+  .title-laurel-right {
+    transform: scaleX(-1);
+  }
+
+  .title-main-text-box {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-family: var(--font-impact);
+    text-transform: uppercase;
+    line-height: 1;
+    position: relative;
+    padding: 0 10px;
+  }
+
+  /* Blue Neon Under-glow Line behind Title */
+  .title-neon-bar {
+    position: absolute;
+    bottom: -6px;
+    left: -20px;
+    right: -20px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, #00e5ff 25%, #00e5ff 75%, transparent 100%);
+    box-shadow: 0 0 20px #00e5ff, 0 0 40px #00e5ff;
+  }
+
+  /* First Part: Chrome Silver (e.g. VINI JR.) */
+  .title-part-name {
+    font-size: 78px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #ffffff;
+    background: linear-gradient(180deg, #ffffff 0%, #d4e4f7 40%, #8ba3c7 50%, #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.9)) drop-shadow(0 0 10px rgba(255,255,255,0.4));
+  }
+
+  /* Second Part: 3D Bevel Gold (COMPARISON) */
+  .title-part-comparison {
+    font-size: 80px;
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    color: #ffd700;
+    background: linear-gradient(180deg, #fff299 0%, #ffc000 45%, #b37700 85%, #ffdb4d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.95)) drop-shadow(0 0 16px rgba(255, 192, 0, 0.6));
+  }
+
+  /* Subtitle Glowing Green Pill */
+  .header-subtitle-pill {
+    margin-top: 12px;
+    background: #020704;
+    border: 2.5px solid #00ff66;
+    border-radius: 40px;
+    box-shadow: 0 0 20px rgba(0, 255, 102, 0.65), 0 6px 18px rgba(0,0,0,0.8);
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 6px 24px 6px 28px;
+  }
+
+  .subtitle-text {
+    font-family: var(--font-impact);
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: #00ff66;
+    background: linear-gradient(180deg, #c4ff80 0%, #00ff66 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(0, 255, 102, 0.6);
+  }
+
+  .subtitle-check-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #00ff66;
+    color: #021a08;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    font-weight: 900;
+    border: 2px solid #000;
+    box-shadow: 0 0 10px rgba(0, 255, 102, 0.8);
+  }
+
+  /* ========================================================
+     THE 4-COLUMN BATTLE GRID (3 ROWS × 2 SIDES = 6 MATCHUPS)
+     ======================================================== */
+  .battles-container {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+    row-gap: 32px;
+    align-content: space-between;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .battle-side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    justify-content: space-between;
+  }
+
+  /* A Single Matchup Row: 3 Columns (Left Card, Operator, Right Card) with Genuine Space */
+  .battle-matchup-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    column-gap: 16px;
+    position: relative;
+  }
+
+  /* Quick Floating Delete Button for each Matchup */
+  .battle-delete-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #ff1744, #99001f);
+    border: 1.5px solid #ff4d6d;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    z-index: 15;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.8), 0 0 10px rgba(255, 23, 68, 0.6);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.16s ease;
+    user-select: none;
+  }
+
+  .battle-delete-badge:hover {
+    background: linear-gradient(135deg, #ff3366, #cc0029);
+    box-shadow: 0 4px 16px rgba(255, 23, 68, 0.9);
+    transform: translateX(-50%) scale(1.08);
+  }
+
+  .clean-view .battle-delete-badge {
+    display: none !important;
+  }
+
+  /* Empty Battle Slot Placeholder */
+  .empty-battle-slot {
+    width: 100%;
+    aspect-ratio: 28 / 18;
+    border: 2px dashed rgba(0, 229, 255, 0.3);
+    border-radius: 12px;
+    background: rgba(3, 8, 18, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #00e5ff;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-weight: 800;
+    font-size: 13px;
+  }
+
+  .empty-battle-slot:hover {
+    border-color: #00e5ff;
+    background: rgba(0, 229, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .clean-view .empty-battle-slot {
+    display: none !important;
+  }
+
+  /* ========================================================
+     INDIVIDUAL PLAYER CARD DESIGN (AUTHENTIC EFOOTBALL STYLE)
+     ======================================================== */
+  .player-card-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  /* SHARD BADGE (BLUE ICON + VALUE) */
+  .unit-shard-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    user-select: none;
+    z-index: 4;
+  }
+
+  .unit-shard-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.8));
+    display: block;
+  }
+
+  .unit-shard-val {
+    font-family: var(--font-impact);
+    font-size: 28px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    text-shadow: 
+      -2px -2px 0 #000,  
+       2px -2px 0 #000,
+      -2px  2px 0 #000,
+       2px  2px 0 #000,
+       0 4px 10px rgba(0,0,0,0.9);
+  }
+
+  /* CARD FRAME CONTAINER */
+  .unit-card-box {
+    width: 100%;
+    aspect-ratio: 1 / 1.18;
+    position: relative;
+    border-radius: 12px;
+    overflow: visible;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.16s ease;
+  }
+
+  .unit-card-box:hover {
+    transform: translateY(-2px);
+  }
+
+  .unit-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.85));
+  }
+
+  /* STATUS BADGE: RED CROSS OR GREEN CHECKMARK (CLICKABLE) */
+  .unit-status-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    font-weight: 900;
+    border: 2.5px solid #000000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.9);
+    cursor: pointer;
+    z-index: 5;
+    transition: transform 0.16s ease;
+  }
+
+  .unit-status-badge:hover {
+    transform: scale(1.18);
+  }
+
+  .unit-status-badge.win {
+    background: #00ff66;
+    color: #011a07;
+    box-shadow: 0 0 14px rgba(0, 255, 102, 0.85), 0 4px 12px rgba(0,0,0,0.9);
+  }
+
+  .unit-status-badge.loss {
+    background: #ff1744;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(255, 23, 68, 0.85), 0 4px 12px rgba(0,0,0,0.9);
+  }
+
+  /* OPERATOR COLUMN BETWEEN CARDS WITH GENUINE BREATHING SPACE */
+  .battle-operator-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 42px; /* offsets below the shard badges to align with card center */
+    padding-left: 8px;
+    padding-right: 8px;
+    z-index: 7;
+  }
+
+  .battle-operator-badge {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #021a0a 0%, #010804 100%);
+    border: 2.5px solid #00ff66;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-impact, 'Impact', 'Arial Black', sans-serif);
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1;
+    color: #00ff66;
+    text-shadow: 
+      0 0 10px #00ff66,
+      0 0 20px #00ff66,
+      0 0 32px rgba(0, 255, 102, 0.95),
+      0 2px 4px #000;
+    box-shadow: 
+      0 0 18px rgba(0, 255, 102, 0.7),
+      0 0 36px rgba(0, 255, 102, 0.4),
+      inset 0 0 12px rgba(0, 255, 102, 0.45),
+      0 4px 14px rgba(0, 0, 0, 0.9);
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  }
+
+  .battle-operator-badge:hover {
+    transform: scale(1.22);
+    background: radial-gradient(circle, #043815 0%, #021006 100%);
+    box-shadow: 
+      0 0 26px rgba(0, 255, 102, 0.98),
+      0 0 48px rgba(0, 255, 102, 0.6),
+      inset 0 0 16px rgba(0, 255, 102, 0.65),
+      0 6px 18px rgba(0, 0, 0, 0.95);
+  }
+
+  /* EDIT OVERLAY ON HOVER */
+  .unit-edit-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 8, 18, 0.86);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.16s ease;
+    z-index: 10;
+    padding: 8px;
+  }
+
+  .unit-card-box:hover .unit-edit-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .clean-view .unit-edit-overlay {
+    display: none !important;
+  }
+
+  .btn-unit-act {
+    background: #0e1726;
+    border: 1px solid #223754;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 90%;
+    text-align: center;
+  }
+
+  .btn-unit-act:hover {
+    background: #00e5ff;
+    color: #020813;
+    border-color: #33f0ff;
+  }
+
+  /* ========================================================
+     MODALS
+     ======================================================== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 5, 12, 0.92);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 16px;
+  }
+
+  .modal-backdrop.hidden {
+    display: none !important;
+  }
+
+  .modal-card {
+    background: #090e17;
+    border: 1.5px solid #00e5ff;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 30px rgba(0, 229, 255, 0.35);
+    border-radius: 14px;
+    width: 560px;
+    max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .modal-header {
+    padding: 14px 18px;
+    background: #0d1522;
+    border-bottom: 1px solid #1c2b42;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-header h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+  }
+
+  .modal-close {
+    background: transparent;
+    border: none;
+    color: #8da4c4;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .modal-body {
+    padding: 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-group label {
+    font-size: 11px;
+    font-weight: 800;
+    color: #9cb5d6;
+    letter-spacing: 0.5px;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group select {
+    background: #060a12;
+    border: 1px solid #1f2e45;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 12px;
+    border-radius: 7px;
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: #00e5ff;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+  }
+
+  .image-picker-zone {
+    border: 2px dashed #203554;
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    background: #060910;
+    cursor: pointer;
+  }
+
+  .image-picker-zone:hover {
+    border-color: #00e5ff;
+    background: rgba(0, 229, 255, 0.05);
+  }
+
+  .gallery-presets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+    gap: 8px;
+    max-height: 140px;
+    overflow-y: auto;
+    padding: 4px;
+    background: #05080e;
+    border-radius: 8px;
+    border: 1px solid #172437;
+  }
+
+  .gallery-preset-item {
+    position: relative;
+    aspect-ratio: 13 / 18;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s ease;
+  }
+
+  .gallery-preset-item:hover,
+  .gallery-preset-item.selected {
+    border-color: #00e5ff;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    transform: scale(1.05);
+  }
+
+  .gallery-preset-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    padding: 2px;
+  }
+
+  /* Uploaded Cards & Preset Cards with Permanent Delete Button */
+  .gallery-uploaded-item {
+    position: relative;
+    aspect-ratio: 13 / 18;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1.5px solid #203652;
+    transition: all 0.15s ease;
+    background: #090e17;
+  }
+
+  .gallery-uploaded-item:hover {
+    border-color: #00e5ff;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+    transform: scale(1.05);
+  }
+
+  .gallery-uploaded-item.selected {
+    border-color: #00e5ff;
+    box-shadow: 0 0 14px rgba(0, 229, 255, 0.7);
+  }
+
+  .gallery-uploaded-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    padding: 2px;
+  }
+
+  .gallery-card-del-btn,
+  .gallery-uploaded-del-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ff1744;
+    color: #ffffff;
+    border: 1.5px solid #000;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.9);
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .gallery-card-del-btn:hover,
+  .gallery-uploaded-del-btn:hover {
+    background: #ff335e;
+    transform: scale(1.25);
+  }
+
+  /* Active Uploaded Image Preview Box */
+  .active-image-preview-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #060a12;
+    border: 1.5px solid #00e5ff;
+    border-radius: 8px;
+    padding: 10px 12px;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+  }
+
+  .active-image-preview-thumb {
+    width: 48px;
+    height: 60px;
+    border-radius: 5px;
+    object-fit: contain;
+    object-position: center center;
+    background: #090e17;
+    border: 1px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+
+  .active-image-preview-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .active-image-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .active-image-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: 2px;
+  }
+
+  .modal-footer {
+    padding: 12px 18px;
+    background: #0a111c;
+    border-top: 1px solid #1a273b;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* Toast Notification */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #09111c;
+    border: 1.5px solid #00e5ff;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(0, 229, 255, 0.35);
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 20000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- TOP TOOLBAR -->
+  <header class="toolbar">
+    <div class="brand-area">
+      <div class="brandmark">💎</div>
+      <div class="brand-text">
+        <h1>FC_VOLT</h1>
+        <small>FOOTBALL SHARD COMPARISON</small>
+      </div>
+    </div>
+
+    <!-- TEMPLATE SWITCHER TABS -->
+    <nav class="template-nav">
+      <a href="index.html" class="nav-tab" title="Go to Tier List Template">📊 Tier List (4 Tiers)</a>
+      <a href="top10.html" class="nav-tab" title="Go to Top 10 Best Players Template">🔟 Top 10 Ranking</a>
+      <a href="team11.html" class="nav-tab" title="Go to Best Team 11 Squad Builder">⚽ Best Team 11</a>
+      <button class="nav-tab active" title="Current: Football Shard Comparison Template">💎 Shard Comparison</button>
+    </nav>
+
+    <!-- ACTION BUTTONS -->
+    <div class="toolbar-actions">
+      <button id="addMatchupBtn" class="btn btn-primary" title="Add a new comparison battle">
+        ＋ ADD MATCHUP
+      </button>
+      <button id="configMainBtn" class="btn" title="Configure Main Baseline Player & Default Shards">
+        ⚙️ MAIN PLAYER SETUP
+      </button>
+      <button id="clearAllCardsBtn" class="btn btn-danger" title="Delete / Clear all comparison cards">
+        🗑️ CLEAR ALL CARDS
+      </button>
+      <button id="cleanViewBtn" class="btn" title="Toggle Clean Preview (hide edit buttons)">
+        👁️ CLEAN VIEW
+      </button>
+      <button id="downloadPngBtn" class="btn btn-download" title="Download High-Res 3:5 (1080×1800) PNG">
+        📸 DOWNLOAD PNG (3:5 - 1080×1800)
+      </button>
+      <button id="downloadJpgBtn" class="btn" title="Download High-Res 3:5 (1080×1800) JPG">
+        🖼️ DOWNLOAD JPG (3:5)
+      </button>
+    </div>
+  </header>
+
+  <!-- WORKSPACE: DUAL COLUMN (EDITOR + LIVE PREVIEW) -->
+  <main class="workspace-layout">
+
+    <!-- LEFT PANE: CONFIGURATION & BATTLES MANAGER -->
+    <aside class="editor-panel">
+
+      <!-- MAIN PLAYER CARD SUMMARY -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>👑 Baseline Star Player</span>
+          <button id="editMainPlayerBtn" class="btn-mini">Edit Profile</button>
+        </div>
+
+        <div class="main-player-widget">
+          <img id="mainPlayerThumb" class="main-player-thumb" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='80' viewBox='0 0 60 80'><rect width='60' height='80' fill='%230b1322' rx='6'/><text x='50%' y='50%' fill='%23415b76' font-size='20' dominant-baseline='middle' text-anchor='middle'>👤</text></svg>" alt="Main Player">
+          <div class="main-player-info">
+            <div class="main-player-badge">⭐ Baseline Star</div>
+            <h2 id="mainPlayerNameDisplay" class="main-player-name">Set Main Player</h2>
+            <div class="main-player-stats">
+              <span id="mainPlayerOvrDisplay" class="stat-pill">-- OVR</span>
+              <span id="mainPlayerPosDisplay" class="stat-pill">--</span>
+              <span class="shard-pill">
+                <img src="shard_icon.png" alt="Shard">
+                <span id="mainPlayerShardDisplay">0</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEFAULT SHARD VALUE FIELD -->
+        <div class="quick-config-box">
+          <div class="form-row">
+            <label class="form-label">
+              <span>🔷 Fixed Baseline Shard Value:</span>
+            </label>
+            <div class="shard-input-wrap">
+              <img src="shard_icon.png" alt="Shard">
+              <input type="text" id="defaultShardInput" class="input-styled" placeholder="e.g. 8,300" value="">
+            </div>
+          </div>
+          <small style="display:block; color:#6c829e; font-size:10px; margin-top:5px;">
+            Displayed automatically above all baseline cards.
+          </small>
+        </div>
+      </section>
+
+      <!-- TITLE & SUBTITLE HEADINGS CONFIG -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>🏷️ Titles & Banners</span>
+        </div>
+        <div class="form-group">
+          <label>Main Heading Name</label>
+          <input type="text" id="titleNameInput" class="input-styled" placeholder="e.g. VINI JR." value="">
+        </div>
+        <div class="form-group" style="margin-top:6px;">
+          <label>Subtitle Capsule Text</label>
+          <input type="text" id="subtitleTextInput" class="input-styled" placeholder="e.g. BETTER THAN ALL" value="">
+        </div>
+      </section>
+
+      <!-- ADD MATCHUP BUTTON -->
+      <button id="addMatchupProminentBtn" class="btn-add-prominent">
+        ＋ ADD NEW COMPARISON BATTLE
+      </button>
+
+      <!-- ACTIVE MATCHUPS MANAGER -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>⚔️ Comparison Battles</span>
+          <span id="battleCountBadge" class="btn-mini" style="cursor:default;">6 Battles</span>
+        </div>
+        <div id="battlesList" class="battles-list">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- UPLOADED CARDS LIBRARY PANEL -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>📁 Uploaded Cards Library</span>
+          <span id="uploadedCountBadge" class="btn-mini" style="cursor:default;">0 Cards</span>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:10px;">
+          <button type="button" id="batchUploadCardsBtn" class="btn-mini btn-primary" style="flex:1; justify-content:center; padding:7px 10px;">
+            ＋ Upload Card Pictures
+          </button>
+          <button type="button" id="clearAllUploadedLibraryBtn" class="btn-mini btn-danger" style="padding:7px 10px;">
+            🗑️ Clear All
+          </button>
+          <input type="file" id="batchUploadCardsInput" accept="image/*" multiple style="display:none;">
+        </div>
+        <div id="sidebarUploadedCardsGrid" class="gallery-presets" style="max-height:160px;">
+          <!-- Dynamically populated -->
+        </div>
+        <small style="display:block; color:#6c829e; font-size:10px; margin-top:6px;">
+          Click any card to use, or click the red ✕ to delete it from library.
+        </small>
+      </section>
+
+    </aside>
+
+    <!-- RIGHT PANE: LIVE GRAPHIC PREVIEW -->
+    <section class="preview-panel">
+
+      <div class="preview-controls-bar">
+        <span>📸 <strong>Live 3:5 Ratio Preview</strong> (1080 × 1800 - Matching Reference Design)</span>
+        <div style="display:flex; gap:6px;">
+          <button id="zoomFitBtn" class="btn-mini">Fit View</button>
+          <button id="zoom100Btn" class="btn-mini">100% Full Res</button>
+        </div>
+      </div>
+
+      <!-- VIEWPORT -->
+      <div id="graphicViewport" class="graphic-viewport">
+
+        <!-- 1080 × 1800 (3:5 RATIO) CANVAS (EXACT REFERENCE GRAPHIC) -->
+        <div id="comparisonGraphic">
+
+          <!-- STADIUM ATMOSPHERE & LASER LAYERS -->
+          <div class="stadium-lights-layer"></div>
+          <div class="laser-beam-left"></div>
+          <div class="laser-beam-right"></div>
+          <div class="stadium-grass-floor"></div>
+          <div class="center-neon-divider"></div>
+
+          <!-- TOP HEADER: CROWN, LAURELS, TITLE & SUBTITLE -->
+          <div class="comparison-header-area">
+            <!-- Crown -->
+            <div class="header-crown-wrap">
+              <img src="crown_gold_clean.png" class="header-crown-img" alt="Crown">
+            </div>
+
+            <!-- Title Row with Golden Laurels -->
+            <div class="header-title-row">
+              <!-- Left Laurel Branch (SVG) -->
+              <svg class="title-laurel" viewBox="0 0 60 90" fill="none">
+                <path d="M50 85 C35 65 25 40 30 10" stroke="#ffd700" stroke-width="3" stroke-linecap="round"/>
+                <path d="M48 80 C30 78 20 68 22 58 C32 60 40 70 48 80 Z" fill="#ffd700"/>
+                <path d="M40 65 C22 62 12 50 15 40 C26 43 34 54 40 65 Z" fill="#ffd700"/>
+                <path d="M34 48 C18 44 8 32 12 22 C23 25 30 36 34 48 Z" fill="#ffd700"/>
+                <path d="M30 30 C16 25 10 12 16 4 C25 9 30 20 30 30 Z" fill="#ffd700"/>
+              </svg>
+
+              <!-- Main Title Text -->
+              <div class="title-main-text-box">
+                <span id="gTitlePlayer" class="title-part-name">PLAYER</span>
+                <span class="title-part-comparison">COMPARISON</span>
+                <div class="title-neon-bar"></div>
+              </div>
+
+              <!-- Right Laurel Branch (SVG mirrored) -->
+              <svg class="title-laurel title-laurel-right" viewBox="0 0 60 90" fill="none">
+                <path d="M50 85 C35 65 25 40 30 10" stroke="#ffd700" stroke-width="3" stroke-linecap="round"/>
+                <path d="M48 80 C30 78 20 68 22 58 C32 60 40 70 48 80 Z" fill="#ffd700"/>
+                <path d="M40 65 C22 62 12 50 15 40 C26 43 34 54 40 65 Z" fill="#ffd700"/>
+                <path d="M34 48 C18 44 8 32 12 22 C23 25 30 36 34 48 Z" fill="#ffd700"/>
+                <path d="M30 30 C16 25 10 12 16 4 C25 9 30 20 30 30 Z" fill="#ffd700"/>
+              </svg>
+            </div>
+
+            <!-- Glowing Neon Green Subtitle Pill -->
+            <div class="header-subtitle-pill">
+              <span id="gSubtitleText" class="subtitle-text">BETTER THAN ALL</span>
+              <div class="subtitle-check-badge">✓</div>
+            </div>
+          </div>
+
+          <!-- THE 4-COLUMN BATTLES CONTAINER -->
+          <div class="battles-container">
+            <!-- Left Side: 3 Battles (Col 1 & 2) -->
+            <div id="battleSideLeft" class="battle-side-column">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <!-- Right Side: 3 Battles (Col 3 & 4) -->
+            <div id="battleSideRight" class="battle-side-column">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- ========================================================
+     MODAL: EDIT MAIN PLAYER PROFILE
+     ======================================================== -->
+<div id="mainPlayerModal" class="modal-backdrop hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>⚙️ Configure Baseline Player</h3>
+      <button class="modal-close" data-close="mainPlayerModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Main Player Name</label>
+        <input type="text" id="cfgMainName" placeholder="e.g. VINI JR., MESSI" value="">
+      </div>
+      <div class="setting-grid">
+        <div class="form-group">
+          <label>Rating (OVR)</label>
+          <input type="number" id="cfgMainOvr" placeholder="e.g. 121" value="">
+        </div>
+        <div class="form-group">
+          <label>Position</label>
+          <input type="text" id="cfgMainPos" placeholder="e.g. LW" value="">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Fixed Shard Value</label>
+        <div class="shard-input-wrap">
+          <img src="shard_icon.png" alt="Shard">
+          <input type="text" id="cfgMainShard" class="input-styled" style="width:100%; text-align:left;" placeholder="e.g. 8,300" value="">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Main Player Card Photo</label>
+        <div id="cfgMainDropZone" class="image-picker-zone">
+          <div style="font-size:22px;">📁</div>
+          <div style="font-size:12px; font-weight:800; color:#fff;">Click or drag to upload card photo</div>
+        </div>
+        <div id="cfgMainActivePreview" class="active-image-preview-box" style="display:none; margin-top:8px;">
+          <img id="cfgMainActiveThumb" class="active-image-preview-thumb" src="" alt="Active Card">
+          <div class="active-image-preview-info">
+            <span class="active-image-title">Current Card Selected</span>
+            <div class="active-image-actions">
+              <button type="button" id="cfgMainRemoveImgBtn" class="btn-mini btn-danger" title="Remove / Clear this image">
+                🗑️ Delete / Remove Image
+              </button>
+              <button type="button" id="cfgMainReplaceImgBtn" class="btn-mini" title="Replace image">
+                🔄 Replace Image
+              </button>
+            </div>
+          </div>
+        </div>
+        <input type="file" id="cfgMainFileInput" accept="image/*" style="display:none;">
+      </div>
+
+      <!-- MY UPLOADED CARDS SECTION -->
+      <div class="form-group" id="cfgMainUploadedSection" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label>📁 My Uploaded Cards (Click to use • ✕ to delete):</label>
+          <button type="button" id="cfgMainClearUploadsBtn" class="btn-mini btn-danger" style="font-size:10px; padding:2px 6px;">
+            🗑️ Clear Uploads
+          </button>
+        </div>
+        <div class="gallery-presets" id="mainUploadedGallery"></div>
+      </div>
+
+      <div class="form-group" id="mainPresetSection" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <label>Or Select From Presets (Click to use • ✕ to permanently delete):</label>
+          <button type="button" class="btn-mini btn-danger restore-presets-btn" style="font-size:10px; padding:2px 6px;" title="Reset preset cards">
+            🔄 Clear
+          </button>
+        </div>
+        <div class="gallery-presets" id="mainPresetGallery"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-close="mainPlayerModal">Cancel</button>
+      <button id="saveMainPlayerBtn" class="btn btn-primary">Save Configuration</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================
+     MODAL: ADD / EDIT COMPARISON OPPONENT
+     ======================================================== -->
+<div id="matchupModal" class="modal-backdrop hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="matchupModalTitle">＋ Edit Comparison Battle</h3>
+      <button class="modal-close" data-close="matchupModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Opponent Player Name</label>
+        <input type="text" id="opponentNameInput" placeholder="e.g. Ronaldinho, Rivaldo, Son">
+      </div>
+      <div class="setting-grid">
+        <div class="form-group">
+          <label>Rating (OVR)</label>
+          <input type="number" id="opponentOvrInput" value="120">
+        </div>
+        <div class="form-group">
+          <label>Position</label>
+          <input type="text" id="opponentPosInput" value="LW">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Opponent Shard Value</label>
+        <div class="shard-input-wrap">
+          <img src="shard_icon.png" alt="Shard">
+          <input type="text" id="opponentShardInput" class="input-styled" style="width:100%; text-align:left;" value="68,195">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Battle Comparison Outcome (&lt; or &gt;)</label>
+        <select id="battleWinnerSelect" class="select-styled" style="font-size:13px; padding:10px;">
+          <option value="opponent_wins">&lt; Opponent Better (Main &lt; Opponent / Opponent ✔)</option>
+          <option value="main_wins">&gt; Main Better (Main &gt; Opponent / Main ✔)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Opponent Card Image</label>
+        <div id="opponentDropZone" class="image-picker-zone">
+          <div style="font-size:22px;">📁</div>
+          <div style="font-size:12px; font-weight:800; color:#fff;">Click or drag opponent card image</div>
+        </div>
+        <div id="opponentActivePreview" class="active-image-preview-box" style="display:none; margin-top:8px;">
+          <img id="opponentActiveThumb" class="active-image-preview-thumb" src="" alt="Active Opponent">
+          <div class="active-image-preview-info">
+            <span class="active-image-title">Current Opponent Card</span>
+            <div class="active-image-actions">
+              <button type="button" id="opponentRemoveImgBtn" class="btn-mini btn-danger" title="Remove / Clear this image">
+                🗑️ Delete / Remove Image
+              </button>
+              <button type="button" id="opponentReplaceImgBtn" class="btn-mini" title="Replace image">
+                🔄 Replace Image
+              </button>
+            </div>
+          </div>
+        </div>
+        <input type="file" id="opponentFileInput" accept="image/*" style="display:none;">
+      </div>
+
+      <!-- MY UPLOADED CARDS SECTION -->
+      <div class="form-group" id="opponentUploadedSection" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label>📁 My Uploaded Cards (Click to use • ✕ to delete):</label>
+          <button type="button" id="opponentClearUploadsBtn" class="btn-mini btn-danger" style="font-size:10px; padding:2px 6px;">
+            🗑️ Clear Uploads
+          </button>
+        </div>
+        <div class="gallery-presets" id="opponentUploadedGallery"></div>
+      </div>
+
+      <div class="form-group" id="opponentPresetSection" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <label>Or Choose From Presets (Click to use • ✕ to permanently delete):</label>
+          <button type="button" class="btn-mini btn-danger restore-presets-btn" style="font-size:10px; padding:2px 6px;" title="Reset preset cards">
+            🔄 Clear
+          </button>
+        </div>
+        <div class="gallery-presets" id="opponentPresetGallery"></div>
+      </div>
+    </div>
+    <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+      <button id="deleteMatchupModalBtn" class="btn btn-danger" style="display:none;" title="Delete this card matchup">
+        🗑️ Delete Card
+      </button>
+      <div style="display:flex; gap:8px;">
+        <button class="btn" data-close="matchupModal">Cancel</button>
+        <button id="saveMatchupBtn" class="btn btn-primary">Save Battle</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast">
+  <span id="toastIcon">✨</span>
+  <span id="toastMessage">Action completed</span>
+</div>
+
+<script>
+/**
+ * FC_VOLT EXACT SHARD COMPARISON ENGINE
+ * Recreates the exact reference graphic with 100% fidelity.
+ */
+
+const DEFAULT_PRESETS = [];
+let PRESETS = [];
+
+// App State
+let state = {
+  mainPlayer: {
+    name: '',
+    ovr: '',
+    pos: '',
+    image: ''
+  },
+  defaultShardValue: 0,
+  titleName: 'PLAYER',
+  subtitleText: 'BETTER THAN ALL',
+  isCleanView: false,
+  uploadedCards: [],
+  presets: [],
+  battles: []
+};
+
+let editingBattleId = null;
+let tempMainImage = null;
+let tempOpponentImage = null;
+
+function formatNumber(num) {
+  const n = parseInt(String(num).replace(/[^0-9]/g, ''), 10);
+  return isNaN(n) ? '0' : n.toLocaleString('en-US');
+}
+
+function parseFormattedNumber(str) {
+  const n = parseInt(String(str).replace(/[^0-9]/g, ''), 10);
+  return isNaN(n) ? 0 : n;
+}
+
+function uid() {
+  return 'b_' + Math.random().toString(36).substr(2, 9);
+}
+
+function showToast(msg, icon = '✨') {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMessage').textContent = msg;
+  document.getElementById('toastIcon').textContent = icon;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+async function compressImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 900;
+        let w = img.width, h = img.height;
+        if (w > h) {
+          if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+        } else {
+          if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, w, h);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, w, h);
+        const mime = file.type === 'image/png' ? 'image/png' : 'image/webp';
+        resolve(canvas.toDataURL(mime, 0.95));
+      };
+      img.onerror = reject;
+      img.src = ev.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ========================================================
+// CORE RENDER FUNCTION
+// ========================================================
+function render() {
+  // Update Main Player in Sidebar
+  const thumb = document.getElementById('mainPlayerThumb');
+  if (thumb) {
+    thumb.src = state.mainPlayer.image || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='80' viewBox='0 0 60 80'><rect width='60' height='80' fill='%230b1322' rx='6'/><text x='50%' y='50%' fill='%23415b76' font-size='20' dominant-baseline='middle' text-anchor='middle'>👤</text></svg>";
+  }
+  document.getElementById('mainPlayerNameDisplay').textContent = state.mainPlayer.name || 'Set Main Player';
+  document.getElementById('mainPlayerOvrDisplay').textContent = state.mainPlayer.ovr ? `${state.mainPlayer.ovr} OVR` : '-- OVR';
+  document.getElementById('mainPlayerPosDisplay').textContent = state.mainPlayer.pos || '--';
+  document.getElementById('mainPlayerShardDisplay').textContent = formatNumber(state.defaultShardValue || 0);
+
+  // Update Titles on Graphic
+  document.getElementById('gTitlePlayer').textContent = state.titleName || (state.mainPlayer.name ? state.mainPlayer.name : 'PLAYER');
+  document.getElementById('gSubtitleText').textContent = state.subtitleText || (state.mainPlayer.name ? `${state.mainPlayer.name} : BETTER THAN ALL` : 'BETTER THAN ALL');
+
+  // Render Left & Right Battle Sides
+  const mid = Math.ceil(state.battles.length / 2);
+  const leftBattles = state.battles.slice(0, mid);
+  const rightBattles = state.battles.slice(mid);
+
+  document.getElementById('battleCountBadge').textContent = `${state.battles.length} Battles`;
+  renderBattleSide('battleSideLeft', leftBattles);
+  renderBattleSide('battleSideRight', rightBattles);
+
+  // Render Sidebar Battles Manager List
+  renderSidebarBattles();
+
+  adjustGraphicScale();
+  saveToLocalStorage();
+}
+
+function renderBattleSide(containerId, battleSlice) {
+  const container = document.getElementById(containerId);
+  const mainImgSrc = state.mainPlayer.image || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='170' viewBox='0 0 120 170'><rect width='120' height='170' fill='%23060c18' stroke='%23223856' stroke-width='2' stroke-dasharray='6,4' rx='8'/><text x='50%' y='45%' fill='%2300e5ff' font-size='26' dominant-baseline='middle' text-anchor='middle'>＋</text><text x='50%' y='65%' fill='%238aa1be' font-size='11' font-weight='700' dominant-baseline='middle' text-anchor='middle'>Main Card</text></svg>";
+
+  let html = battleSlice.map(b => {
+    const mainWins = b.winner === 'main';
+    const oppWins = !mainWins;
+
+    return `
+      <div class="battle-matchup-row" data-id="${b.id}">
+        <!-- FLOATING DELETE BADGE FOR THIS MATCHUP -->
+        <button class="battle-delete-badge" onclick="deleteBattle('${b.id}')" title="Delete this card matchup">
+          🗑️ Delete
+        </button>
+
+        <!-- MAIN PLAYER CARD (LEFT IN PAIR) -->
+        <div class="player-card-unit">
+          <div class="unit-shard-badge">
+            <img class="unit-shard-icon" src="shard_icon.png" alt="Shard">
+            <span class="unit-shard-val">${formatNumber(state.defaultShardValue)}</span>
+          </div>
+          <div class="unit-card-box">
+            <img class="unit-card-img" src="${mainImgSrc}" alt="${state.mainPlayer.name || 'Main Player'}">
+            <div class="unit-status-badge ${mainWins ? 'win' : 'loss'}" onclick="toggleBattleWinner('${b.id}')" title="Click to toggle winner">
+              ${mainWins ? '✓' : '✕'}
+            </div>
+            <div class="unit-edit-overlay">
+              <button class="btn-unit-act" onclick="toggleBattleWinner('${b.id}')">Toggle Result</button>
+              <button class="btn-unit-act" onclick="openMainPlayerModal()">Edit Main</button>
+              <button class="btn-unit-act" style="background:#ff1744;" onclick="deleteBattle('${b.id}')">🗑️ Delete Card</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEDICATED CENTER OPERATOR WRAP WITH GENUINE BREATHING SPACE -->
+        <div class="battle-operator-wrap">
+          <div class="battle-operator-badge" onclick="toggleBattleWinner('${b.id}')" title="Click to switch between < and >">
+            ${mainWins ? '&gt;' : '&lt;'}
+          </div>
+        </div>
+
+        <!-- OPPONENT CARD (RIGHT IN PAIR) -->
+        <div class="player-card-unit">
+          <div class="unit-shard-badge">
+            <img class="unit-shard-icon" src="shard_icon.png" alt="Shard">
+            <span class="unit-shard-val">${formatNumber(b.opponent.shards)}</span>
+          </div>
+          <div class="unit-card-box">
+            <img class="unit-card-img" src="${b.opponent.image}" alt="${b.opponent.name}">
+            <div class="unit-status-badge ${oppWins ? 'win' : 'loss'}" onclick="toggleBattleWinner('${b.id}')" title="Click to toggle winner">
+              ${oppWins ? '✓' : '✕'}
+            </div>
+            <div class="unit-edit-overlay">
+              <button class="btn-unit-act" onclick="toggleBattleWinner('${b.id}')">Toggle Result</button>
+              <button class="btn-unit-act" onclick="openEditMatchupModal('${b.id}')">Edit Opponent</button>
+              <button class="btn-unit-act" style="background:#ff1744;" onclick="deleteBattle('${b.id}')">🗑️ Delete Card</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (battleSlice.length < 3) {
+    html += `
+      <div class="empty-battle-slot" onclick="openAddMatchupModal()">
+        <span style="font-size:26px;">＋</span>
+        <span>Add Comparison Battle</span>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+}
+
+function renderSidebarBattles() {
+  const container = document.getElementById('battlesList');
+  if (!state.battles.length) {
+    container.innerHTML = `<div style="text-align:center; padding:16px; color:#5c7391; font-size:11px;">No comparison cards yet. Click "＋ ADD COMPARISON BATTLE" to add cards.</div>`;
+    return;
+  }
+
+  container.innerHTML = state.battles.map((b, idx) => {
+    const oppWins = b.winner !== 'main';
+    return `
+      <div class="battle-item">
+        <div class="battle-pair-thumbs">
+          <img class="thumb-left" src="${state.mainPlayer.image}" alt="Main">
+          <img class="thumb-right" src="${b.opponent.image}" alt="Opponent">
+        </div>
+        <div class="battle-meta">
+          <div class="battle-title">
+            <span>vs <strong>${b.opponent.name}</strong></span>
+          </div>
+          <div class="battle-sub">
+            <span style="color:#00e5ff; font-weight:800;">💎 ${formatNumber(b.opponent.shards)}</span>
+            <span>•</span>
+            <span class="btn-mini-toggle ${oppWins ? 'win' : 'loss'}" onclick="toggleBattleWinner('${b.id}')" title="Click to toggle comparison (< / >)">
+              ${oppWins ? '&lt; Opponent Wins' : '&gt; Main Wins'}
+            </span>
+          </div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn-mini" onclick="openEditMatchupModal('${b.id}')" title="Edit Opponent">✏️</button>
+          <button class="btn-mini btn-danger" onclick="deleteBattle('${b.id}')" title="Delete this matchup">🗑️ Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ========================================================
+// BATTLE CONTROLS: TOGGLE, DELETE, EDIT, ADD
+// ========================================================
+function toggleBattleWinner(battleId) {
+  const b = state.battles.find(item => item.id === battleId);
+  if (!b) return;
+  b.winner = b.winner === 'opponent' ? 'main' : 'opponent';
+  render();
+  const symbol = b.winner === 'opponent' ? '<' : '>';
+  showToast(`Updated comparison: ${state.mainPlayer.name || 'Main'} ${symbol} ${b.opponent.name}!`, '⚡');
+}
+
+function deleteBattle(battleId) {
+  const b = state.battles.find(item => item.id === battleId);
+  const oppName = b ? b.opponent.name : 'Matchup';
+  state.battles = state.battles.filter(item => item.id !== battleId);
+  render();
+  showToast(`Deleted battle with ${oppName}.`, '🗑️');
+}
+
+// ========================================================
+// UPLOADED CARDS MANAGEMENT & PERSISTENCE
+// ========================================================
+function saveUploadedCardsStorage() {
+  try {
+    localStorage.setItem('fcvolt_shards_uploaded_cards', JSON.stringify(state.uploadedCards));
+  } catch (e) {
+    console.warn('Failed to save uploaded cards', e);
+  }
+}
+
+function loadUploadedCardsStorage() {
+  try {
+    const raw = localStorage.getItem('fcvolt_shards_uploaded_cards');
+    if (raw) {
+      state.uploadedCards = JSON.parse(raw) || [];
+    }
+  } catch (e) {
+    console.warn('Failed to load uploaded cards', e);
+    state.uploadedCards = [];
+  }
+}
+
+function addUploadedCard(src, name = 'Uploaded Card') {
+  const cleanName = (name || 'Card').replace(/\.[^/.]+$/, '');
+  const newCard = {
+    id: uid(),
+    name: cleanName,
+    src: src,
+    date: Date.now()
+  };
+  state.uploadedCards.unshift(newCard);
+  saveUploadedCardsStorage();
+  renderUploadedGalleries();
+  return newCard;
+}
+
+function deleteUploadedCard(cardId) {
+  const card = state.uploadedCards.find(c => c.id === cardId);
+  const cardName = card ? card.name : 'Card';
+  state.uploadedCards = state.uploadedCards.filter(c => c.id !== cardId);
+  saveUploadedCardsStorage();
+  renderUploadedGalleries();
+
+  if (tempOpponentImage && card && tempOpponentImage === card.src) {
+    tempOpponentImage = null;
+    setOpponentActivePreview(null);
+  }
+  if (tempMainImage && card && tempMainImage === card.src) {
+    tempMainImage = state.mainPlayer.image;
+    setMainActivePreview(tempMainImage);
+  }
+
+  showToast(`Deleted card "${cardName}" from uploads!`, '🗑️');
+}
+
+function clearAllUploadedCards() {
+  if (!state.uploadedCards.length) {
+    showToast('No uploaded cards to clear.');
+    return;
+  }
+  if (confirm('Delete all uploaded cards from your library?')) {
+    state.uploadedCards = [];
+    saveUploadedCardsStorage();
+    renderUploadedGalleries();
+    showToast('All uploaded cards deleted!', '🗑️');
+  }
+}
+
+function setOpponentActivePreview(src) {
+  const previewBox = document.getElementById('opponentActivePreview');
+  const dropZone = document.getElementById('opponentDropZone');
+  const thumb = document.getElementById('opponentActiveThumb');
+  if (src) {
+    thumb.src = src;
+    previewBox.style.display = 'flex';
+    dropZone.style.display = 'none';
+  } else {
+    thumb.src = '';
+    previewBox.style.display = 'none';
+    dropZone.style.display = 'flex';
+  }
+}
+
+function setMainActivePreview(src) {
+  const previewBox = document.getElementById('cfgMainActivePreview');
+  const dropZone = document.getElementById('cfgMainDropZone');
+  const thumb = document.getElementById('cfgMainActiveThumb');
+  if (src) {
+    thumb.src = src;
+    previewBox.style.display = 'flex';
+    dropZone.style.display = 'none';
+  } else {
+    thumb.src = '';
+    previewBox.style.display = 'none';
+    dropZone.style.display = 'flex';
+  }
+}
+
+function renderUploadedGalleries() {
+  const badge = document.getElementById('uploadedCountBadge');
+  if (badge) badge.textContent = `${state.uploadedCards.length} Card${state.uploadedCards.length === 1 ? '' : 's'}`;
+
+  // 1. Sidebar Grid
+  const sideGrid = document.getElementById('sidebarUploadedCardsGrid');
+  if (sideGrid) {
+    if (!state.uploadedCards.length) {
+      sideGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:12px; color:#5c7391; font-size:11px;">No custom cards uploaded yet. Click "+ Upload Card Pictures" to add some!</div>`;
+    } else {
+      sideGrid.innerHTML = state.uploadedCards.map(c => `
+        <div class="gallery-uploaded-item" data-id="${c.id}" title="${c.name} (Click to open battle)">
+          <img src="${c.src}" alt="${c.name}">
+          <button type="button" class="gallery-uploaded-del-btn" title="Delete ${c.name}" onclick="event.stopPropagation(); deleteUploadedCard('${c.id}')">✕</button>
+        </div>
+      `).join('');
+
+      sideGrid.querySelectorAll('.gallery-uploaded-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = el.dataset.id;
+          const card = state.uploadedCards.find(item => item.id === id);
+          if (card) {
+            openAddMatchupModal();
+            tempOpponentImage = card.src;
+            setOpponentActivePreview(card.src);
+            document.getElementById('opponentNameInput').value = card.name || 'Opponent';
+          }
+        });
+      });
+    }
+  }
+
+  // 2. Opponent Modal Uploaded Section
+  const oppSec = document.getElementById('opponentUploadedSection');
+  const oppGal = document.getElementById('opponentUploadedGallery');
+  if (oppSec && oppGal) {
+    if (state.uploadedCards.length > 0) {
+      oppSec.style.display = 'block';
+      oppGal.innerHTML = state.uploadedCards.map(c => `
+        <div class="gallery-uploaded-item ${tempOpponentImage === c.src ? 'selected' : ''}" data-id="${c.id}" title="${c.name}">
+          <img src="${c.src}" alt="${c.name}">
+          <button type="button" class="gallery-uploaded-del-btn" title="Delete ${c.name}" onclick="event.stopPropagation(); deleteUploadedCard('${c.id}')">✕</button>
+        </div>
+      `).join('');
+
+      oppGal.querySelectorAll('.gallery-uploaded-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = el.dataset.id;
+          const card = state.uploadedCards.find(item => item.id === id);
+          if (card) {
+            oppGal.querySelectorAll('.gallery-uploaded-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            tempOpponentImage = card.src;
+            setOpponentActivePreview(card.src);
+            if (!document.getElementById('opponentNameInput').value.trim() || document.getElementById('opponentNameInput').value === 'Opponent') {
+              document.getElementById('opponentNameInput').value = card.name;
+            }
+            showToast(`Selected uploaded card: ${card.name}`);
+          }
+        });
+      });
+    } else {
+      oppSec.style.display = 'none';
+      oppGal.innerHTML = '';
+    }
+  }
+
+  // 3. Main Player Modal Uploaded Section
+  const mainSec = document.getElementById('cfgMainUploadedSection');
+  const mainGal = document.getElementById('mainUploadedGallery');
+  if (mainSec && mainGal) {
+    if (state.uploadedCards.length > 0) {
+      mainSec.style.display = 'block';
+      mainGal.innerHTML = state.uploadedCards.map(c => `
+        <div class="gallery-uploaded-item ${tempMainImage === c.src ? 'selected' : ''}" data-id="${c.id}" title="${c.name}">
+          <img src="${c.src}" alt="${c.name}">
+          <button type="button" class="gallery-uploaded-del-btn" title="Delete ${c.name}" onclick="event.stopPropagation(); deleteUploadedCard('${c.id}')">✕</button>
+        </div>
+      `).join('');
+
+      mainGal.querySelectorAll('.gallery-uploaded-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = el.dataset.id;
+          const card = state.uploadedCards.find(item => item.id === id);
+          if (card) {
+            mainGal.querySelectorAll('.gallery-uploaded-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            tempMainImage = card.src;
+            setMainActivePreview(card.src);
+            showToast(`Selected uploaded card for main: ${card.name}`);
+          }
+        });
+      });
+    } else {
+      mainSec.style.display = 'none';
+      mainGal.innerHTML = '';
+    }
+  }
+}
+
+function openAddMatchupModal() {
+  editingBattleId = null;
+  tempOpponentImage = null;
+  setOpponentActivePreview(null);
+  renderUploadedGalleries();
+
+  document.getElementById('matchupModalTitle').textContent = '＋ Add Comparison Battle';
+  document.getElementById('opponentNameInput').value = '';
+  document.getElementById('opponentOvrInput').value = '120';
+  document.getElementById('opponentPosInput').value = state.mainPlayer.pos || 'LW';
+  document.getElementById('opponentShardInput').value = formatNumber(state.defaultShardValue);
+  document.getElementById('battleWinnerSelect').value = 'opponent_wins';
+
+  const delModalBtn = document.getElementById('deleteMatchupModalBtn');
+  if (delModalBtn) delModalBtn.style.display = 'none';
+
+  populatePresetGallery('opponentPresetGallery', preset => {
+    document.getElementById('opponentNameInput').value = preset.name;
+    document.getElementById('opponentOvrInput').value = preset.ovr;
+    document.getElementById('opponentPosInput').value = preset.pos;
+    document.getElementById('opponentShardInput').value = formatNumber(preset.shards);
+    tempOpponentImage = preset.img;
+    setOpponentActivePreview(preset.img);
+    showToast(`Selected preset: ${preset.name}`);
+  });
+
+  document.getElementById('matchupModal').classList.remove('hidden');
+}
+
+function openEditMatchupModal(battleId) {
+  const b = state.battles.find(item => item.id === battleId);
+  if (!b) return;
+  editingBattleId = battleId;
+  tempOpponentImage = b.opponent.image;
+  setOpponentActivePreview(tempOpponentImage);
+  renderUploadedGalleries();
+
+  document.getElementById('matchupModalTitle').textContent = `✏️ Edit vs ${b.opponent.name}`;
+  document.getElementById('opponentNameInput').value = b.opponent.name;
+  document.getElementById('opponentOvrInput').value = b.opponent.ovr;
+  document.getElementById('opponentPosInput').value = b.opponent.pos;
+  document.getElementById('opponentShardInput').value = formatNumber(b.opponent.shards);
+  document.getElementById('battleWinnerSelect').value = b.winner === 'main' ? 'main_wins' : 'opponent_wins';
+
+  // Show prominent delete button inside edit modal!
+  const delModalBtn = document.getElementById('deleteMatchupModalBtn');
+  if (delModalBtn) {
+    delModalBtn.style.display = 'inline-flex';
+    delModalBtn.onclick = () => {
+      deleteBattle(battleId);
+      document.getElementById('matchupModal').classList.add('hidden');
+    };
+  }
+
+  populatePresetGallery('opponentPresetGallery', preset => {
+    document.getElementById('opponentNameInput').value = preset.name;
+    document.getElementById('opponentOvrInput').value = preset.ovr;
+    document.getElementById('opponentPosInput').value = preset.pos;
+    document.getElementById('opponentShardInput').value = formatNumber(preset.shards);
+    tempOpponentImage = preset.img;
+    setOpponentActivePreview(preset.img);
+    showToast(`Updated to preset: ${preset.name}`);
+  });
+
+  document.getElementById('matchupModal').classList.remove('hidden');
+}
+
+document.getElementById('saveMatchupBtn').addEventListener('click', () => {
+  const name = document.getElementById('opponentNameInput').value.trim() || 'Opponent';
+  const ovr = parseInt(document.getElementById('opponentOvrInput').value, 10) || 120;
+  const pos = document.getElementById('opponentPosInput').value.trim() || 'LW';
+  const shards = parseFormattedNumber(document.getElementById('opponentShardInput').value) || state.defaultShardValue;
+  const winner = document.getElementById('battleWinnerSelect').value === 'main_wins' ? 'main' : 'opponent';
+  const image = tempOpponentImage || 'exact_ronaldinho.png';
+
+  if (editingBattleId) {
+    const b = state.battles.find(item => item.id === editingBattleId);
+    if (b) {
+      b.opponent.name = name;
+      b.opponent.ovr = ovr;
+      b.opponent.pos = pos;
+      b.opponent.shards = shards;
+      b.opponent.image = image;
+      b.winner = winner;
+      showToast(`Updated vs ${name}!`);
+    }
+  } else {
+    state.battles.push({
+      id: uid(),
+      opponent: { name, ovr, pos, shards, image },
+      winner
+    });
+    showToast(`Added vs ${name}!`);
+  }
+
+  document.getElementById('matchupModal').classList.add('hidden');
+  render();
+});
+
+// File upload for Opponent Card
+const oppDropZone = document.getElementById('opponentDropZone');
+const oppFileInput = document.getElementById('opponentFileInput');
+oppDropZone.addEventListener('click', () => oppFileInput.click());
+oppFileInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    const compressed = await compressImageFile(file);
+    addUploadedCard(compressed, file.name);
+    tempOpponentImage = compressed;
+    setOpponentActivePreview(compressed);
+    const nameInput = document.getElementById('opponentNameInput');
+    if (!nameInput.value.trim() || nameInput.value === 'Opponent') {
+      nameInput.value = file.name.replace(/\.[^/.]+$/, '').toUpperCase();
+    }
+    showToast(`Opponent card "${file.name}" uploaded!`);
+  }
+});
+
+// Opponent Active Preview Buttons
+document.getElementById('opponentRemoveImgBtn').addEventListener('click', () => {
+  tempOpponentImage = null;
+  oppFileInput.value = '';
+  setOpponentActivePreview(null);
+  showToast('Opponent card photo removed!', '🗑️');
+});
+document.getElementById('opponentReplaceImgBtn').addEventListener('click', () => oppFileInput.click());
+document.getElementById('opponentClearUploadsBtn').addEventListener('click', clearAllUploadedCards);
+
+// ========================================================
+// MAIN PLAYER CONFIGURATION
+// ========================================================
+function openMainPlayerModal() {
+  tempMainImage = state.mainPlayer.image || null;
+  setMainActivePreview(tempMainImage);
+  renderUploadedGalleries();
+
+  document.getElementById('cfgMainName').value = state.mainPlayer.name || '';
+  document.getElementById('cfgMainOvr').value = state.mainPlayer.ovr || '';
+  document.getElementById('cfgMainPos').value = state.mainPlayer.pos || '';
+  document.getElementById('cfgMainShard').value = state.defaultShardValue ? formatNumber(state.defaultShardValue) : '';
+
+  if (state.presets && state.presets.length > 0) {
+    populatePresetGallery('mainPresetGallery', preset => {
+      document.getElementById('cfgMainName').value = preset.name;
+      document.getElementById('cfgMainOvr').value = preset.ovr;
+      document.getElementById('cfgMainPos').value = preset.pos;
+      tempMainImage = preset.img;
+      setMainActivePreview(preset.img);
+      showToast(`Selected preset: ${preset.name}`);
+    });
+  }
+
+  document.getElementById('mainPlayerModal').classList.remove('hidden');
+}
+
+document.getElementById('saveMainPlayerBtn').addEventListener('click', () => {
+  const name = document.getElementById('cfgMainName').value.trim() || 'MAIN PLAYER';
+  const ovr = parseInt(document.getElementById('cfgMainOvr').value, 10) || 120;
+  const pos = document.getElementById('cfgMainPos').value.trim() || 'LW';
+  const shards = parseFormattedNumber(document.getElementById('cfgMainShard').value) || 0;
+
+  state.mainPlayer.name = name;
+  state.mainPlayer.ovr = ovr;
+  state.mainPlayer.pos = pos;
+  state.defaultShardValue = shards;
+  state.mainPlayer.image = tempMainImage || '';
+
+  // Sync inputs
+  document.getElementById('defaultShardInput').value = shards ? formatNumber(shards) : '';
+  document.getElementById('titleNameInput').value = name;
+  document.getElementById('subtitleTextInput').value = `${name} : BETTER THAN ALL`;
+  state.titleName = name;
+  state.subtitleText = `${name} : BETTER THAN ALL`;
+
+  document.getElementById('mainPlayerModal').classList.add('hidden');
+  render();
+  showToast('Main player profile saved!');
+});
+
+const cfgDropZone = document.getElementById('cfgMainDropZone');
+const cfgFileInput = document.getElementById('cfgMainFileInput');
+cfgDropZone.addEventListener('click', () => cfgFileInput.click());
+cfgFileInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    const compressed = await compressImageFile(file);
+    addUploadedCard(compressed, file.name);
+    tempMainImage = compressed;
+    setMainActivePreview(compressed);
+    const nameInput = document.getElementById('cfgMainName');
+    if (!nameInput.value.trim()) {
+      nameInput.value = file.name.replace(/\.[^/.]+$/, '').toUpperCase();
+    }
+    showToast(`Main card "${file.name}" uploaded!`);
+  }
+});
+
+// Main Card Active Preview Buttons
+document.getElementById('cfgMainRemoveImgBtn').addEventListener('click', () => {
+  tempMainImage = null;
+  state.mainPlayer.image = '';
+  cfgFileInput.value = '';
+  setMainActivePreview(null);
+  render();
+  showToast('Main card photo removed!', '🗑️');
+});
+document.getElementById('cfgMainReplaceImgBtn').addEventListener('click', () => cfgFileInput.click());
+document.getElementById('cfgMainClearUploadsBtn').addEventListener('click', clearAllUploadedCards);
+
+// Sidebar Uploaded Library Controls
+document.getElementById('clearAllUploadedLibraryBtn').addEventListener('click', clearAllUploadedCards);
+document.getElementById('batchUploadCardsBtn').addEventListener('click', () => {
+  document.getElementById('batchUploadCardsInput').click();
+});
+document.getElementById('batchUploadCardsInput').addEventListener('change', async e => {
+  const files = Array.from(e.target.files || []);
+  if (!files.length) return;
+  showToast(`Uploading ${files.length} card picture${files.length > 1 ? 's' : ''}...`, '⏳');
+  for (const file of files) {
+    try {
+      const compressed = await compressImageFile(file);
+      addUploadedCard(compressed, file.name);
+    } catch (err) {
+      console.warn('Batch upload error', err);
+    }
+  }
+  e.target.value = '';
+  showToast(`Added ${files.length} cards to your library!`, '🎉');
+});
+
+// Default Shard input quick sync
+document.getElementById('defaultShardInput').addEventListener('change', e => {
+  const val = parseFormattedNumber(e.target.value);
+  if (val > 0) {
+    state.defaultShardValue = val;
+    e.target.value = formatNumber(val);
+    render();
+    showToast(`Baseline shard value updated to ${formatNumber(val)}!`);
+  }
+});
+
+document.getElementById('titleNameInput').addEventListener('input', e => {
+  state.titleName = e.target.value;
+  document.getElementById('gTitlePlayer').textContent = e.target.value;
+});
+
+document.getElementById('subtitleTextInput').addEventListener('input', e => {
+  state.subtitleText = e.target.value;
+  document.getElementById('gSubtitleText').textContent = e.target.value;
+});
+
+document.getElementById('editMainPlayerBtn').addEventListener('click', openMainPlayerModal);
+document.getElementById('configMainBtn').addEventListener('click', openMainPlayerModal);
+document.getElementById('addMatchupBtn').addEventListener('click', openAddMatchupModal);
+document.getElementById('addMatchupProminentBtn').addEventListener('click', openAddMatchupModal);
+
+// Clear / Delete All Cards
+document.getElementById('clearAllCardsBtn').addEventListener('click', () => {
+  if (!state.battles.length) {
+    showToast('There are no cards on the canvas.');
+    return;
+  }
+  if (confirm('Are you sure you want to delete all comparison cards?')) {
+    state.battles = [];
+    render();
+    showToast('All comparison cards deleted!', '🗑️');
+  }
+});
+
+// ========================================================
+// PRESET CARDS STORAGE & PERMANENT DELETION
+// ========================================================
+let opponentPresetCallback = null;
+let mainPresetCallback = null;
+
+function loadPresetsStorage() {
+  try {
+    const raw = localStorage.getItem('fcvolt_shards_saved_presets');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.some(p => p.id && String(p.id).startsWith('p_'))) {
+        state.presets = [];
+        localStorage.removeItem('fcvolt_shards_saved_presets');
+      } else {
+        state.presets = parsed;
+      }
+    } else {
+      state.presets = [];
+    }
+  } catch (e) {
+    state.presets = [];
+  }
+  PRESETS = state.presets;
+}
+
+function savePresetsStorage() {
+  try {
+    localStorage.setItem('fcvolt_shards_saved_presets', JSON.stringify(state.presets));
+  } catch (e) {
+    console.warn('Failed to save presets', e);
+  }
+}
+
+function deletePresetCard(cardId) {
+  const card = state.presets.find(p => p.id === cardId);
+  const cardName = card ? card.name : 'Card';
+  if (!confirm(`Are you sure you want to permanently delete "${cardName}"?`)) {
+    return;
+  }
+  state.presets = state.presets.filter(p => p.id !== cardId);
+  PRESETS = state.presets;
+  savePresetsStorage();
+  refreshAllPresetGalleries();
+
+  if (tempOpponentImage && card && tempOpponentImage === card.img) {
+    tempOpponentImage = null;
+    setOpponentActivePreview(null);
+  }
+  if (tempMainImage && card && tempMainImage === card.img) {
+    tempMainImage = state.mainPlayer.image;
+    setMainActivePreview(tempMainImage);
+  }
+
+  showToast(`"${cardName}" permanently deleted!`, '🗑️');
+}
+
+// Preset Gallery Helper
+function populatePresetGallery(containerId, onSelect) {
+  if (containerId === 'opponentPresetGallery' && onSelect) opponentPresetCallback = onSelect;
+  if (containerId === 'mainPresetGallery' && onSelect) mainPresetCallback = onSelect;
+
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  if (!state.presets || !state.presets.length) {
+    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:12px; color:#5c7391; font-size:11px;">No preset cards. Upload your own cards above!</div>`;
+    return;
+  }
+
+  container.innerHTML = state.presets.map(p => {
+    const isSelected = (containerId === 'opponentPresetGallery' && tempOpponentImage === p.img) ||
+                       (containerId === 'mainPresetGallery' && tempMainImage === p.img);
+    return `
+      <div class="gallery-preset-item ${isSelected ? 'selected' : ''}" data-id="${p.id}" title="${p.name} (${p.ovr} ${p.pos})">
+        <img src="${p.img}" alt="${p.name}">
+        <button type="button" class="gallery-card-del-btn" title="Permanently delete ${p.name}" onclick="event.stopPropagation(); deletePresetCard('${p.id}')">✕</button>
+      </div>
+    `;
+  }).join('');
+
+  container.querySelectorAll('.gallery-preset-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.id;
+      const preset = state.presets.find(p => p.id === id);
+      if (!preset) return;
+      container.querySelectorAll('.gallery-preset-item').forEach(i => i.classList.remove('selected'));
+      el.classList.add('selected');
+      const cb = containerId === 'opponentPresetGallery' ? opponentPresetCallback : mainPresetCallback;
+      if (cb) cb(preset);
+    });
+  });
+}
+
+function refreshAllPresetGalleries() {
+  const oppSec = document.getElementById('opponentPresetSection');
+  const mainSec = document.getElementById('mainPresetSection');
+  if (!state.presets || !state.presets.length) {
+    if (oppSec) oppSec.style.display = 'none';
+    if (mainSec) mainSec.style.display = 'none';
+    return;
+  }
+  if (oppSec) oppSec.style.display = 'block';
+  if (mainSec) mainSec.style.display = 'block';
+  if (document.getElementById('opponentPresetGallery')) {
+    populatePresetGallery('opponentPresetGallery');
+  }
+  if (document.getElementById('mainPresetGallery')) {
+    populatePresetGallery('mainPresetGallery');
+  }
+}
+
+// Modal Close Handlers
+document.querySelectorAll('[data-close]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const modalId = btn.getAttribute('data-close');
+    document.getElementById(modalId).classList.add('hidden');
+  });
+});
+
+document.querySelectorAll('.modal-backdrop').forEach(modal => {
+  modal.addEventListener('click', e => {
+    if (e.target === modal) modal.classList.add('hidden');
+  });
+});
+
+// Clean View Toggle
+const cleanViewBtn = document.getElementById('cleanViewBtn');
+cleanViewBtn.addEventListener('click', () => {
+  state.isCleanView = !state.isCleanView;
+  const graphic = document.getElementById('comparisonGraphic');
+  if (state.isCleanView) {
+    graphic.classList.add('clean-view');
+    cleanViewBtn.textContent = '✏️ EDIT VIEW';
+    cleanViewBtn.style.borderColor = '#00ff66';
+    cleanViewBtn.style.color = '#00ff66';
+    showToast('Clean View enabled: Ready to export');
+  } else {
+    graphic.classList.remove('clean-view');
+    cleanViewBtn.textContent = '👁️ CLEAN VIEW';
+    cleanViewBtn.style.borderColor = '';
+    cleanViewBtn.style.color = '';
+    showToast('Edit Mode enabled: Hover cards to edit');
+  }
+});
+
+// Viewport Zoom
+function adjustGraphicScale(forceScale = null) {
+  const graphic = document.getElementById('comparisonGraphic');
+  const viewport = document.getElementById('graphicViewport');
+  if (!graphic || !viewport) return;
+
+  if (forceScale) {
+    graphic.style.transform = `scale(${forceScale})`;
+    viewport.style.height = `${1800 * forceScale}px`;
+    return;
+  }
+
+  const availableWidth = viewport.clientWidth || 640;
+  const targetScale = Math.min(1, availableWidth / 1080);
+  graphic.style.transform = `scale(${targetScale})`;
+  viewport.style.height = `${1800 * targetScale}px`;
+}
+
+window.addEventListener('resize', () => adjustGraphicScale());
+document.getElementById('zoomFitBtn').addEventListener('click', () => adjustGraphicScale());
+document.getElementById('zoom100Btn').addEventListener('click', () => adjustGraphicScale(1.0));
+
+// ========================================================
+// HIGH RESOLUTION EXPORT (3:5 RATIO - 1080 × 1800 PNG & JPG)
+// ========================================================
+async function exportGraphicImage(format = 'png') {
+  const graphic = document.getElementById('comparisonGraphic');
+  showToast(`Generating 1080×1800 (3:5 ratio) ${format.toUpperCase()} image...`, '⏳');
+
+  const prevTransform = graphic.style.transform;
+  graphic.style.transform = 'none';
+  graphic.classList.add('clean-view');
+
+  try {
+    const canvas = await html2canvas(graphic, {
+      width: 1080,
+      height: 1800,
+      scale: 1,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#020408',
+      logging: false
+    });
+
+    const safeName = (state.mainPlayer.name || 'Player').replace(/[^a-z0-9_-]/gi, '_');
+    const filename = `FC_VOLT_Shard_Comparison_${safeName}_3x5_1080x1800.${format}`;
+
+    let dataUrl;
+    if (format === 'jpg' || format === 'jpeg') {
+      const solidCanvas = document.createElement('canvas');
+      solidCanvas.width = 1080;
+      solidCanvas.height = 1800;
+      const sCtx = solidCanvas.getContext('2d');
+      sCtx.fillStyle = '#020408';
+      sCtx.fillRect(0, 0, 1080, 1800);
+      sCtx.drawImage(canvas, 0, 0);
+      dataUrl = solidCanvas.toDataURL('image/jpeg', 0.94);
+    } else {
+      dataUrl = canvas.toDataURL('image/png');
+    }
+
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    showToast(`Downloaded ${filename} successfully!`, '🎉');
+  } catch (err) {
+    console.error('Export Error:', err);
+    showToast('Export failed. Please check browser permissions.', '⚠️');
+  } finally {
+    graphic.style.transform = prevTransform;
+    if (!state.isCleanView) graphic.classList.remove('clean-view');
+  }
+}
+
+document.getElementById('downloadPngBtn').addEventListener('click', () => exportGraphicImage('png'));
+document.getElementById('downloadJpgBtn').addEventListener('click', () => exportGraphicImage('jpg'));
+
+// ========================================================
+// PERSISTENCE
+// ========================================================
+function saveToLocalStorage() {
+  try {
+    localStorage.setItem('fcvolt_shards_exact_save', JSON.stringify(state));
+  } catch (e) {
+    console.warn('Storage save failed', e);
+  }
+}
+
+function loadFromLocalStorage() {
+  loadPresetsStorage();
+  loadUploadedCardsStorage();
+  renderUploadedGalleries();
+  refreshAllPresetGalleries();
+
+  try {
+    const raw = localStorage.getItem('fcvolt_shards_exact_save');
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (data.mainPlayer) {
+        state.mainPlayer = data.mainPlayer;
+        if (state.mainPlayer.image === 'exact_vini.png') {
+          state.mainPlayer.image = '';
+        }
+        if (state.mainPlayer.name === 'VINI JR.') {
+          state.mainPlayer.name = '';
+        }
+      }
+      if (data.defaultShardValue) state.defaultShardValue = data.defaultShardValue;
+      if (data.titleName) {
+        state.titleName = data.titleName === 'VINI JR.' ? 'PLAYER' : data.titleName;
+      }
+      if (data.subtitleText) {
+        state.subtitleText = data.subtitleText === 'VINI JR. : BETTER THAN ALL' ? 'BETTER THAN ALL' : data.subtitleText;
+      }
+      if (Array.isArray(data.battles)) {
+        // Purge old default demo battles with Ronaldinho if present
+        if (data.battles.some(b => b.id === 'b1' && b.opponent && b.opponent.name === 'RONALDINHO')) {
+          state.battles = [];
+        } else {
+          state.battles = data.battles;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Storage load error', e);
+  }
+
+  saveToLocalStorage();
+  render();
+}
+
+loadFromLocalStorage();
+</script>
+
+</body>
+</html>
