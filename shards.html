@@ -992,6 +992,58 @@
     justify-content: space-between;
   }
 
+  /* DYNAMIC COLUMN COUNT LAYOUT ADAPTATIONS */
+  #comparisonGraphic[data-cols="2"] {
+    width: 1080px;
+    min-width: 1080px;
+    height: 1800px;
+    min-height: 1800px;
+  }
+  #comparisonGraphic[data-cols="2"] .battles-container {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 40px;
+  }
+
+  #comparisonGraphic[data-cols="3"] {
+    width: 1560px;
+    min-width: 1560px;
+    height: 1800px;
+    min-height: 1800px;
+  }
+  #comparisonGraphic[data-cols="3"] .battles-container {
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 34px;
+  }
+
+  #comparisonGraphic[data-cols="4"] {
+    width: 2040px;
+    min-width: 2040px;
+    height: 1800px;
+    min-height: 1800px;
+  }
+  #comparisonGraphic[data-cols="4"] .battles-container {
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 30px;
+  }
+
+  /* Neon Column Dividers */
+  .neon-dividers-wrap {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .neon-column-divider {
+    position: absolute;
+    top: 220px;
+    bottom: 30px;
+    width: 3px;
+    background: linear-gradient(180deg, #ff007f 0%, #aa00ff 40%, #00e5ff 75%, #00ff66 100%);
+    box-shadow: 0 0 16px rgba(255, 0, 127, 0.8), 0 0 30px rgba(0, 229, 255, 0.6);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
   /* DYNAMIC ROW COUNT LAYOUT ADAPTATIONS */
   #comparisonGraphic[data-rows="2"] .battles-container {
     row-gap: 54px;
@@ -1050,6 +1102,39 @@
   #comparisonGraphic[data-rows="5"] .unit-shard-icon {
     width: 20px;
     height: 20px;
+  }
+
+  /* COLS SELECTOR CONTROLS */
+  .cols-selector-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .btn-col-opt {
+    background: #0d1522;
+    border: 1.5px solid #1f2f45;
+    color: #9cb5d6;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 9px 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.16s ease;
+    user-select: none;
+    line-height: 1.25;
+  }
+  .btn-col-opt:hover {
+    border-color: #00e5ff;
+    color: #fff;
+    background: #131f32;
+  }
+  .btn-col-opt.active {
+    background: linear-gradient(135deg, #00e5ff, #0070f3);
+    color: #020813;
+    font-weight: 900;
+    border-color: #33f0ff;
+    box-shadow: 0 0 14px rgba(0, 229, 255, 0.5);
   }
 
   /* ROWS SELECTOR CONTROLS */
@@ -2243,6 +2328,29 @@
         </div>
       </section>
 
+      <!-- COMPARISON COLUMNS CONFIGURATION -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>📐 Comparison Columns Layout</span>
+          <span id="colsBadge" class="btn-mini" style="cursor:default; background:#00e5ff; color:#020813; font-weight:900;">2 Cols (3:5 Ratio)</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-size:11px; color:#8fa5c5; font-weight:700;">Select columns of comparison:</label>
+          <div class="cols-selector-bar">
+            <button type="button" class="btn-col-opt active" data-cols="2" onclick="setComparisonCols(2)">
+              2 Columns<br><small style="font-size:9px; opacity:0.8;">(3:5 Ratio)</small>
+            </button>
+            <button type="button" class="btn-col-opt" data-cols="3" onclick="setComparisonCols(3)">
+              3 Columns<br><small style="font-size:9px; opacity:0.8;">(4:5 Ratio)</small>
+            </button>
+            <button type="button" class="btn-col-opt" data-cols="4" onclick="setComparisonCols(4)">
+              4 Columns<br><small style="font-size:9px; opacity:0.8;">(16:14 Ratio)</small>
+            </button>
+          </div>
+          <small style="color:#6c829e; font-size:10px;">Canvas width and picture aspect ratio automatically adapt to the columns selected!</small>
+        </div>
+      </section>
+
       <!-- COMPARISON ROWS CONFIGURATION -->
       <section class="panel-card">
         <div class="panel-title">
@@ -2329,7 +2437,7 @@
           <div class="laser-beam-left"></div>
           <div class="laser-beam-right"></div>
           <div class="stadium-grass-floor"></div>
-          <div class="center-neon-divider"></div>
+          <div id="neonDividersWrap" class="neon-dividers-wrap"></div>
 
           <!-- TOP HEADER: CROWN, LAURELS, TITLE & SUBTITLE -->
           <div class="comparison-header-area">
@@ -2437,17 +2545,9 @@
             </div>
           </div>
 
-          <!-- THE 4-COLUMN BATTLES CONTAINER -->
-          <div class="battles-container">
-            <!-- Left Side: 3 Battles (Col 1 & 2) -->
-            <div id="battleSideLeft" class="battle-side-column">
-              <!-- Rendered dynamically -->
-            </div>
-
-            <!-- Right Side: 3 Battles (Col 3 & 4) -->
-            <div id="battleSideRight" class="battle-side-column">
-              <!-- Rendered dynamically -->
-            </div>
+          <!-- THE DYNAMIC BATTLES CONTAINER (2, 3, OR 4 COLUMNS) -->
+          <div class="battles-container" id="battlesGridContainer">
+            <!-- Columns rendered dynamically -->
           </div>
 
         </div>
@@ -2833,6 +2933,7 @@ let state = {
   subtitleText: 'BETTER THAN ALL',
   isCleanView: false,
   comparisonRows: 3,
+  comparisonCols: 2,
   stadiumTheme: 'champions',
   stadiumGlow: 80,
   uploadedCards: [],
@@ -3128,12 +3229,20 @@ async function detectAndApplyOpponentCardMetadata(imageSrc, hint = '') {
 }
 
 // ========================================================
-// CORE RENDER FUNCTION & ROW CONTROLLER
+// CORE RENDER FUNCTION & ROW/COL CONTROLLER
 // ========================================================
+function setComparisonCols(num) {
+  state.comparisonCols = parseInt(num, 10) || 2;
+  render();
+  adjustGraphicScale();
+  const ratioStr = state.comparisonCols === 2 ? '3:5 (1080×1800)' : (state.comparisonCols === 3 ? '4:5 (1560×1800)' : '16:14 (2040×1800)');
+  showToast(`Updated to ${state.comparisonCols} Columns with ${ratioStr} ratio!`, '📐');
+}
+
 function setComparisonRows(num) {
   state.comparisonRows = parseInt(num, 10) || 3;
   render();
-  showToast(`Updated comparison layout to ${state.comparisonRows} rows per side!`, '📏');
+  showToast(`Updated comparison layout to ${state.comparisonRows} rows per column!`, '📏');
 }
 
 function setStadiumTheme(theme) {
@@ -3166,11 +3275,15 @@ function render() {
   document.getElementById('gTitlePlayer').textContent = state.titleName || (state.mainPlayer.name ? state.mainPlayer.name : 'PLAYER');
   document.getElementById('gSubtitleText').textContent = state.subtitleText || (state.mainPlayer.name ? `${state.mainPlayer.name} : BETTER THAN ALL` : 'BETTER THAN ALL');
 
-  // Dynamic Row Configuration (Defaults to 3 rows)
+  // Dynamic Row & Column Configuration
   const maxRows = state.comparisonRows || 3;
+  const maxCols = state.comparisonCols || 2;
+  const totalSlots = maxRows * maxCols;
+
   const graphic = document.getElementById('comparisonGraphic');
   if (graphic) {
     graphic.setAttribute('data-rows', maxRows);
+    graphic.setAttribute('data-cols', maxCols);
     const curTheme = state.stadiumTheme || 'champions';
     graphic.setAttribute('data-theme', curTheme);
     const backdrop = graphic.querySelector('.stadium-backdrop-img');
@@ -3179,11 +3292,22 @@ function render() {
     }
   }
 
+  // Update Columns selector buttons & badge
+  document.querySelectorAll('.btn-col-opt').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.cols, 10) === maxCols);
+  });
+  const colsBadge = document.getElementById('colsBadge');
+  if (colsBadge) {
+    const ratioStr = maxCols === 2 ? '3:5 Ratio' : (maxCols === 3 ? '4:5 Ratio' : '16:14 Ratio');
+    colsBadge.textContent = `${maxCols} Cols (${ratioStr})`;
+  }
+
+  // Update Rows selector buttons & badge
   document.querySelectorAll('.btn-row-opt').forEach(btn => {
     btn.classList.toggle('active', parseInt(btn.dataset.rows, 10) === maxRows);
   });
   const rowsBadge = document.getElementById('rowsBadge');
-  if (rowsBadge) rowsBadge.textContent = `${maxRows} Rows (${maxRows * 2} Cards)`;
+  if (rowsBadge) rowsBadge.textContent = `${maxRows} Rows (${totalSlots} Cards)`;
 
   // Theme Toggles Sync
   const curTheme = state.stadiumTheme || 'champions';
@@ -3195,13 +3319,35 @@ function render() {
     glowRange.value = state.stadiumGlow;
   }
 
-  // Render Left & Right Battle Sides based on maxRows
-  const leftBattles = state.battles.slice(0, maxRows);
-  const rightBattles = state.battles.slice(maxRows, maxRows * 2);
+  // Generate Neon Dividers for Columns
+  const dividersWrap = document.getElementById('neonDividersWrap');
+  if (dividersWrap) {
+    let divHtml = '';
+    for (let c = 1; c < maxCols; c++) {
+      const leftPct = (c / maxCols * 100).toFixed(2);
+      divHtml += `<div class="neon-column-divider" style="left: ${leftPct}%;"></div>`;
+    }
+    dividersWrap.innerHTML = divHtml;
+  }
 
-  document.getElementById('battleCountBadge').textContent = `${Math.min(state.battles.length, maxRows * 2)} / ${maxRows * 2} Battles (${maxRows} Rows)`;
-  renderBattleSide('battleSideLeft', leftBattles, maxRows);
-  renderBattleSide('battleSideRight', rightBattles, maxRows);
+  // Render Dynamic Battles Grid (2, 3, or 4 Columns)
+  const gridContainer = document.getElementById('battlesGridContainer');
+  if (gridContainer) {
+    let colsHtml = '';
+    for (let c = 0; c < maxCols; c++) {
+      colsHtml += `<div id="battleCol_${c}" class="battle-side-column"></div>`;
+    }
+    gridContainer.innerHTML = colsHtml;
+
+    for (let c = 0; c < maxCols; c++) {
+      const startIdx = c * maxRows;
+      const endIdx = startIdx + maxRows;
+      const colBattles = state.battles.slice(startIdx, endIdx);
+      renderBattleSide(`battleCol_${c}`, colBattles, maxRows, c + 1, maxCols);
+    }
+  }
+
+  document.getElementById('battleCountBadge').textContent = `${Math.min(state.battles.length, totalSlots)} / ${totalSlots} Battles (${maxCols} Cols × ${maxRows} Rows)`;
 
   // Render Sidebar Battles Manager List
   renderSidebarBattles();
@@ -3210,7 +3356,7 @@ function render() {
   saveToLocalStorage();
 }
 
-function renderBattleSide(containerId, battleSlice, maxRows = 3) {
+function renderBattleSide(containerId, battleSlice, maxRows = 3, colNum = 1, totalCols = 2) {
   const container = document.getElementById(containerId);
   const mainImgSrc = state.mainPlayer.image || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='170' viewBox='0 0 120 170'><rect width='120' height='170' fill='%23060c18' stroke='%23223856' stroke-width='2' stroke-dasharray='6,4' rx='8'/><text x='50%' y='45%' fill='%2300e5ff' font-size='26' dominant-baseline='middle' text-anchor='middle'>＋</text><text x='50%' y='65%' fill='%238aa1be' font-size='11' font-weight='700' dominant-baseline='middle' text-anchor='middle'>Main Card</text></svg>";
 
@@ -3280,7 +3426,7 @@ function renderBattleSide(containerId, battleSlice, maxRows = 3) {
       html += `
         <div class="empty-battle-slot" onclick="openAddMatchupModal()">
           <span style="font-size:24px;">＋</span>
-          <span>Add Comparison Battle (${i + 1}/${maxRows})</span>
+          <span>Add Matchup (Col ${colNum} • ${i + 1}/${maxRows})</span>
         </div>
       `;
     }
@@ -3982,16 +4128,19 @@ function adjustGraphicScale(forceScale = null) {
   const viewport = document.getElementById('graphicViewport');
   if (!graphic || !viewport) return;
 
+  const gw = graphic.offsetWidth || (state.comparisonCols === 2 ? 1080 : (state.comparisonCols === 3 ? 1560 : 2040));
+  const gh = graphic.offsetHeight || 1800;
+
   if (forceScale) {
     graphic.style.transform = `scale(${forceScale})`;
-    viewport.style.height = `${1800 * forceScale}px`;
+    viewport.style.height = `${gh * forceScale + 24}px`;
     return;
   }
 
   const availableWidth = viewport.clientWidth || 640;
-  const targetScale = Math.min(1, availableWidth / 1080);
+  const targetScale = Math.min(1, (availableWidth - 16) / gw);
   graphic.style.transform = `scale(${targetScale})`;
-  viewport.style.height = `${1800 * targetScale}px`;
+  viewport.style.height = `${gh * targetScale + 24}px`;
 }
 
 window.addEventListener('resize', () => adjustGraphicScale());
@@ -3999,11 +4148,17 @@ document.getElementById('zoomFitBtn').addEventListener('click', () => adjustGrap
 document.getElementById('zoom100Btn').addEventListener('click', () => adjustGraphicScale(1.0));
 
 // ========================================================
-// HIGH RESOLUTION EXPORT (3:5 RATIO - 1080 × 1800 PNG & JPG)
+// HIGH RESOLUTION DYNAMIC EXPORT (ADAPTIVE ASPECT RATIOS)
 // ========================================================
 async function exportGraphicImage(format = 'png') {
   const graphic = document.getElementById('comparisonGraphic');
-  showToast(`Generating 1080×1800 (3:5 ratio) ${format.toUpperCase()} image...`, '⏳');
+  const gw = graphic.offsetWidth || (state.comparisonCols === 2 ? 1080 : (state.comparisonCols === 3 ? 1560 : 2040));
+  const gh = graphic.offsetHeight || 1800;
+  const cols = state.comparisonCols || 2;
+  const rows = state.comparisonRows || 3;
+  const ratioLabel = cols === 2 ? '3x5' : (cols === 3 ? '4x5' : '16x14');
+
+  showToast(`Generating ${gw}×${gh} (${ratioLabel} ratio) ${format.toUpperCase()} image...`, '⏳');
 
   if (document.fonts) {
     try {
@@ -4017,8 +4172,8 @@ async function exportGraphicImage(format = 'png') {
 
   try {
     const canvas = await html2canvas(graphic, {
-      width: 1080,
-      height: 1800,
+      width: gw,
+      height: gh,
       scale: 1,
       useCORS: true,
       allowTaint: true,
@@ -4040,16 +4195,16 @@ async function exportGraphicImage(format = 'png') {
     });
 
     const safeName = (state.mainPlayer.name || 'Player').replace(/[^a-z0-9_-]/gi, '_');
-    const filename = `FC_VOLT_Shard_Comparison_${safeName}_3x5_1080x1800.${format}`;
+    const filename = `FC_VOLT_Shard_Comparison_${safeName}_${cols}Cols_${rows}Rows_${gw}x${gh}.${format}`;
 
     let dataUrl;
     if (format === 'jpg' || format === 'jpeg') {
       const solidCanvas = document.createElement('canvas');
-      solidCanvas.width = 1080;
-      solidCanvas.height = 1800;
+      solidCanvas.width = gw;
+      solidCanvas.height = gh;
       const sCtx = solidCanvas.getContext('2d');
       sCtx.fillStyle = '#020408';
-      sCtx.fillRect(0, 0, 1080, 1800);
+      sCtx.fillRect(0, 0, gw, gh);
       sCtx.drawImage(canvas, 0, 0);
       dataUrl = solidCanvas.toDataURL('image/jpeg', 0.94);
     } else {
@@ -4862,6 +5017,9 @@ function loadFromLocalStorage() {
       }
       if (data.comparisonRows) {
         state.comparisonRows = parseInt(data.comparisonRows, 10) || 3;
+      }
+      if (data.comparisonCols) {
+        state.comparisonCols = parseInt(data.comparisonCols, 10) || 2;
       }
       if (data.stadiumTheme) {
         state.stadiumTheme = data.stadiumTheme;
