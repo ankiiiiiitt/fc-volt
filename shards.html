@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Russo+One&family=Anton&display=swap" rel="stylesheet">
 <script src="html2canvas.min.js"></script>
 <script src="jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
   :root {
     --bg-dark: #020408;
@@ -801,28 +802,48 @@
     box-shadow: 0 0 20px #00e5ff, 0 0 40px #00e5ff;
   }
 
-  /* First Part: Chrome Silver (e.g. VINI JR.) */
+  /* Real PNG Laurels from reference */
+  .title-laurel-img {
+    height: 74px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.85)) drop-shadow(0 0 14px rgba(255, 215, 0, 0.7));
+    flex-shrink: 0;
+  }
+
+  /* First Part: Chrome Metallic Silver with Crisp 3D Text Shadow (Exports 100% cleanly!) */
   .title-part-name {
     font-size: 78px;
     font-weight: 900;
     letter-spacing: 2px;
     color: #ffffff;
-    background: linear-gradient(180deg, #ffffff 0%, #d4e4f7 40%, #8ba3c7 50%, #ffffff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.9)) drop-shadow(0 0 10px rgba(255,255,255,0.4));
+    text-transform: uppercase;
+    text-shadow: 
+      -2px -2px 0 #000,
+       2px -2px 0 #000,
+      -2px  2px 0 #000,
+       2px  2px 0 #000,
+       0 4px 0 #1b2838,
+       0 6px 14px rgba(0,0,0,0.95),
+       0 0 24px rgba(255,255,255,0.7);
   }
 
-  /* Second Part: 3D Bevel Gold (COMPARISON) */
+  /* Second Part: Rich Golden 3D Bevel with Crisp Shadows (No background-clip boxes!) */
   .title-part-comparison {
     font-size: 80px;
     font-weight: 900;
     letter-spacing: 2.5px;
-    color: #ffd700;
-    background: linear-gradient(180deg, #fff299 0%, #ffc000 45%, #b37700 85%, #ffdb4d 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.95)) drop-shadow(0 0 16px rgba(255, 192, 0, 0.6));
+    color: #ffcc00;
+    text-transform: uppercase;
+    text-shadow: 
+      -2px -2px 0 #000,
+       2px -2px 0 #000,
+      -2px  2px 0 #000,
+       2px  2px 0 #000,
+       0 3px 0 #b38600,
+       0 5px 0 #664d00,
+       0 8px 16px rgba(0,0,0,0.95),
+       0 0 30px rgba(255, 204, 0, 0.85);
   }
 
   /* Subtitle Glowing Green Pill */
@@ -843,11 +864,14 @@
     font-size: 32px;
     letter-spacing: 2px;
     color: #00ff66;
-    background: linear-gradient(180deg, #c4ff80 0%, #00ff66 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     text-transform: uppercase;
-    text-shadow: 0 0 12px rgba(0, 255, 102, 0.6);
+    text-shadow: 
+      -2px -2px 0 #000,
+       2px -2px 0 #000,
+      -2px  2px 0 #000,
+       2px  2px 0 #000,
+       0 0 14px #00ff66,
+       0 0 28px rgba(0, 255, 102, 0.95);
   }
 
   .subtitle-check-badge {
@@ -885,6 +909,98 @@
     flex-direction: column;
     gap: 36px;
     justify-content: space-between;
+  }
+
+  /* DYNAMIC ROW COUNT LAYOUT ADAPTATIONS */
+  #comparisonGraphic[data-rows="2"] .battles-container {
+    row-gap: 54px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  #comparisonGraphic[data-rows="2"] .battle-side-column {
+    gap: 54px;
+  }
+  #comparisonGraphic[data-rows="2"] .unit-card-box {
+    aspect-ratio: 1 / 1.25;
+  }
+
+  #comparisonGraphic[data-rows="3"] .battles-container {
+    row-gap: 32px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+  #comparisonGraphic[data-rows="3"] .battle-side-column {
+    gap: 36px;
+  }
+
+  #comparisonGraphic[data-rows="4"] .battles-container {
+    row-gap: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  #comparisonGraphic[data-rows="4"] .battle-side-column {
+    gap: 16px;
+  }
+  #comparisonGraphic[data-rows="4"] .battle-operator-badge {
+    width: 44px;
+    height: 44px;
+    font-size: 30px;
+  }
+  #comparisonGraphic[data-rows="4"] .unit-shard-val {
+    font-size: 24px;
+  }
+
+  #comparisonGraphic[data-rows="5"] .battles-container {
+    row-gap: 8px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  #comparisonGraphic[data-rows="5"] .battle-side-column {
+    gap: 8px;
+  }
+  #comparisonGraphic[data-rows="5"] .battle-operator-badge {
+    width: 38px;
+    height: 38px;
+    font-size: 24px;
+  }
+  #comparisonGraphic[data-rows="5"] .unit-shard-val {
+    font-size: 19px;
+  }
+  #comparisonGraphic[data-rows="5"] .unit-shard-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ROWS SELECTOR CONTROLS */
+  .rows-selector-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .btn-row-opt {
+    background: #0d1522;
+    border: 1.5px solid #1f2f45;
+    color: #9cb5d6;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 9px 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.16s ease;
+    user-select: none;
+  }
+  .btn-row-opt:hover {
+    border-color: #00e5ff;
+    color: #fff;
+    background: #131f32;
+  }
+  .btn-row-opt.active {
+    background: linear-gradient(135deg, #00e5ff, #0070f3);
+    color: #020813;
+    font-weight: 900;
+    border-color: #33f0ff;
+    box-shadow: 0 0 14px rgba(0, 229, 255, 0.5);
   }
 
   /* A Single Matchup Row: 3 Columns (Left Card, Operator, Right Card) with Genuine Space */
@@ -1994,6 +2110,24 @@
         </div>
       </section>
 
+      <!-- COMPARISON ROWS CONFIGURATION -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>📏 Comparison Rows Layout</span>
+          <span id="rowsBadge" class="btn-mini" style="cursor:default; background:#00e5ff; color:#020813; font-weight:900;">3 Rows (6 Cards)</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-size:11px; color:#8fa5c5; font-weight:700;">Select rows of comparison on graphic:</label>
+          <div class="rows-selector-bar">
+            <button type="button" class="btn-row-opt" data-rows="2" onclick="setComparisonRows(2)">2 Rows</button>
+            <button type="button" class="btn-row-opt active" data-rows="3" onclick="setComparisonRows(3)">3 Rows (Default)</button>
+            <button type="button" class="btn-row-opt" data-rows="4" onclick="setComparisonRows(4)">4 Rows</button>
+            <button type="button" class="btn-row-opt" data-rows="5" onclick="setComparisonRows(5)">5 Rows</button>
+          </div>
+          <small style="color:#6c829e; font-size:10px;">Change between 2, 3, 4, or 5 rows. Layout and cards adapt automatically!</small>
+        </div>
+      </section>
+
       <!-- ADD MATCHUP BUTTON -->
       <button id="addMatchupProminentBtn" class="btn-add-prominent">
         ＋ ADD NEW COMPARISON BATTLE
@@ -2063,19 +2197,13 @@
           <div class="comparison-header-area">
             <!-- Crown -->
             <div class="header-crown-wrap">
-              <img src="crown_gold_clean.png" class="header-crown-img" alt="Crown">
+              <img src="asset_crown.png" class="header-crown-img" alt="Crown">
             </div>
 
             <!-- Title Row with Golden Laurels -->
             <div class="header-title-row">
-              <!-- Left Laurel Branch (SVG) -->
-              <svg class="title-laurel" viewBox="0 0 60 90" fill="none">
-                <path d="M50 85 C35 65 25 40 30 10" stroke="#ffd700" stroke-width="3" stroke-linecap="round"/>
-                <path d="M48 80 C30 78 20 68 22 58 C32 60 40 70 48 80 Z" fill="#ffd700"/>
-                <path d="M40 65 C22 62 12 50 15 40 C26 43 34 54 40 65 Z" fill="#ffd700"/>
-                <path d="M34 48 C18 44 8 32 12 22 C23 25 30 36 34 48 Z" fill="#ffd700"/>
-                <path d="M30 30 C16 25 10 12 16 4 C25 9 30 20 30 30 Z" fill="#ffd700"/>
-              </svg>
+              <!-- Left Laurel Branch -->
+              <img src="asset_laurel_left.png" class="title-laurel-img" alt="Laurel Left">
 
               <!-- Main Title Text -->
               <div class="title-main-text-box">
@@ -2084,14 +2212,8 @@
                 <div class="title-neon-bar"></div>
               </div>
 
-              <!-- Right Laurel Branch (SVG mirrored) -->
-              <svg class="title-laurel title-laurel-right" viewBox="0 0 60 90" fill="none">
-                <path d="M50 85 C35 65 25 40 30 10" stroke="#ffd700" stroke-width="3" stroke-linecap="round"/>
-                <path d="M48 80 C30 78 20 68 22 58 C32 60 40 70 48 80 Z" fill="#ffd700"/>
-                <path d="M40 65 C22 62 12 50 15 40 C26 43 34 54 40 65 Z" fill="#ffd700"/>
-                <path d="M34 48 C18 44 8 32 12 22 C23 25 30 36 34 48 Z" fill="#ffd700"/>
-                <path d="M30 30 C16 25 10 12 16 4 C25 9 30 20 30 30 Z" fill="#ffd700"/>
-              </svg>
+              <!-- Right Laurel Branch -->
+              <img src="asset_laurel_right.png" class="title-laurel-img" alt="Laurel Right">
             </div>
 
             <!-- Glowing Neon Green Subtitle Pill -->
@@ -2165,6 +2287,9 @@
           <div class="active-image-preview-info">
             <span class="active-image-title">Current Card Selected</span>
             <div class="active-image-actions">
+              <button type="button" id="cfgMainAutoDetectBtn" class="btn-mini btn-primary" title="Auto-detect Player Name & OVR from this card">
+                🔍 Auto-Detect Name & OVR
+              </button>
               <button type="button" id="cfgMainRemoveImgBtn" class="btn-mini btn-danger" title="Remove / Clear this image">
                 🗑️ Delete / Remove Image
               </button>
@@ -2257,6 +2382,9 @@
           <div class="active-image-preview-info">
             <span class="active-image-title">Current Opponent Card</span>
             <div class="active-image-actions">
+              <button type="button" id="opponentAutoDetectBtn" class="btn-mini btn-primary" title="Auto-detect Player Name & OVR from this card">
+                🔍 Auto-Detect Name & OVR
+              </button>
               <button type="button" id="opponentRemoveImgBtn" class="btn-mini btn-danger" title="Remove / Clear this image">
                 🗑️ Delete / Remove Image
               </button>
@@ -2490,6 +2618,7 @@ let state = {
   titleName: 'PLAYER',
   subtitleText: 'BETTER THAN ALL',
   isCleanView: false,
+  comparisonRows: 3,
   uploadedCards: [],
   presets: [],
   battles: []
@@ -2553,8 +2682,244 @@ async function compressImageFile(file) {
 }
 
 // ========================================================
-// CORE RENDER FUNCTION
+// SMART CARD METADATA & OCR EXTRACTION ENGINE
 // ========================================================
+const KNOWN_PLAYERS = [
+  'BAGGIO', 'KANE', 'MBAPPÉ', 'MBAPPE', 'PAVLIDIS', 'SHEVCHENKO', 'RAÚL', 'RAUL',
+  'PAPIN', 'HAALAND', 'DALGLISH', 'VINI JR.', 'VINICIUS JR', 'MESSI', 'RONALDO',
+  'C. RONALDO', 'CRISTIANO RONALDO', 'R. BAGGIO', 'ROBERTO BAGGIO', 'R9', 'RONALDO NAZARIO',
+  'RONALDINHO', 'ZIDANE', 'PELE', 'PELÉ', 'MARADONA', 'CRUYFF', 'MALDINI', 'HENRY',
+  'BELLINGHAM', 'RODRI', 'DE BRUYNE', 'SALAH', 'VAN DIJK', 'YASHIN', 'CASILLAS',
+  'BUFFON', 'GULLIT', 'VIEIRA', 'MÄTTHAUS', 'MATTHAUS', 'EUSEBIO', 'PUSKAS',
+  'BEST', 'CANTONA', 'RIBERY', 'ROBBEN', 'ROONEY', 'GERRARD', 'LAMPARD',
+  'KAKA', 'SEEDORF', 'PIRLO', 'XAVI', 'INIESTA', 'PUYOL', 'RAMOS', 'MODRIC',
+  'KROOS', 'NEYMAR', 'LEWANDOWSKI', 'BENZEMA', 'SON', 'SAKA', 'FODEN', 'PALMER',
+  'MUSIALA', 'WIRTZ', 'YAMAL', 'LAMINE YAMAL', 'ALVAREZ', 'LAUTARO', 'VALVERDE',
+  'CAMAVINGA', 'TCHOUAMENI', 'BASTONI', 'DIAS', 'SALIBIA', 'RUDIGER', 'DAVIES',
+  'HERNANDEZ', 'WALKER', 'FRIMPONG', 'CARVAJAL', 'ALISSON', 'EDERSON', 'COURTOIS',
+  'DONNARUMMA', 'OBLAK', 'NEUER', 'DROGBA', 'ETO\'O', 'TORRES', 'SUAREZ', 'AGUERO',
+  'IBRAHIMOVIC', 'FORLAN', 'GINOLA', 'DI NATALE', 'DEL PIERO', 'TOTTI', 'NESTA',
+  'CANNAVARO', 'BLANC', 'DESAILLY', 'KOEMAN', 'CARLOS ALBERTO', 'ROBERTO CARLOS',
+  'ZANETTI', 'CAFU', 'LAHM', 'SCHMEICHEL', 'CECH', 'VAN DER SAR'
+];
+
+function levenshteinDist(a, b) {
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+  for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1,
+          Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1)
+        );
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+function findBestPlayerMatch(text) {
+  if (!text) return null;
+  const clean = text.replace(/[^A-Z\s]/gi, ' ').trim().toUpperCase().replace(/\s+/g, ' ');
+  if (!clean) return null;
+
+  for (const p of KNOWN_PLAYERS) {
+    if (clean === p || clean.includes(p) || (p.length >= 4 && clean.includes(p))) {
+      return p;
+    }
+  }
+
+  const tokens = clean.split(' ');
+  let bestPlayer = null;
+  let bestScore = 0;
+
+  for (const token of tokens) {
+    if (token.length < 3) continue;
+    for (const player of KNOWN_PLAYERS) {
+      const pName = player.replace(/[^A-Z]/g, '');
+      const t = token.replace(/[^A-Z]/g, '');
+      const maxLen = Math.max(pName.length, t.length);
+      if (maxLen === 0) continue;
+      const dist = levenshteinDist(pName, t);
+      const similarity = 1 - (dist / maxLen);
+      if (similarity > 0.65 && similarity > bestScore) {
+        bestScore = similarity;
+        bestPlayer = player;
+      }
+    }
+  }
+
+  return bestPlayer;
+}
+
+function createCropCanvasForOCR(img, xPct, yPct, wPct, hPct, boostThreshold = true) {
+  const canvas = document.createElement('canvas');
+  const nw = img.naturalWidth || img.width;
+  const nh = img.naturalHeight || img.height;
+  const sx = Math.floor(nw * xPct);
+  const sy = Math.floor(nh * yPct);
+  const sw = Math.floor(nw * wPct);
+  const sh = Math.floor(nh * hPct);
+
+  const targetW = Math.max(sw * 2, 340);
+  const targetH = Math.round(targetW * (sh / sw));
+  canvas.width = targetW;
+  canvas.height = targetH;
+
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
+
+  if (boostThreshold) {
+    const imgData = ctx.getImageData(0, 0, targetW, targetH);
+    const d = imgData.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      const v = lum > 130 ? 255 : 0;
+      d[i] = v;
+      d[i + 1] = v;
+      d[i + 2] = v;
+    }
+    ctx.putImageData(imgData, 0, 0);
+  }
+  return canvas;
+}
+
+async function detectCardMetadata(imageSrc, hintName = '') {
+  let detectedName = '';
+  let detectedOvr = '';
+  let detectedPos = '';
+
+  // 1. Initial heuristic extraction from filename/hint
+  if (hintName) {
+    const rawHint = hintName.replace(/\.[^/.]+$/, '').toUpperCase();
+    
+    // OVR in filename (e.g. 120, 123, 124, 105)
+    const ovrMatch = rawHint.match(/\b(1[0-2][0-9]|9[0-9])\b/);
+    if (ovrMatch) detectedOvr = ovrMatch[1];
+
+    // Position in filename (ST, LW, RW, etc.)
+    const posMatch = rawHint.match(/\b(ST|CF|LW|RW|CAM|CM|CDM|LM|RM|CB|LB|RB|LWB|RWB|GK)\b/i);
+    if (posMatch) detectedPos = posMatch[1].toUpperCase();
+
+    // Check hint for known player
+    const matched = findBestPlayerMatch(rawHint);
+    if (matched) detectedName = matched;
+  }
+
+  // 2. Tesseract OCR Detection directly from card image
+  if (imageSrc && typeof Tesseract !== 'undefined') {
+    try {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = imageSrc;
+      });
+
+      // Zone A: Top-Left (OVR + Position)
+      const ovrCanvas = createCropCanvasForOCR(img, 0.03, 0.04, 0.39, 0.34, true);
+      // Zone B: Bottom Banner (Player Name)
+      const nameCanvas = createCropCanvasForOCR(img, 0.06, 0.64, 0.88, 0.24, true);
+
+      const [ovrRes, nameRes] = await Promise.all([
+        Tesseract.recognize(ovrCanvas, 'eng', {
+          tessedit_char_whitelist: '0123456789STCFLWRCAMDKBGP '
+        }).catch(() => null),
+        Tesseract.recognize(nameCanvas, 'eng').catch(() => null)
+      ]);
+
+      if (ovrRes && ovrRes.data && ovrRes.data.text) {
+        const textA = ovrRes.data.text.toUpperCase();
+        const numMatch = textA.match(/\b(1[0-2][0-9]|9[0-9])\b/);
+        if (numMatch && !detectedOvr) {
+          detectedOvr = numMatch[1];
+        }
+        const pMatch = textA.match(/\b(ST|CF|LW|RW|CAM|CM|CDM|LM|RM|CB|LB|RB|LWB|RWB|GK)\b/);
+        if (pMatch && !detectedPos) {
+          detectedPos = pMatch[1];
+        }
+      }
+
+      if (nameRes && nameRes.data && nameRes.data.text) {
+        const rawOcrName = nameRes.data.text.toUpperCase().replace(/[^A-Z\s]/g, ' ').trim();
+        const matched = findBestPlayerMatch(rawOcrName);
+        if (matched) {
+          detectedName = matched;
+        } else if (!detectedName && rawOcrName.length >= 3) {
+          detectedName = rawOcrName.split(/\s+/)[0];
+        }
+      }
+    } catch (ocrErr) {
+      console.warn('OCR card metadata extraction skipped/failed', ocrErr);
+    }
+  }
+
+  if (!detectedName && hintName) {
+    const cleanHint = hintName.replace(/\.[^/.]+$/, '').replace(/card|fifa|fc|mobile|render|png|jpg|jpeg/gi, '').trim().toUpperCase();
+    detectedName = cleanHint || 'PLAYER';
+  }
+
+  return {
+    name: detectedName || '',
+    ovr: detectedOvr || '120',
+    pos: detectedPos || 'ST'
+  };
+}
+
+async function detectAndApplyMainCardMetadata(imageSrc, hint = '') {
+  if (!imageSrc) {
+    showToast('Please upload or select a main card first!', '⚠️');
+    return;
+  }
+  showToast('🔍 Analyzing card for Player Name & OVR...', '⏳');
+  try {
+    const meta = await detectCardMetadata(imageSrc, hint);
+    if (meta.name) document.getElementById('cfgMainName').value = meta.name;
+    if (meta.ovr) document.getElementById('cfgMainOvr').value = meta.ovr;
+    if (meta.pos) document.getElementById('cfgMainPos').value = meta.pos;
+    showToast(`✨ Detected: ${meta.name || 'Player'} (${meta.ovr || '--'} ${meta.pos || ''})`, '✅');
+  } catch (err) {
+    console.error('Detection error', err);
+    showToast('Could not auto-detect card text, please enter manually.', '⚠️');
+  }
+}
+
+async function detectAndApplyOpponentCardMetadata(imageSrc, hint = '') {
+  if (!imageSrc) {
+    showToast('Please upload or select an opponent card first!', '⚠️');
+    return;
+  }
+  showToast('🔍 Analyzing opponent card for Name & OVR...', '⏳');
+  try {
+    const meta = await detectCardMetadata(imageSrc, hint);
+    if (meta.name) document.getElementById('opponentNameInput').value = meta.name;
+    if (meta.ovr) document.getElementById('opponentOvrInput').value = meta.ovr;
+    if (meta.pos) document.getElementById('opponentPosInput').value = meta.pos;
+    showToast(`✨ Detected: ${meta.name || 'Opponent'} (${meta.ovr || '--'} ${meta.pos || ''})`, '✅');
+  } catch (err) {
+    console.error('Detection error', err);
+    showToast('Could not auto-detect card text, please enter manually.', '⚠️');
+  }
+}
+
+// ========================================================
+// CORE RENDER FUNCTION & ROW CONTROLLER
+// ========================================================
+function setComparisonRows(num) {
+  state.comparisonRows = parseInt(num, 10) || 3;
+  render();
+  showToast(`Updated comparison layout to ${state.comparisonRows} rows per side!`, '📏');
+}
+
 function render() {
   // Update Main Player in Sidebar
   const thumb = document.getElementById('mainPlayerThumb');
@@ -2570,14 +2935,24 @@ function render() {
   document.getElementById('gTitlePlayer').textContent = state.titleName || (state.mainPlayer.name ? state.mainPlayer.name : 'PLAYER');
   document.getElementById('gSubtitleText').textContent = state.subtitleText || (state.mainPlayer.name ? `${state.mainPlayer.name} : BETTER THAN ALL` : 'BETTER THAN ALL');
 
-  // Render Left & Right Battle Sides
-  const mid = Math.ceil(state.battles.length / 2);
-  const leftBattles = state.battles.slice(0, mid);
-  const rightBattles = state.battles.slice(mid);
+  // Dynamic Row Configuration (Defaults to 3 rows)
+  const maxRows = state.comparisonRows || 3;
+  const graphic = document.getElementById('comparisonGraphic');
+  if (graphic) graphic.setAttribute('data-rows', maxRows);
 
-  document.getElementById('battleCountBadge').textContent = `${state.battles.length} Battles`;
-  renderBattleSide('battleSideLeft', leftBattles);
-  renderBattleSide('battleSideRight', rightBattles);
+  document.querySelectorAll('.btn-row-opt').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.rows, 10) === maxRows);
+  });
+  const rowsBadge = document.getElementById('rowsBadge');
+  if (rowsBadge) rowsBadge.textContent = `${maxRows} Rows (${maxRows * 2} Cards)`;
+
+  // Render Left & Right Battle Sides based on maxRows
+  const leftBattles = state.battles.slice(0, maxRows);
+  const rightBattles = state.battles.slice(maxRows, maxRows * 2);
+
+  document.getElementById('battleCountBadge').textContent = `${Math.min(state.battles.length, maxRows * 2)} / ${maxRows * 2} Battles (${maxRows} Rows)`;
+  renderBattleSide('battleSideLeft', leftBattles, maxRows);
+  renderBattleSide('battleSideRight', rightBattles, maxRows);
 
   // Render Sidebar Battles Manager List
   renderSidebarBattles();
@@ -2586,7 +2961,7 @@ function render() {
   saveToLocalStorage();
 }
 
-function renderBattleSide(containerId, battleSlice) {
+function renderBattleSide(containerId, battleSlice, maxRows = 3) {
   const container = document.getElementById(containerId);
   const mainImgSrc = state.mainPlayer.image || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='170' viewBox='0 0 120 170'><rect width='120' height='170' fill='%23060c18' stroke='%23223856' stroke-width='2' stroke-dasharray='6,4' rx='8'/><text x='50%' y='45%' fill='%2300e5ff' font-size='26' dominant-baseline='middle' text-anchor='middle'>＋</text><text x='50%' y='65%' fill='%238aa1be' font-size='11' font-weight='700' dominant-baseline='middle' text-anchor='middle'>Main Card</text></svg>";
 
@@ -2651,13 +3026,15 @@ function renderBattleSide(containerId, battleSlice) {
     `;
   }).join('');
 
-  if (battleSlice.length < 3) {
-    html += `
-      <div class="empty-battle-slot" onclick="openAddMatchupModal()">
-        <span style="font-size:26px;">＋</span>
-        <span>Add Comparison Battle</span>
-      </div>
-    `;
+  if (battleSlice.length < maxRows) {
+    for (let i = battleSlice.length; i < maxRows; i++) {
+      html += `
+        <div class="empty-battle-slot" onclick="openAddMatchupModal()">
+          <span style="font-size:24px;">＋</span>
+          <span>Add Comparison Battle (${i + 1}/${maxRows})</span>
+        </div>
+      `;
+    }
   }
 
   container.innerHTML = html;
@@ -2874,9 +3251,7 @@ function renderUploadedGalleries() {
             el.classList.add('selected');
             tempOpponentImage = card.src;
             setOpponentActivePreview(card.src);
-            if (!document.getElementById('opponentNameInput').value.trim() || document.getElementById('opponentNameInput').value === 'Opponent') {
-              document.getElementById('opponentNameInput').value = card.name;
-            }
+            detectAndApplyOpponentCardMetadata(card.src, card.name);
             showToast(`Selected uploaded card: ${card.name}`);
           }
         });
@@ -2910,6 +3285,7 @@ function renderUploadedGalleries() {
             el.classList.add('selected');
             tempMainImage = card.src;
             setMainActivePreview(card.src);
+            detectAndApplyMainCardMetadata(card.src, card.name);
             showToast(`Selected uploaded card for main: ${card.name}`);
           }
         });
@@ -3031,15 +3407,21 @@ oppFileInput.addEventListener('change', async e => {
     addUploadedCard(compressed, file.name);
     tempOpponentImage = compressed;
     setOpponentActivePreview(compressed);
-    const nameInput = document.getElementById('opponentNameInput');
-    if (!nameInput.value.trim() || nameInput.value === 'Opponent') {
-      nameInput.value = file.name.replace(/\.[^/.]+$/, '').toUpperCase();
-    }
+    detectAndApplyOpponentCardMetadata(compressed, file.name);
     showToast(`Opponent card "${file.name}" uploaded!`);
   }
 });
 
 // Opponent Active Preview Buttons
+document.getElementById('opponentAutoDetectBtn').addEventListener('click', () => {
+  const currentImg = tempOpponentImage;
+  if (!currentImg) {
+    showToast('Please upload or choose an opponent card first!', '⚠️');
+    return;
+  }
+  detectAndApplyOpponentCardMetadata(currentImg, document.getElementById('opponentNameInput').value);
+});
+
 document.getElementById('opponentRemoveImgBtn').addEventListener('click', () => {
   tempOpponentImage = null;
   oppFileInput.value = '';
@@ -3053,6 +3435,9 @@ document.getElementById('opponentClearUploadsBtn').addEventListener('click', cle
 // MAIN PLAYER CONFIGURATION
 // ========================================================
 function openMainPlayerModal() {
+  if (state.mainPlayer.image && (state.mainPlayer.image === 'exact_vini.png' || state.mainPlayer.image.includes('vini'))) {
+    state.mainPlayer.image = '';
+  }
   tempMainImage = state.mainPlayer.image || null;
   setMainActivePreview(tempMainImage);
   renderUploadedGalleries();
@@ -3110,15 +3495,21 @@ cfgFileInput.addEventListener('change', async e => {
     addUploadedCard(compressed, file.name);
     tempMainImage = compressed;
     setMainActivePreview(compressed);
-    const nameInput = document.getElementById('cfgMainName');
-    if (!nameInput.value.trim()) {
-      nameInput.value = file.name.replace(/\.[^/.]+$/, '').toUpperCase();
-    }
+    detectAndApplyMainCardMetadata(compressed, file.name);
     showToast(`Main card "${file.name}" uploaded!`);
   }
 });
 
 // Main Card Active Preview Buttons
+document.getElementById('cfgMainAutoDetectBtn').addEventListener('click', () => {
+  const currentImg = tempMainImage || state.mainPlayer.image;
+  if (!currentImg) {
+    showToast('Please upload or choose a card first!', '⚠️');
+    return;
+  }
+  detectAndApplyMainCardMetadata(currentImg, document.getElementById('cfgMainName').value);
+});
+
 document.getElementById('cfgMainRemoveImgBtn').addEventListener('click', () => {
   tempMainImage = null;
   state.mainPlayer.image = '';
@@ -3365,6 +3756,12 @@ async function exportGraphicImage(format = 'png') {
   const graphic = document.getElementById('comparisonGraphic');
   showToast(`Generating 1080×1800 (3:5 ratio) ${format.toUpperCase()} image...`, '⏳');
 
+  if (document.fonts) {
+    try {
+      await document.fonts.ready;
+    } catch (e) {}
+  }
+
   const prevTransform = graphic.style.transform;
   graphic.style.transform = 'none';
   graphic.classList.add('clean-view');
@@ -3377,7 +3774,20 @@ async function exportGraphicImage(format = 'png') {
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#020408',
-      logging: false
+      logging: false,
+      onclone: (clonedDoc) => {
+        const clonedGraphic = clonedDoc.getElementById('comparisonGraphic');
+        if (clonedGraphic) {
+          clonedGraphic.style.transform = 'none';
+          clonedGraphic.classList.add('clean-view');
+          // Clear any background-clip text rendering issues that cause rectangular artifact boxes
+          clonedGraphic.querySelectorAll('.title-part-name, .title-part-comparison, .subtitle-text, .unit-shard-val, .battle-operator-badge').forEach(el => {
+            el.style.backgroundImage = 'none';
+            el.style.webkitBackgroundClip = 'initial';
+            el.style.webkitTextFillColor = 'initial';
+          });
+        }
+      }
     });
 
     const safeName = (state.mainPlayer.name || 'Player').replace(/[^a-z0-9_-]/gi, '_');
@@ -4187,10 +4597,10 @@ function loadFromLocalStorage() {
       const data = JSON.parse(raw);
       if (data.mainPlayer) {
         state.mainPlayer = data.mainPlayer;
-        if (state.mainPlayer.image === 'exact_vini.png') {
+        if (state.mainPlayer.image && (state.mainPlayer.image === 'exact_vini.png' || state.mainPlayer.image.includes('vini'))) {
           state.mainPlayer.image = '';
         }
-        if (state.mainPlayer.name === 'VINI JR.') {
+        if (state.mainPlayer.name && (state.mainPlayer.name === 'VINI JR.' || state.mainPlayer.name.toUpperCase().includes('VINI'))) {
           state.mainPlayer.name = '';
         }
       }
@@ -4200,6 +4610,9 @@ function loadFromLocalStorage() {
       }
       if (data.subtitleText) {
         state.subtitleText = data.subtitleText === 'VINI JR. : BETTER THAN ALL' ? 'BETTER THAN ALL' : data.subtitleText;
+      }
+      if (data.comparisonRows) {
+        state.comparisonRows = parseInt(data.comparisonRows, 10) || 3;
       }
       if (Array.isArray(data.battles)) {
         // Purge old default demo battles with Ronaldinho if present
