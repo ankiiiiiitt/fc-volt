@@ -655,7 +655,14 @@
     min-width: 1080px;
     min-height: 1800px;
     position: relative;
-    background-color: #03060c;
+    background-color: #030814;
+    background-image: 
+      radial-gradient(ellipse at 50% 12%, rgba(0, 229, 255, 0.28) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 92%, rgba(0, 255, 102, 0.38) 0%, transparent 65%),
+      linear-gradient(180deg, rgba(3, 8, 18, 0.82) 0%, rgba(2, 6, 14, 0.68) 35%, rgba(2, 6, 14, 0.78) 75%, rgba(2, 14, 8, 0.94) 100%),
+      url('stadium_pitch.jpg');
+    background-size: cover;
+    background-position: center bottom;
     overflow: hidden;
     user-select: none;
     display: flex;
@@ -665,16 +672,94 @@
     box-sizing: border-box;
   }
 
+  #comparisonGraphic[data-theme="champions"] {
+    background-image: 
+      radial-gradient(ellipse at 50% 12%, rgba(0, 229, 255, 0.30) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 92%, rgba(0, 255, 102, 0.38) 0%, transparent 65%),
+      linear-gradient(180deg, rgba(3, 9, 22, 0.80) 0%, rgba(2, 6, 14, 0.68) 35%, rgba(2, 6, 14, 0.78) 75%, rgba(2, 16, 9, 0.94) 100%),
+      url('stadium_pitch.jpg');
+  }
+
+  #comparisonGraphic[data-theme="pitch"] {
+    background-image: 
+      radial-gradient(ellipse at 50% 15%, rgba(0, 255, 102, 0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 88%, rgba(0, 255, 102, 0.45) 0%, transparent 65%),
+      linear-gradient(180deg, rgba(4, 18, 10, 0.82) 0%, rgba(3, 12, 8, 0.70) 40%, rgba(2, 10, 6, 0.85) 80%, rgba(1, 16, 8, 0.96) 100%),
+      url('stadium_pitch.jpg');
+  }
+
+  #comparisonGraphic[data-theme="neon"] {
+    background-image: 
+      radial-gradient(ellipse at 15% 15%, rgba(255, 0, 128, 0.38) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 15%, rgba(0, 229, 255, 0.42) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 90%, rgba(0, 255, 102, 0.35) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(8, 5, 20, 0.85) 0%, rgba(4, 3, 12, 0.70) 40%, rgba(2, 6, 14, 0.85) 80%, rgba(2, 14, 8, 0.95) 100%),
+      url('stadium_pitch.jpg');
+  }
+
+  #comparisonGraphic[data-theme="dark"] {
+    background-image: 
+      radial-gradient(ellipse at 50% 12%, rgba(0, 229, 255, 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 92%, rgba(0, 255, 102, 0.2) 0%, transparent 65%),
+      linear-gradient(180deg, rgba(2, 4, 8, 0.93) 0%, rgba(1, 3, 6, 0.88) 50%, rgba(1, 4, 3, 0.96) 100%),
+      url('stadium_pitch.jpg');
+  }
+
+  /* Stadium Backdrop Lighting Layer */
+  .stadium-backdrop-img {
+    position: absolute;
+    inset: 0;
+    background: url('stadium_pitch.jpg') center bottom / cover no-repeat;
+    opacity: 0.35;
+    mix-blend-mode: screen;
+    filter: contrast(1.1) brightness(0.85);
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.25s ease;
+  }
+
+  /* Football Pitch Lines Layer */
+  .stadium-pitch-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .pitch-center-circle {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    border: 2px dashed rgba(0, 229, 255, 0.22);
+    box-shadow: 0 0 35px rgba(0, 229, 255, 0.08), inset 0 0 45px rgba(0, 229, 255, 0.05);
+  }
+
+  .pitch-center-spot {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #00e5ff;
+    box-shadow: 0 0 16px #00e5ff, 0 0 32px #00e5ff;
+  }
+
   /* Stadium Floodlights & Atmosphere Layer */
   .stadium-lights-layer {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
     background-image: 
-      radial-gradient(ellipse at 12% 8%, rgba(255, 0, 128, 0.35) 0%, transparent 45%),
-      radial-gradient(ellipse at 88% 8%, rgba(0, 229, 255, 0.38) 0%, transparent 45%),
-      radial-gradient(ellipse at 50% 10%, rgba(255, 255, 255, 0.18) 0%, transparent 60%);
+      radial-gradient(ellipse at 12% 8%, rgba(255, 0, 128, 0.40) 0%, transparent 45%),
+      radial-gradient(ellipse at 88% 8%, rgba(0, 229, 255, 0.42) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 10%, rgba(255, 255, 255, 0.22) 0%, transparent 60%);
   }
 
   /* Diagonal Laser Beams (Top-Left Pink & Top-Right Cyan) */
@@ -682,13 +767,13 @@
     position: absolute;
     top: -60px;
     left: -40px;
-    width: 320px;
-    height: 12px;
+    width: 340px;
+    height: 14px;
     background: linear-gradient(90deg, #ff0077, rgba(255, 0, 119, 0));
     transform: rotate(38deg);
     box-shadow: 0 0 35px #ff0077, 0 0 70px #ff0077;
     filter: blur(2px);
-    z-index: 2;
+    z-index: 3;
     pointer-events: none;
   }
 
@@ -696,13 +781,13 @@
     position: absolute;
     top: -60px;
     right: -40px;
-    width: 320px;
-    height: 12px;
+    width: 340px;
+    height: 14px;
     background: linear-gradient(270deg, #00e5ff, rgba(0, 229, 255, 0));
     transform: rotate(-38deg);
     box-shadow: 0 0 35px #00e5ff, 0 0 70px #00e5ff;
     filter: blur(2px);
-    z-index: 2;
+    z-index: 3;
     pointer-events: none;
   }
 
@@ -712,13 +797,16 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 140px;
+    height: 180px;
     background: 
-      radial-gradient(ellipse at 50% 100%, rgba(0, 255, 102, 0.35) 0%, transparent 70%),
-      linear-gradient(180deg, transparent 0%, rgba(10, 45, 20, 0.6) 50%, rgba(6, 28, 12, 0.95) 100%);
+      radial-gradient(ellipse at 50% 100%, rgba(0, 255, 102, 0.5) 0%, transparent 70%),
+      linear-gradient(180deg, transparent 0%, rgba(8, 48, 22, 0.65) 45%, rgba(4, 26, 11, 0.98) 100%),
+      url('bg_grass_exact.png') repeat-x bottom center;
+    background-size: auto, auto, auto 80px;
     pointer-events: none;
     z-index: 2;
-    border-top: 1px solid rgba(0, 255, 102, 0.25);
+    border-top: 1.5px solid rgba(0, 255, 102, 0.35);
+    box-shadow: 0 -10px 40px rgba(0, 255, 102, 0.25);
   }
 
   /* Center Vertical Neon Divider */
@@ -728,7 +816,7 @@
     bottom: 30px;
     left: 50%;
     width: 3px;
-    background: linear-gradient(180deg, #ff007f 0%, #aa00ff 50%, #00e5ff 100%);
+    background: linear-gradient(180deg, #ff007f 0%, #aa00ff 40%, #00e5ff 75%, #00ff66 100%);
     box-shadow: 0 0 16px rgba(255, 0, 127, 0.8), 0 0 30px rgba(0, 229, 255, 0.6);
     transform: translateX(-50%);
     z-index: 3;
@@ -750,14 +838,14 @@
   /* Crown */
   .header-crown-wrap {
     position: relative;
-    margin-bottom: -10px;
+    margin-bottom: -6px;
     z-index: 2;
   }
 
-  .header-crown-img {
-    height: 48px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 14px rgba(255, 200, 0, 0.8));
+  .header-crown-svg {
+    height: 52px;
+    width: 100px;
+    filter: drop-shadow(0 0 16px rgba(255, 200, 0, 0.85));
   }
 
   /* Main Title Banner with Laurels */
@@ -770,10 +858,11 @@
     width: 100%;
   }
 
-  .title-laurel {
-    width: 50px;
-    height: 70px;
+  .title-laurel-svg {
+    height: 80px;
+    width: 55px;
     flex-shrink: 0;
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.75));
   }
 
   .title-laurel-right {
@@ -784,11 +873,11 @@
     display: flex;
     align-items: baseline;
     gap: 14px;
-    font-family: var(--font-impact);
+    font-family: var(--font-impact, 'Impact', 'Arial Black', sans-serif);
     text-transform: uppercase;
     line-height: 1;
     position: relative;
-    padding: 0 10px;
+    padding: 0 12px;
   }
 
   /* Blue Neon Under-glow Line behind Title */
@@ -800,15 +889,6 @@
     height: 3px;
     background: linear-gradient(90deg, transparent 0%, #00e5ff 25%, #00e5ff 75%, transparent 100%);
     box-shadow: 0 0 20px #00e5ff, 0 0 40px #00e5ff;
-  }
-
-  /* Real PNG Laurels from reference */
-  .title-laurel-img {
-    height: 74px;
-    width: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.85)) drop-shadow(0 0 14px rgba(255, 215, 0, 0.7));
-    flex-shrink: 0;
   }
 
   /* First Part: Chrome Metallic Silver with Crisp 3D Text Shadow (Exports 100% cleanly!) */
@@ -848,11 +928,12 @@
 
   /* Subtitle Glowing Green Pill */
   .header-subtitle-pill {
-    margin-top: 12px;
-    background: #020704;
+    margin-top: 14px;
+    background: rgba(2, 7, 4, 0.88);
+    backdrop-filter: blur(8px);
     border: 2.5px solid #00ff66;
     border-radius: 40px;
-    box-shadow: 0 0 20px rgba(0, 255, 102, 0.65), 0 6px 18px rgba(0,0,0,0.8);
+    box-shadow: 0 0 24px rgba(0, 255, 102, 0.65), 0 6px 20px rgba(0,0,0,0.85);
     display: inline-flex;
     align-items: center;
     gap: 14px;
@@ -1001,6 +1082,38 @@
     font-weight: 900;
     border-color: #33f0ff;
     box-shadow: 0 0 14px rgba(0, 229, 255, 0.5);
+  }
+
+  /* FOOTBALL STADIUM THEME CONTROLS */
+  .theme-selector-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .btn-theme-opt {
+    background: #0d1522;
+    border: 1.5px solid #1f2f45;
+    color: #9cb5d6;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 8px 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.16s ease;
+    user-select: none;
+  }
+  .btn-theme-opt:hover {
+    border-color: #00ff66;
+    color: #fff;
+    background: #112219;
+  }
+  .btn-theme-opt.active {
+    background: linear-gradient(135deg, #00ff66, #00c8ff);
+    color: #021a08;
+    font-weight: 900;
+    border-color: #33ff88;
+    box-shadow: 0 0 14px rgba(0, 255, 102, 0.45);
   }
 
   /* A Single Matchup Row: 3 Columns (Left Card, Operator, Right Card) with Genuine Space */
@@ -2110,6 +2223,26 @@
         </div>
       </section>
 
+      <!-- FOOTBALL STADIUM BACKGROUND THEME -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>🏟️ Football Stadium Background</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-size:11px; color:#8fa5c5; font-weight:700;">Stadium atmosphere theme:</label>
+          <div class="theme-selector-bar">
+            <button type="button" class="btn-theme-opt active" data-theme="champions" onclick="setStadiumTheme('champions')">🏟️ Arena</button>
+            <button type="button" class="btn-theme-opt" data-theme="pitch" onclick="setStadiumTheme('pitch')">⚽ Pitch</button>
+            <button type="button" class="btn-theme-opt" data-theme="neon" onclick="setStadiumTheme('neon')">⚡ Electric</button>
+            <button type="button" class="btn-theme-opt" data-theme="dark" onclick="setStadiumTheme('dark')">⬛ Midnight</button>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px;">
+            <span style="font-size:11px; color:#8fa5c5; font-weight:700;">Stadium Floodlights & Glow:</span>
+            <input type="range" id="stadiumGlowRange" min="20" max="100" value="80" style="width:110px;" oninput="updateStadiumGlow(this.value)">
+          </div>
+        </div>
+      </section>
+
       <!-- COMPARISON ROWS CONFIGURATION -->
       <section class="panel-card">
         <div class="panel-title">
@@ -2184,9 +2317,14 @@
       <div id="graphicViewport" class="graphic-viewport">
 
         <!-- 1080 × 1800 (3:5 RATIO) CANVAS (EXACT REFERENCE GRAPHIC) -->
-        <div id="comparisonGraphic">
+        <div id="comparisonGraphic" data-theme="champions">
 
-          <!-- STADIUM ATMOSPHERE & LASER LAYERS -->
+          <!-- FOOTBALL STADIUM & PITCH ATMOSPHERE -->
+          <div class="stadium-backdrop-img"></div>
+          <div class="stadium-pitch-lines">
+            <div class="pitch-center-circle"></div>
+            <div class="pitch-center-spot"></div>
+          </div>
           <div class="stadium-lights-layer"></div>
           <div class="laser-beam-left"></div>
           <div class="laser-beam-right"></div>
@@ -2197,13 +2335,73 @@
           <div class="comparison-header-area">
             <!-- Crown -->
             <div class="header-crown-wrap">
-              <img src="asset_crown.png" class="header-crown-img" alt="Crown">
+              <svg class="header-crown-svg" viewBox="0 0 120 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="goldCrownGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fff8db" />
+                    <stop offset="25%" stop-color="#ffd700" />
+                    <stop offset="60%" stop-color="#ffaa00" />
+                    <stop offset="85%" stop-color="#cc8800" />
+                    <stop offset="100%" stop-color="#995500" />
+                  </linearGradient>
+                  <linearGradient id="goldJewelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" />
+                    <stop offset="100%" stop-color="#00e5ff" />
+                  </linearGradient>
+                  <filter id="crownGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#ffd700" flood-opacity="0.85" />
+                    <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#ff9900" flood-opacity="0.5" />
+                  </filter>
+                </defs>
+                <g filter="url(#crownGlow)">
+                  <path d="M15 54 C35 58, 85 58, 105 54 L102 62 C82 66, 38 66, 18 62 Z" fill="url(#goldCrownGrad)" stroke="#ffea75" stroke-width="1" />
+                  <path d="M15 54 L12 28 L35 42 L60 12 L85 42 L108 28 L105 54 C85 58, 35 58, 15 54 Z" fill="url(#goldCrownGrad)" stroke="#fff" stroke-width="0.8" />
+                  <polygon points="60,12 50,45 60,56 70,45" fill="#ffe57f" opacity="0.75" />
+                  <polygon points="12,28 25,48 35,42" fill="#fff" opacity="0.45" />
+                  <polygon points="108,28 95,48 85,42" fill="#d48800" opacity="0.45" />
+                  <circle cx="60" cy="11" r="5" fill="#ffffff" filter="drop-shadow(0 0 6px #00e5ff)" />
+                  <circle cx="12" cy="27" r="4" fill="#ffd700" filter="drop-shadow(0 0 4px #ffd700)" />
+                  <circle cx="108" cy="27" r="4" fill="#ffd700" filter="drop-shadow(0 0 4px #ffd700)" />
+                  <circle cx="35" cy="41" r="3.5" fill="#ffffff" />
+                  <circle cx="85" cy="41" r="3.5" fill="#ffffff" />
+                  <polygon points="60,48 64,53 60,58 56,53" fill="url(#goldJewelGrad)" stroke="#fff" stroke-width="0.5" />
+                  <circle cx="36" cy="54" r="2.5" fill="#ff0055" />
+                  <circle cx="84" cy="54" r="2.5" fill="#00ff66" />
+                </g>
+              </svg>
             </div>
 
             <!-- Title Row with Golden Laurels -->
             <div class="header-title-row">
               <!-- Left Laurel Branch -->
-              <img src="asset_laurel_left.png" class="title-laurel-img" alt="Laurel Left">
+              <svg class="title-laurel-svg" viewBox="0 0 60 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="goldLaurelGradL" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fff8db" />
+                    <stop offset="30%" stop-color="#ffd700" />
+                    <stop offset="70%" stop-color="#cca000" />
+                    <stop offset="100%" stop-color="#805900" />
+                  </linearGradient>
+                  <filter id="laurelGlowL" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#ffd700" flood-opacity="0.8" />
+                  </filter>
+                </defs>
+                <g filter="url(#laurelGlowL)">
+                  <path d="M48 84 C38 68, 22 45, 34 10" stroke="url(#goldLaurelGradL)" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                  <path d="M48 82 C42 80, 36 84, 38 88 C44 88, 48 85, 48 82 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M43 72 C35 70, 27 75, 30 81 C37 80, 42 76, 43 72 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M37 60 C27 58, 18 64, 22 71 C30 69, 36 64, 37 60 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M31 47 C20 44, 12 51, 16 58 C24 56, 30 51, 31 47 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M28 34 C17 30, 10 38, 14 45 C22 43, 27 38, 28 34 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M28 21 C18 17, 13 25, 17 31 C24 29, 28 25, 28 21 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M34 10 C26 7, 24 15, 28 20 C34 18, 36 14, 34 10 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M36 8 C34 2, 41 2, 42 7 C41 10, 38 10, 36 8 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M47 70 C49 64, 55 64, 54 71 C51 72, 48 72, 47 70 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M41 57 C44 51, 50 52, 49 58 C46 59, 43 59, 41 57 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M36 44 C39 38, 45 39, 44 45 C41 46, 38 46, 36 44 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M34 30 C37 24, 43 25, 42 31 C39 32, 36 32, 34 30 Z" fill="url(#goldLaurelGradL)" />
+                </g>
+              </svg>
 
               <!-- Main Title Text -->
               <div class="title-main-text-box">
@@ -2213,7 +2411,23 @@
               </div>
 
               <!-- Right Laurel Branch -->
-              <img src="asset_laurel_right.png" class="title-laurel-img" alt="Laurel Right">
+              <svg class="title-laurel-svg title-laurel-right" viewBox="0 0 60 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#laurelGlowL)">
+                  <path d="M48 84 C38 68, 22 45, 34 10" stroke="url(#goldLaurelGradL)" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                  <path d="M48 82 C42 80, 36 84, 38 88 C44 88, 48 85, 48 82 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M43 72 C35 70, 27 75, 30 81 C37 80, 42 76, 43 72 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M37 60 C27 58, 18 64, 22 71 C30 69, 36 64, 37 60 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M31 47 C20 44, 12 51, 16 58 C24 56, 30 51, 31 47 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M28 34 C17 30, 10 38, 14 45 C22 43, 27 38, 28 34 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M28 21 C18 17, 13 25, 17 31 C24 29, 28 25, 28 21 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M34 10 C26 7, 24 15, 28 20 C34 18, 36 14, 34 10 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M36 8 C34 2, 41 2, 42 7 C41 10, 38 10, 36 8 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M47 70 C49 64, 55 64, 54 71 C51 72, 48 72, 47 70 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M41 57 C44 51, 50 52, 49 58 C46 59, 43 59, 41 57 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M36 44 C39 38, 45 39, 44 45 C41 46, 38 46, 36 44 Z" fill="url(#goldLaurelGradL)" />
+                  <path d="M34 30 C37 24, 43 25, 42 31 C39 32, 36 32, 34 30 Z" fill="url(#goldLaurelGradL)" />
+                </g>
+              </svg>
             </div>
 
             <!-- Glowing Neon Green Subtitle Pill -->
@@ -2619,6 +2833,8 @@ let state = {
   subtitleText: 'BETTER THAN ALL',
   isCleanView: false,
   comparisonRows: 3,
+  stadiumTheme: 'champions',
+  stadiumGlow: 80,
   uploadedCards: [],
   presets: [],
   battles: []
@@ -2920,6 +3136,21 @@ function setComparisonRows(num) {
   showToast(`Updated comparison layout to ${state.comparisonRows} rows per side!`, '📏');
 }
 
+function setStadiumTheme(theme) {
+  state.stadiumTheme = theme;
+  render();
+  showToast(`Applied ${theme.toUpperCase()} football stadium theme!`, '🏟️');
+}
+
+function updateStadiumGlow(val) {
+  state.stadiumGlow = parseInt(val, 10);
+  const backdrop = document.querySelector('.stadium-backdrop-img');
+  if (backdrop) {
+    backdrop.style.opacity = (val / 100 * 0.6).toFixed(2);
+  }
+  saveToLocalStorage();
+}
+
 function render() {
   // Update Main Player in Sidebar
   const thumb = document.getElementById('mainPlayerThumb');
@@ -2938,13 +3169,31 @@ function render() {
   // Dynamic Row Configuration (Defaults to 3 rows)
   const maxRows = state.comparisonRows || 3;
   const graphic = document.getElementById('comparisonGraphic');
-  if (graphic) graphic.setAttribute('data-rows', maxRows);
+  if (graphic) {
+    graphic.setAttribute('data-rows', maxRows);
+    const curTheme = state.stadiumTheme || 'champions';
+    graphic.setAttribute('data-theme', curTheme);
+    const backdrop = graphic.querySelector('.stadium-backdrop-img');
+    if (backdrop && typeof state.stadiumGlow !== 'undefined') {
+      backdrop.style.opacity = (state.stadiumGlow / 100 * 0.6).toFixed(2);
+    }
+  }
 
   document.querySelectorAll('.btn-row-opt').forEach(btn => {
     btn.classList.toggle('active', parseInt(btn.dataset.rows, 10) === maxRows);
   });
   const rowsBadge = document.getElementById('rowsBadge');
   if (rowsBadge) rowsBadge.textContent = `${maxRows} Rows (${maxRows * 2} Cards)`;
+
+  // Theme Toggles Sync
+  const curTheme = state.stadiumTheme || 'champions';
+  document.querySelectorAll('.btn-theme-opt').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === curTheme);
+  });
+  const glowRange = document.getElementById('stadiumGlowRange');
+  if (glowRange && typeof state.stadiumGlow !== 'undefined') {
+    glowRange.value = state.stadiumGlow;
+  }
 
   // Render Left & Right Battle Sides based on maxRows
   const leftBattles = state.battles.slice(0, maxRows);
@@ -4613,6 +4862,12 @@ function loadFromLocalStorage() {
       }
       if (data.comparisonRows) {
         state.comparisonRows = parseInt(data.comparisonRows, 10) || 3;
+      }
+      if (data.stadiumTheme) {
+        state.stadiumTheme = data.stadiumTheme;
+      }
+      if (typeof data.stadiumGlow !== 'undefined') {
+        state.stadiumGlow = parseInt(data.stadiumGlow, 10) || 80;
       }
       if (Array.isArray(data.battles)) {
         // Purge old default demo battles with Ronaldinho if present
