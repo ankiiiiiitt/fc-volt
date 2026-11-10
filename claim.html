@@ -2144,75 +2144,6 @@ document.getElementById('modalAutoDetectBtn').addEventListener('click', () => {
   }
 });
 
-// Remove Background Studio Integration (Single Card)
-document.getElementById('modalRemoveBgBtn').addEventListener('click', async () => {
-  const card = state.cards.find(c => c.rank === currentEditingRank);
-  if (!card || !card.image) {
-    showToast('Please upload a card image first!', '⚠️');
-    return;
-  }
-  showToast('🪄 Removing background & outliers...', '⏳');
-  try {
-    const cleaned = await processImageBackgroundRemoval(card.image, {
-      mode: 'auto',
-      tolerance: 0.30,
-      choke: 1,
-      crop: true
-    });
-    card.image = cleaned;
-    document.getElementById('modalPreviewThumb').src = cleaned;
-    render();
-    showToast('Cleaned background and made transparent card cutout!', '✨');
-  } catch(err) {
-    console.error('BG removal failed', err);
-    showToast('Failed to clean image.', '⚠️');
-  }
-});
-
-// Remove Background from ALL Cards (Modal Button)
-document.getElementById('modalBatchRemoveBgBtn').addEventListener('click', () => {
-  batchRemoveBackgroundAllCards();
-});
-
-// Batch Remove Background for All 10 Cards
-async function batchRemoveBackgroundAllCards() {
-  const cardsWithImages = state.cards.filter(c => c.image && c.image.length > 50);
-  if (cardsWithImages.length === 0) {
-    showToast('No cards with images found to clean! Please upload card image(s) first.', '⚠️');
-    return;
-  }
-
-  showToast(`🪄 Starting background removal for ${cardsWithImages.length} cards...`, '⏳');
-  
-  let successCount = 0;
-  for (let i = 0; i < cardsWithImages.length; i++) {
-    const card = cardsWithImages[i];
-    showToast(`🪄 Removing background: Card #${card.rank} (${i + 1}/${cardsWithImages.length})...`, '⏳');
-    try {
-      const cleaned = await processImageBackgroundRemoval(card.image, {
-        mode: 'auto',
-        tolerance: 0.30,
-        choke: 1,
-        crop: true
-      });
-      card.image = cleaned;
-      successCount++;
-    } catch (err) {
-      console.warn(`Card #${card.rank} background removal error:`, err);
-    }
-  }
-
-  // Update modal preview if open
-  const modalThumb = document.getElementById('modalPreviewThumb');
-  const currentCard = state.cards.find(c => c.rank === currentEditingRank);
-  if (currentCard && modalThumb && currentCard.image) {
-    modalThumb.src = currentCard.image;
-  }
-
-  render();
-  showToast(`✅ Successfully removed background from all ${successCount} cards!`, '🎉');
-}
-
 // Multi-file batch card upload
 function readFileAsDataUrl(file) {
   return new Promise((resolve, reject) => {
@@ -2250,107 +2181,6 @@ if (batchCardsInput) {
     batchCardsInput.value = '';
     showToast(`✅ Loaded ${files.length} cards! Auto-cleaning backgrounds now...`, '✨');
     await batchRemoveBackgroundAllCards();
-  });
-}
-
-function processImageBackgroundRemoval(imgSource, options = {}) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onerror = reject;
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-
-      const w = canvas.width;
-      const h = canvas.height;
-      if (w === 0 || h === 0) return resolve(imgSource);
-
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const data = imgData.data;
-
-      // Auto-detect corner/border dominant color
-      const cornerCoords = [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]];
-      let sumR = 0, sumG = 0, sumB = 0, validSamples = 0;
-      cornerCoords.forEach(([cx, cy]) => {
-        const idx = (cy * w + cx) * 4;
-        if (data[idx + 3] > 20) {
-          sumR += data[idx]; sumG += data[idx + 1]; sumB += data[idx + 2];
-          validSamples++;
-        }
-      });
-      const tr = validSamples > 0 ? sumR / validSamples : 0;
-      const tg = validSamples > 0 ? sumG / validSamples : 0;
-      const tb = validSamples > 0 ? sumB / validSamples : 0;
-      const tolDist = (options.tolerance || 0.28) * 441.67;
-
-      // Flood fill from borders
-      const visited = new Uint8Array(w * h);
-      const queue = [];
-      for (let x = 0; x < w; x++) { queue.push(x, 0); queue.push(x, h - 1); }
-      for (let y = 1; y < h - 1; y++) { queue.push(0, y); queue.push(w - 1, y); }
-
-      let qIdx = 0;
-      while (qIdx < queue.length) {
-        const x = queue[qIdx++];
-        const y = queue[qIdx++];
-        const pIdx = y * w + x;
-        if (visited[pIdx]) continue;
-        visited[pIdx] = 1;
-
-        const idx = pIdx * 4;
-        const dr = data[idx] - tr;
-        const dg = data[idx + 1] - tg;
-        const db = data[idx + 2] - tb;
-        const dist = Math.sqrt(dr * dr + dg * dg + db * db);
-
-        if (dist <= tolDist || data[idx + 3] === 0) {
-          data[idx + 3] = 0;
-          if (x > 0 && !visited[pIdx - 1]) queue.push(x - 1, y);
-          if (x < w - 1 && !visited[pIdx + 1]) queue.push(x + 1, y);
-          if (y > 0 && !visited[pIdx - w]) queue.push(x, y - 1);
-          if (y < h - 1 && !visited[pIdx + w]) queue.push(x, y + 1);
-        }
-      }
-      ctx.putImageData(imgData, 0, 0);
-
-      // Auto crop bounding box of opaque pixels
-      let minX = w, minY = h, maxX = 0, maxY = 0;
-      let hasOpaque = false;
-      for (let y = 0; y < h; y++) {
-        for (let x = 0; x < w; x++) {
-          const a = data[(y * w + x) * 4 + 3];
-          if (a > 10) {
-            hasOpaque = true;
-            if (x < minX) minX = x;
-            if (x > maxX) maxX = x;
-            if (y < minY) minY = y;
-            if (y > maxY) maxY = y;
-          }
-        }
-      }
-
-      if (hasOpaque && (options.crop !== false)) {
-        const pad = 4;
-        minX = Math.max(0, minX - pad);
-        minY = Math.max(0, minY - pad);
-        maxX = Math.min(w - 1, maxX + pad);
-        maxY = Math.min(h - 1, maxY + pad);
-        const cropW = maxX - minX + 1;
-        const cropH = maxY - minY + 1;
-
-        const cropCanvas = document.createElement('canvas');
-        cropCanvas.width = cropW;
-        cropCanvas.height = cropH;
-        const cropCtx = cropCanvas.getContext('2d');
-        cropCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
-        return resolve(cropCanvas.toDataURL('image/png'));
-      }
-      resolve(canvas.toDataURL('image/png'));
-    };
   });
 }
 
@@ -2540,24 +2370,17 @@ function loadStorage() {
 loadStorage();
 
 
+
 // ========================================================
-// BG REMOVER & OUTLIERS STUDIO JAVASCRIPT
+// REMOVE BACKGROUND & OUTLIERS STUDIO ENGINE (BULLETPROOF)
 // ========================================================
 const bgStudioModal = document.getElementById('bgStudioModal');
 const closeBgStudioBtn = document.getElementById('closeBgStudioBtn');
 const bgCloseCancelBtn = document.getElementById('bgCloseCancelBtn');
 const bgCardSelect = document.getElementById('bgCardSelect');
-const loadRonaldoSampleBtn = document.getElementById('loadRonaldoSampleBtn');
 const bgUploadInput = document.getElementById('bgUploadInput');
-const bgTolRange = document.getElementById('bgTolRange');
-const tolValDisplay = document.getElementById('tolValDisplay');
-const bgChokeRange = document.getElementById('bgChokeRange');
-const chokeValDisplay = document.getElementById('chokeValDisplay');
-const bgFeatherRange = document.getElementById('bgFeatherRange');
-const featherValDisplay = document.getElementById('featherValDisplay');
-const bgAutoCropCheck = document.getElementById('bgAutoCropCheck');
 const bgApplyCurrentBtn = document.getElementById('bgApplyCurrentBtn');
-const bgApplyAllPitchBtn = document.getElementById('bgApplyAllPitchBtn');
+const bgApplyAllCardsBtn = document.getElementById('bgApplyAllCardsBtn');
 const bgDownloadCutoutBtn = document.getElementById('bgDownloadCutoutBtn');
 const bgCanvasContainer = document.getElementById('bgCanvasContainer');
 const bgStudioCanvas = document.getElementById('bgStudioCanvas');
@@ -2569,9 +2392,42 @@ const modeWhite = document.getElementById('modeWhite');
 const modeBlack = document.getElementById('modeBlack');
 const modeColor = document.getElementById('modeColor');
 
+// Sliders & Controls
+const bgTolRange = document.getElementById('bgTolRange');
+const tolValDisplay = document.getElementById('tolValDisplay');
+const bgChokeRange = document.getElementById('bgChokeRange');
+const chokeValDisplay = document.getElementById('chokeValDisplay');
+const bgFeatherRange = document.getElementById('bgFeatherRange');
+const featherValDisplay = document.getElementById('featherValDisplay');
+const bgAutoCropCheck = document.getElementById('bgAutoCropCheck');
+
+// Presets
+const presetCleanWhite = document.getElementById('presetCleanWhite');
+const presetCleanBlack = document.getElementById('presetCleanBlack');
+const presetRevert = document.getElementById('presetRevert');
+
+// Backdrop buttons
+const stageBtnChecker = document.getElementById('stageBtnChecker');
+const stageBtnStadium = document.getElementById('stageBtnStadium');
+const stageBtnBlack = document.getElementById('stageBtnBlack');
+const stageBtnWhite = document.getElementById('stageBtnWhite');
+
+// Zoom buttons
+const zoomOutBtn = document.getElementById('zoomOutBtn');
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomResetBtn = document.getElementById('zoomResetBtn');
+const zoomLevelDisplay = document.getElementById('zoomLevelDisplay');
+
+// Tool buttons
+const toolPanBtn = document.getElementById('toolPanBtn');
+const toolEyedropperBtn = document.getElementById('toolEyedropperBtn');
+const toolEraserBtn = document.getElementById('toolEraserBtn');
+const eraserSizeWrap = document.getElementById('eraserSizeWrap');
+const eraserSizeRange = document.getElementById('eraserSizeRange');
+const eraserSizeVal = document.getElementById('eraserSizeVal');
+
 let studioState = {
-  activeCardType: null, // 'rank' | 'bench' | 'sample' | 'custom'
-  activeCardKey: null,
+  activeCardKey: 1, // rank 1..10
   originalImageSrc: null,
   currentWorkingDataUrl: null,
   mode: 'auto',
@@ -2579,7 +2435,7 @@ let studioState = {
   choke: 1,
   feather: 1,
   autoCrop: true,
-  pickedColor: { r: 255, g: 255, b: 255 },
+  pickedColor: { r: 0, g: 0, b: 0 },
   activeTool: 'pan',
   eraserSize: 18,
   zoom: 1,
@@ -2589,11 +2445,12 @@ let studioState = {
 function openBgStudioWithCard(rank = null) {
   if (!rank) rank = currentEditingRank || 1;
   populateStudioCardSelect(rank);
-  bgStudioModal.classList.remove('hidden');
+  if (bgStudioModal) bgStudioModal.classList.remove('hidden');
   loadCardIntoStudio(rank);
 }
 
 function populateStudioCardSelect(selectedRank = null) {
+  if (!bgCardSelect) return;
   bgCardSelect.innerHTML = '';
   const group = document.createElement('optgroup');
   group.label = '🔟 Top 10 Must Claim Cards';
@@ -2601,7 +2458,7 @@ function populateStudioCardSelect(selectedRank = null) {
     const opt = document.createElement('option');
     opt.value = c.rank;
     const hasImg = c.image && c.image.length > 50;
-    opt.textContent = `Rank #${c.rank}: ${c.name || 'Player ' + c.rank} ${hasImg ? '🖼️' : '(Empty)'}`;
+    opt.textContent = `Rank #${c.rank}: ${c.name || 'Slot ' + c.rank} ${hasImg ? '🖼️' : '(Empty)'}`;
     if (selectedRank && Number(selectedRank) === Number(c.rank)) opt.selected = true;
     group.appendChild(opt);
   });
@@ -2611,16 +2468,18 @@ function populateStudioCardSelect(selectedRank = null) {
 function loadCardIntoStudio(rank) {
   rank = Number(rank) || 1;
   studioState.activeCardKey = rank;
-  bgCardSelect.value = rank;
+  if (bgCardSelect) bgCardSelect.value = rank;
   if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO RANK #${rank}`;
 
   const card = state.cards.find(c => c.rank === rank);
   if (!card || !card.image || card.image.length < 50) {
     studioState.originalImageSrc = null;
     studioState.currentWorkingDataUrl = null;
-    const ctx = bgStudioCanvas.getContext('2d');
-    ctx.clearRect(0, 0, bgStudioCanvas.width, bgStudioCanvas.height);
-    canvasInfoBadge.textContent = `Rank #${rank} is empty — click "Upload New Image To Studio" above!`;
+    if (bgStudioCanvas) {
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, bgStudioCanvas.width, bgStudioCanvas.height);
+    }
+    if (canvasInfoBadge) canvasInfoBadge.textContent = `Rank #${rank} is empty — click "Upload New Image To Studio" above!`;
     return;
   }
   studioState.originalImageSrc = card.image;
@@ -2629,7 +2488,7 @@ function loadCardIntoStudio(rank) {
 
 async function runStudioUpdate() {
   if (!studioState.originalImageSrc) return;
-  canvasInfoBadge.textContent = 'Processing cutout...';
+  if (canvasInfoBadge) canvasInfoBadge.textContent = 'Processing cutout...';
 
   try {
     const cleaned = await processImageBackgroundRemoval(studioState.originalImageSrc, {
@@ -2651,15 +2510,18 @@ async function runStudioUpdate() {
       ctx.clearRect(0, 0, img.width, img.height);
       ctx.drawImage(img, 0, 0);
 
-      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Transparent Cutout Ready`;
+      if (canvasInfoBadge) canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Transparent Cutout Ready`;
     };
     img.src = cleaned;
   } catch (err) {
     console.error('Studio update error:', err);
-    canvasInfoBadge.textContent = 'Error processing image';
+    if (canvasInfoBadge) canvasInfoBadge.textContent = 'Error processing image';
   }
 }
 
+/**
+ * Robust Background & Outliers Removal Algorithm
+ */
 function processImageBackgroundRemoval(imgSource, options = {}) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -2684,7 +2546,7 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
       const choke = options.choke !== undefined ? options.choke : 1;
       const crop = options.crop !== undefined ? options.crop : true;
 
-      let tr = 255, tg = 255, tb = 255;
+      let tr = 0, tg = 0, tb = 0;
       if (mode === 'white') {
         tr = 255; tg = 255; tb = 255;
       } else if (mode === 'black') {
@@ -2694,17 +2556,27 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
         tg = options.targetColor.g;
         tb = options.targetColor.b;
       } else {
-        const cornerCoords = [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]];
+        // Sample all 4 borders to get outer background color
         let sumR = 0, sumG = 0, sumB = 0, validSamples = 0;
-        cornerCoords.forEach(([cx, cy]) => {
-          const idx = (cy * w + cx) * 4;
-          if (data[idx + 3] > 20) {
-            sumR += data[idx];
-            sumG += data[idx + 1];
-            sumB += data[idx + 2];
-            validSamples++;
-          }
-        });
+        const step = Math.max(1, Math.floor(Math.min(w, h) / 40));
+        for (let x = 0; x < w; x += step) {
+          [0, h - 1].forEach(y => {
+            const pIdx = (y * w + x) * 4;
+            if (data[pIdx + 3] > 20) {
+              sumR += data[pIdx]; sumG += data[pIdx + 1]; sumB += data[pIdx + 2];
+              validSamples++;
+            }
+          });
+        }
+        for (let y = 0; y < h; y += step) {
+          [0, w - 1].forEach(x => {
+            const pIdx = (y * w + x) * 4;
+            if (data[pIdx + 3] > 20) {
+              sumR += data[pIdx]; sumG += data[pIdx + 1]; sumB += data[pIdx + 2];
+              validSamples++;
+            }
+          });
+        }
         if (validSamples > 0) {
           tr = Math.round(sumR / validSamples);
           tg = Math.round(sumG / validSamples);
@@ -2712,10 +2584,10 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
         }
       }
 
-      function colorDist(idx) {
-        const dr = data[idx] - tr;
-        const dg = data[idx + 1] - tg;
-        const db = data[idx + 2] - tb;
+      function colorDist(pIdx) {
+        const dr = data[pIdx] - tr;
+        const dg = data[pIdx + 1] - tg;
+        const db = data[pIdx + 2] - tb;
         return Math.sqrt(dr * dr + dg * dg + db * db) / 441.673;
       }
 
@@ -2723,6 +2595,7 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
       const queue = new Int32Array(w * h);
       let head = 0, tail = 0;
 
+      // Seed all border pixels
       for (let x = 0; x < w; x++) {
         [0, h - 1].forEach(y => {
           const idx = y * w + x;
@@ -2744,6 +2617,7 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
         });
       }
 
+      // Inward Flood Fill
       while (head < tail) {
         const curr = queue[head++];
         const cx = curr % w;
@@ -2768,10 +2642,12 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
         }
       }
 
+      // Set visited pixels transparent
       for (let i = 0; i < w * h; i++) {
         if (visited[i]) data[i * 4 + 3] = 0;
       }
 
+      // Edge Choke / Halo Trim
       if (choke > 0) {
         for (let pass = 0; pass < choke; pass++) {
           const toErase = [];
@@ -2786,7 +2662,7 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
                   data[(idx - w) * 4 + 3] === 0 ||
                   data[(idx + w) * 4 + 3] === 0;
 
-                if (hasTrans && colorDist(pIdx) <= tolerance * 1.45) {
+                if (hasTrans && colorDist(pIdx) <= tolerance * 1.5) {
                   toErase.push(pIdx);
                 }
               }
@@ -2798,6 +2674,7 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
 
       ctx.putImageData(imgData, 0, 0);
 
+      // Auto crop bounding box
       let outCanvas = canvas;
       if (crop) {
         let minX = w, minY = h, maxX = 0, maxY = 0;
@@ -2815,6 +2692,11 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
           }
         }
         if (hasVisible && (minX > 1 || minY > 1 || maxX < w - 2 || maxY < h - 2)) {
+          const pad = 4;
+          minX = Math.max(0, minX - pad);
+          minY = Math.max(0, minY - pad);
+          maxX = Math.min(w - 1, maxX + pad);
+          maxY = Math.min(h - 1, maxY + pad);
           const cropW = Math.max(1, maxX - minX + 1);
           const cropH = Math.max(1, maxY - minY + 1);
           const croppedCanvas = document.createElement('canvas');
@@ -2832,7 +2714,33 @@ function processImageBackgroundRemoval(imgSource, options = {}) {
   });
 }
 
-if (bgRemoverBtn) bgRemoverBtn.addEventListener('click', () => openBgStudioWithCard());
+// Card select change
+if (bgCardSelect) {
+  bgCardSelect.addEventListener('change', e => {
+    loadCardIntoStudio(e.target.value);
+  });
+}
+
+// Upload new image directly in Studio
+if (bgUploadInput) {
+  bgUploadInput.addEventListener('change', async e => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const dataUrl = await readFileAsDataUrl(file);
+      const rank = Number(studioState.activeCardKey || bgCardSelect.value || 1);
+      const card = state.cards.find(c => c.rank === rank);
+      if (card) {
+        card.image = dataUrl;
+        populateStudioCardSelect(rank);
+      }
+      studioState.originalImageSrc = dataUrl;
+      runStudioUpdate();
+      showToast(`Loaded image into Studio for Rank #${rank}!`, '🖼️');
+    }
+  });
+}
+
+// Studio Modal close handlers
 if (closeBgStudioBtn) closeBgStudioBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
 if (bgCloseCancelBtn) bgCloseCancelBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
 if (bgStudioModal) {
@@ -2841,19 +2749,7 @@ if (bgStudioModal) {
   });
 }
 
-if (bgCardSelect) {
-  bgCardSelect.addEventListener('change', e => {
-    const val = e.target.value;
-    if (val.startsWith('rank_')) {
-      loadCardIntoStudio('rank', val.replace('rank_', ''));
-    } else if (val.startsWith('bench_')) {
-      loadCardIntoStudio('bench', val.replace('bench_', ''));
-    } else if (val === 'sample_ronaldo') {
-      loadSampleRonaldo();
-    }
-  });
-}
-
+// Mode Selection
 function setStudioMode(newMode) {
   studioState.mode = newMode;
   [modeAuto, modeWhite, modeBlack, modeColor].forEach(el => {
@@ -2867,24 +2763,25 @@ if (modeWhite) modeWhite.addEventListener('click', () => setStudioMode('white'))
 if (modeBlack) modeBlack.addEventListener('click', () => setStudioMode('black'));
 if (modeColor) modeColor.addEventListener('click', () => setStudioMode('color'));
 
+// Tuning Sliders
 if (bgTolRange) {
   bgTolRange.addEventListener('input', e => {
     studioState.tolerance = parseFloat(e.target.value) / 100;
-    tolValDisplay.textContent = `${e.target.value}%`;
+    if (tolValDisplay) tolValDisplay.textContent = `${e.target.value}%`;
     runStudioUpdate();
   });
 }
 if (bgChokeRange) {
   bgChokeRange.addEventListener('input', e => {
     studioState.choke = parseInt(e.target.value, 10);
-    chokeValDisplay.textContent = `${e.target.value} px`;
+    if (chokeValDisplay) chokeValDisplay.textContent = `${e.target.value} px`;
     runStudioUpdate();
   });
 }
 if (bgFeatherRange) {
   bgFeatherRange.addEventListener('input', e => {
     studioState.feather = parseInt(e.target.value, 10);
-    featherValDisplay.textContent = `${e.target.value} px`;
+    if (featherValDisplay) featherValDisplay.textContent = `${e.target.value} px`;
     runStudioUpdate();
   });
 }
@@ -2895,47 +2792,22 @@ if (bgAutoCropCheck) {
   });
 }
 
-if (loadRonaldoSampleBtn) {
-  loadRonaldoSampleBtn.addEventListener('click', () => {
-    loadSampleRonaldo();
-    showToast('Loaded Ronaldo 124 ST reference card!');
-  });
-}
-
-if (bgUploadInput) {
-  bgUploadInput.addEventListener('change', async e => {
-    if (e.target.files && e.target.files.length > 0) {
-      const dataUrl = await compressImageFile(e.target.files[0]);
-      studioState.activeCardType = 'custom';
-      studioState.activeCardKey = 'uploaded_' + Date.now();
-      studioState.originalImageSrc = dataUrl;
-      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = '✅ APPLY TO RANKING';
-      runStudioUpdate();
-      e.target.value = '';
-      showToast('Uploaded image into studio!');
-    }
-  });
-}
-
-const presetCleanWhite = document.getElementById('presetCleanWhite');
-const presetCleanBlack = document.getElementById('presetCleanBlack');
-const presetRevert = document.getElementById('presetRevert');
-
+// Presets
 if (presetCleanWhite) {
   presetCleanWhite.addEventListener('click', () => {
-    bgTolRange.value = 28;
-    tolValDisplay.textContent = '28%';
-    bgChokeRange.value = 1;
-    chokeValDisplay.textContent = '1 px';
+    if (bgTolRange) bgTolRange.value = 28;
+    if (tolValDisplay) tolValDisplay.textContent = '28%';
+    if (bgChokeRange) bgChokeRange.value = 1;
+    if (chokeValDisplay) chokeValDisplay.textContent = '1 px';
     setStudioMode('white');
   });
 }
 if (presetCleanBlack) {
   presetCleanBlack.addEventListener('click', () => {
-    bgTolRange.value = 28;
-    tolValDisplay.textContent = '28%';
-    bgChokeRange.value = 1;
-    chokeValDisplay.textContent = '1 px';
+    if (bgTolRange) bgTolRange.value = 28;
+    if (tolValDisplay) tolValDisplay.textContent = '28%';
+    if (bgChokeRange) bgChokeRange.value = 1;
+    if (chokeValDisplay) chokeValDisplay.textContent = '1 px';
     setStudioMode('black');
   });
 }
@@ -2950,110 +2822,124 @@ if (presetRevert) {
       ctx.clearRect(0, 0, img.width, img.height);
       ctx.drawImage(img, 0, 0);
       studioState.currentWorkingDataUrl = studioState.originalImageSrc;
-      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Reverted Original`;
-      showToast('Reverted to original image.');
+      if (canvasInfoBadge) canvasInfoBadge.textContent = 'Reverted to original source';
     };
     img.src = studioState.originalImageSrc;
   });
 }
 
-['checker', 'stadium', 'black', 'white'].forEach(theme => {
-  const btn = document.querySelector(`.theme-btn[data-stage="${theme}"]`);
-  if (btn) {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.theme-btn[data-stage]').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      bgCanvasContainer.className = `bg-canvas-container ${theme === 'checker' ? '' : 'theme-' + theme}`;
-    });
+// Backdrop Toggles
+function setStudioBackdrop(type) {
+  if (!bgCanvasContainer) return;
+  bgCanvasContainer.classList.remove('backdrop-checker', 'backdrop-stadium', 'backdrop-black', 'backdrop-white');
+  [stageBtnChecker, stageBtnStadium, stageBtnBlack, stageBtnWhite].forEach(b => {
+    if (b) b.classList.remove('active');
+  });
+
+  if (type === 'checker') {
+    bgCanvasContainer.classList.add('backdrop-checker');
+    if (stageBtnChecker) stageBtnChecker.classList.add('active');
+  } else if (type === 'stadium') {
+    bgCanvasContainer.classList.add('backdrop-stadium');
+    if (stageBtnStadium) stageBtnStadium.classList.add('active');
+  } else if (type === 'black') {
+    bgCanvasContainer.classList.add('backdrop-black');
+    if (stageBtnBlack) stageBtnBlack.classList.add('active');
+  } else if (type === 'white') {
+    bgCanvasContainer.classList.add('backdrop-white');
+    if (stageBtnWhite) stageBtnWhite.classList.add('active');
   }
-});
-
-const zoomInBtn = document.getElementById('zoomInBtn');
-const zoomOutBtn = document.getElementById('zoomOutBtn');
-const zoomResetBtn = document.getElementById('zoomResetBtn');
-const zoomLevelDisplay = document.getElementById('zoomLevelDisplay');
-
-function setStudioZoom(z) {
-  studioState.zoom = Math.max(0.4, Math.min(2.5, z));
-  bgStudioCanvas.style.transform = `scale(${studioState.zoom})`;
-  zoomLevelDisplay.textContent = `${Math.round(studioState.zoom * 100)}%`;
 }
-if (zoomInBtn) zoomInBtn.addEventListener('click', () => setStudioZoom(studioState.zoom + 0.2));
-if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => setStudioZoom(studioState.zoom - 0.2));
-if (zoomResetBtn) zoomResetBtn.addEventListener('click', () => setStudioZoom(1));
 
-const toolPanBtn = document.getElementById('toolPanBtn');
-const toolEyedropperBtn = document.getElementById('toolEyedropperBtn');
-const toolEraserBtn = document.getElementById('toolEraserBtn');
-const eraserSizeWrap = document.getElementById('eraserSizeWrap');
-const eraserSizeRange = document.getElementById('eraserSizeRange');
-const eraserSizeVal = document.getElementById('eraserSizeVal');
+if (stageBtnChecker) stageBtnChecker.addEventListener('click', () => setStudioBackdrop('checker'));
+if (stageBtnStadium) stageBtnStadium.addEventListener('click', () => setStudioBackdrop('stadium'));
+if (stageBtnBlack) stageBtnBlack.addEventListener('click', () => setStudioBackdrop('black'));
+if (stageBtnWhite) stageBtnWhite.addEventListener('click', () => setStudioBackdrop('white'));
 
+// Zoom Controls
+function setStudioZoom(delta, absolute = null) {
+  if (absolute !== null) {
+    studioState.zoom = absolute;
+  } else {
+    studioState.zoom = Math.max(0.4, Math.min(3.0, studioState.zoom + delta));
+  }
+  if (bgStudioCanvas) {
+    bgStudioCanvas.style.transform = `scale(${studioState.zoom})`;
+  }
+  if (zoomLevelDisplay) {
+    zoomLevelDisplay.textContent = `${Math.round(studioState.zoom * 100)}%`;
+  }
+}
+
+if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => setStudioZoom(-0.2));
+if (zoomInBtn) zoomInBtn.addEventListener('click', () => setStudioZoom(0.2));
+if (zoomResetBtn) zoomResetBtn.addEventListener('click', () => setStudioZoom(0, 1.0));
+
+// Tools: Inspect, Eyedropper, Eraser
 function setActiveTool(tool) {
   studioState.activeTool = tool;
-  toolPanBtn.classList.toggle('active', tool === 'pan');
-  toolEyedropperBtn.classList.toggle('active', tool === 'eyedropper');
-  toolEraserBtn.classList.toggle('active', tool === 'eraser');
-  eraserSizeWrap.style.display = tool === 'eraser' ? 'inline-flex' : 'none';
+  if (toolPanBtn) toolPanBtn.classList.toggle('active', tool === 'pan');
+  if (toolEyedropperBtn) toolEyedropperBtn.classList.toggle('active', tool === 'picker');
+  if (toolEraserBtn) toolEraserBtn.classList.toggle('active', tool === 'eraser');
+  if (eraserSizeWrap) eraserSizeWrap.style.display = (tool === 'eraser') ? 'inline-flex' : 'none';
 
-  if (tool === 'eyedropper') {
-    bgStudioCanvas.style.cursor = 'crosshair';
-  } else if (tool === 'eraser') {
-    bgStudioCanvas.style.cursor = 'cell';
-  } else {
-    bgStudioCanvas.style.cursor = 'default';
+  if (bgStudioCanvas) {
+    if (tool === 'picker') bgStudioCanvas.style.cursor = 'crosshair';
+    else if (tool === 'eraser') bgStudioCanvas.style.cursor = 'cell';
+    else bgStudioCanvas.style.cursor = 'grab';
   }
 }
 
 if (toolPanBtn) toolPanBtn.addEventListener('click', () => setActiveTool('pan'));
-if (toolEyedropperBtn) toolEyedropperBtn.addEventListener('click', () => setActiveTool('eyedropper'));
+if (toolEyedropperBtn) toolEyedropperBtn.addEventListener('click', () => setActiveTool('picker'));
 if (toolEraserBtn) toolEraserBtn.addEventListener('click', () => setActiveTool('eraser'));
+
 if (eraserSizeRange) {
   eraserSizeRange.addEventListener('input', e => {
     studioState.eraserSize = parseInt(e.target.value, 10);
-    eraserSizeVal.textContent = `${e.target.value}px`;
+    if (eraserSizeVal) eraserSizeVal.textContent = `${e.target.value}px`;
   });
 }
 
+// Canvas Interaction for Eyedropper & Eraser
 function getCanvasPos(e) {
   const rect = bgStudioCanvas.getBoundingClientRect();
   const scaleX = bgStudioCanvas.width / rect.width;
   const scaleY = bgStudioCanvas.height / rect.height;
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
   return {
-    x: Math.round((clientX - rect.left) * scaleX),
-    y: Math.round((clientY - rect.top) * scaleY)
+    x: Math.round((e.clientX - rect.left) * scaleX),
+    y: Math.round((e.clientY - rect.top) * scaleY)
   };
 }
 
-bgStudioCanvas.addEventListener('mousedown', e => {
-  if (studioState.activeTool === 'eyedropper') {
-    const pos = getCanvasPos(e);
-    const ctx = bgStudioCanvas.getContext('2d');
-    const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
-    studioState.pickedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
-    setStudioMode('color');
-    showToast(`Sampled color: rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`);
-    setActiveTool('pan');
-  } else if (studioState.activeTool === 'eraser') {
-    studioState.isDrawing = true;
-    eraseAt(e);
-  }
-});
+if (bgStudioCanvas) {
+  bgStudioCanvas.addEventListener('click', e => {
+    if (studioState.activeTool === 'picker') {
+      const pos = getCanvasPos(e);
+      const ctx = bgStudioCanvas.getContext('2d');
+      const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+      studioState.pickedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
+      const hex = '#' + ((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1);
+      setStudioMode('color');
+      showToast(`Selected color ${hex} to key out!`, '🎯');
+    }
+  });
 
-window.addEventListener('mouseup', () => {
-  if (studioState.isDrawing) {
-    studioState.isDrawing = false;
-    studioState.currentWorkingDataUrl = bgStudioCanvas.toDataURL('image/png');
-  }
-});
+  bgStudioCanvas.addEventListener('mousedown', e => {
+    if (studioState.activeTool === 'eraser') {
+      studioState.isDrawing = true;
+      eraseAt(e);
+    }
+  });
 
-bgStudioCanvas.addEventListener('mousemove', e => {
-  if (studioState.isDrawing && studioState.activeTool === 'eraser') {
-    eraseAt(e);
-  }
-});
+  bgStudioCanvas.addEventListener('mousemove', e => {
+    if (studioState.isDrawing && studioState.activeTool === 'eraser') {
+      eraseAt(e);
+    }
+  });
+
+  window.addEventListener('mouseup', () => { studioState.isDrawing = false; });
+}
 
 function eraseAt(e) {
   const pos = getCanvasPos(e);
@@ -3066,40 +2952,31 @@ function eraseAt(e) {
   ctx.restore();
 }
 
-if (bgApplyCurrentBtn) {
-  bgApplyCurrentBtn.addEventListener('click', () => {
-    if (!studioState.currentWorkingDataUrl) return;
-
-    if (studioState.activeCardType === 'rank' && studioState.activeCardKey) {
-      rankCards[studioState.activeCardKey] = studioState.currentWorkingDataUrl;
-      renderBoard();
-      showToast(`Applied clean card to Rank #${studioState.activeCardKey}!`);
-    } else if (studioState.activeCardType === 'bench' && studioState.activeCardKey) {
-      const idx = pool.findIndex(c => c.id === studioState.activeCardKey);
-      if (idx !== -1) {
-        pool[idx].src = studioState.currentWorkingDataUrl;
-        renderBench();
-        showToast('Applied clean card to bench!');
-      }
-    } else {
-      const targetRank = (selectedCard && selectedCard.type === 'rank') ? selectedCard.rank : 1;
-      rankCards[targetRank] = studioState.currentWorkingDataUrl;
-      renderBoard();
-      showToast(`Placed clean card at Rank #${targetRank}!`);
+// Download PNG Cutout
+if (bgDownloadCutoutBtn) {
+  bgDownloadCutoutBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) {
+      showToast('No cutout available to download!', '⚠️');
+      return;
     }
-
-    bgStudioModal.classList.add('hidden');
+    const a = document.createElement('a');
+    a.href = studioState.currentWorkingDataUrl;
+    a.download = `FC_VOLT_Card_Cutout_Rank${studioState.activeCardKey}_${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('Cutout downloaded as transparent PNG!', '💾');
   });
 }
 
-
+// ✅ APPLY TO SELECTED RANK CARD
 if (bgApplyCurrentBtn) {
   bgApplyCurrentBtn.addEventListener('click', () => {
     if (!studioState.currentWorkingDataUrl) {
       showToast('No clean cutout to apply! Upload or select a card image first.', '⚠️');
       return;
     }
-    const rank = Number(studioState.activeCardKey || bgCardSelect.value || 1);
+    const rank = Number(studioState.activeCardKey || (bgCardSelect ? bgCardSelect.value : 1));
     const card = state.cards.find(c => c.rank === rank);
     if (card) {
       card.image = studioState.currentWorkingDataUrl;
@@ -3108,13 +2985,13 @@ if (bgApplyCurrentBtn) {
         modalThumb.src = studioState.currentWorkingDataUrl;
       }
       render();
-      bgStudioModal.classList.add('hidden');
+      if (bgStudioModal) bgStudioModal.classList.add('hidden');
       showToast(`✅ Clean cutout applied to Rank #${rank}!`, '✨');
     }
   });
 }
 
-const bgApplyAllCardsBtn = document.getElementById('bgApplyAllCardsBtn');
+// ✨ APPLY TO ALL 10 CARDS
 if (bgApplyAllCardsBtn) {
   bgApplyAllCardsBtn.addEventListener('click', async () => {
     const cardsWithImages = state.cards.filter(c => c.image && c.image.length > 50);
@@ -3128,6 +3005,7 @@ if (bgApplyAllCardsBtn) {
     let successCount = 0;
     for (let i = 0; i < cardsWithImages.length; i++) {
       const card = cardsWithImages[i];
+      showToast(`🪄 Cleaning Card #${card.rank} (${i + 1}/${cardsWithImages.length})...`, '⏳');
       try {
         const cleaned = await processImageBackgroundRemoval(card.image, {
           mode: studioState.mode,
@@ -3151,7 +3029,7 @@ if (bgApplyAllCardsBtn) {
     }
 
     render();
-    bgStudioModal.classList.add('hidden');
+    if (bgStudioModal) bgStudioModal.classList.add('hidden');
     showToast(`✨ Successfully cleaned & applied to all ${successCount} cards!`, '🎉');
   });
 }
