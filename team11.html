@@ -2920,16 +2920,6 @@ function populateStudioCardSelect(selectedType = null, selectedKey = null) {
     });
     bgCardSelect.appendChild(benchGroup);
   }
-
-  // 3. Sample Option
-  const sampleGroup = document.createElement('optgroup');
-  sampleGroup.label = '⭐ Reference Samples';
-  const sampleOpt = document.createElement('option');
-  sampleOpt.value = 'sample_ronaldo';
-  sampleOpt.textContent = '⭐ Ronaldo 124 ST (Transparent Reference Card)';
-  if (selectedType === 'sample') sampleOpt.selected = true;
-  sampleGroup.appendChild(sampleOpt);
-  bgCardSelect.appendChild(sampleGroup);
 }
 
 function loadCardIntoStudio(type, key) {
@@ -2952,18 +2942,7 @@ function loadCardIntoStudio(type, key) {
       if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO BENCH CARD`;
       runStudioUpdate();
     }
-  } else if (type === 'sample') {
-    loadSampleRonaldo();
   }
-}
-
-function loadSampleRonaldo() {
-  studioState.activeCardType = 'sample';
-  studioState.activeCardKey = 'ronaldo';
-  studioState.originalImageSrc = 'ronaldo_sample.png';
-  bgCardSelect.value = 'sample_ronaldo';
-  if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY RONALDO TO ST`;
-  runStudioUpdate();
 }
 
 /**

@@ -699,6 +699,44 @@
     transition: transform 0.16s ease;
   }
 
+  /* Empty Card Placeholder */
+  .card-empty-placeholder {
+    width: 82%;
+    height: 86%;
+    border: 2.5px dashed rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.18s ease;
+    cursor: pointer;
+  }
+
+  .claim-card-unit:hover .card-empty-placeholder {
+    border-color: #00ff66;
+    background: rgba(0, 255, 102, 0.12);
+    box-shadow: 0 0 16px rgba(0, 255, 102, 0.35);
+    transform: scale(1.02);
+  }
+
+  .placeholder-plus {
+    font-size: 34px;
+    line-height: 1;
+    color: #00ff66;
+    font-weight: 900;
+  }
+
+  .placeholder-lbl {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #edf2f9;
+  }
+
   /* Rank Badge on Top-Right */
   .card-rank-badge {
     position: absolute;
@@ -1008,8 +1046,8 @@
 
       <!-- RESET & CLEAR -->
       <div style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-mini" style="flex:1; justify-content:center;" onclick="loadReferenceDefaultCards()">
-          ↺ Reload Sample Cards
+        <button type="button" class="btn btn-mini" style="flex:1; justify-content:center;" onclick="resetAllSlots()">
+          ↺ Reset All 10 Slots
         </button>
         <button type="button" class="btn btn-mini" style="color:#ff5555; justify-content:center;" onclick="clearAllCards()">
           🗑️ Clear All
@@ -1170,26 +1208,26 @@
 
 <script>
 // ========================================================
-// STATE MANAGEMENT & SAMPLE DATA
+// STATE MANAGEMENT & DEFAULT EMPTY SLOTS
 // ========================================================
-const SAMPLE_CARDS = [
-  { rank: 1, name: 'BARESI', ovr: '122', pos: 'CB', shards: '13,455', tag: 'MUST CLAIM', tagColor: 'tag-green', image: 'card_cruyff.png' },
-  { rank: 2, name: 'KEWELL', ovr: '122', pos: 'LW', shards: '12,200', tag: 'MUST CLAIM', tagColor: 'tag-green', image: 'kewell_hq_card.png' },
-  { rank: 3, name: 'BAGGIO', ovr: '123', pos: 'ST', shards: '22,665', tag: 'MUST CLAIM', tagColor: 'tag-green', image: 'exact_rivaldo.png' },
-  { rank: 4, name: 'KVARATSKHELIA', ovr: '122', pos: 'LW', shards: '18,285', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: 'exact_kvara.png' },
-  { rank: 5, name: 'VITINHA', ovr: '122', pos: 'CM', shards: '15,295', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: 'exact_hazard.png' },
-  { rank: 6, name: 'HAKIMI', ovr: '123', pos: 'RB', shards: '31,015', tag: 'BEST: RB', tagColor: 'tag-cyan', image: 'card_cucurella.png' },
-  { rank: 7, name: 'NUNO MENDES', ovr: '122', pos: 'LB', shards: '17,020', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: 'card_gabriel.png' },
-  { rank: 8, name: 'VINI JR.', ovr: '121', pos: 'LW', shards: '8,300', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: 'vini_hq_card.png' },
-  { rank: 9, name: 'PEDRI', ovr: '121', pos: 'CM', shards: '6,600', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: 'exact_son.png' },
-  { rank: 10, name: 'DEBAST', ovr: '122', pos: 'CB', shards: '14,145', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: 'exact_diaz.png' }
+const EMPTY_CARDS = [
+  { rank: 1, name: '', ovr: '', pos: '', shards: '0', tag: 'MUST CLAIM', tagColor: 'tag-green', image: '' },
+  { rank: 2, name: '', ovr: '', pos: '', shards: '0', tag: 'MUST CLAIM', tagColor: 'tag-green', image: '' },
+  { rank: 3, name: '', ovr: '', pos: '', shards: '0', tag: 'MUST CLAIM', tagColor: 'tag-green', image: '' },
+  { rank: 4, name: '', ovr: '', pos: '', shards: '0', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: '' },
+  { rank: 5, name: '', ovr: '', pos: '', shards: '0', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: '' },
+  { rank: 6, name: '', ovr: '', pos: '', shards: '0', tag: 'BEST: RB', tagColor: 'tag-cyan', image: '' },
+  { rank: 7, name: '', ovr: '', pos: '', shards: '0', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: '' },
+  { rank: 8, name: '', ovr: '', pos: '', shards: '0', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: '' },
+  { rank: 9, name: '', ovr: '', pos: '', shards: '0', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: '' },
+  { rank: 10, name: '', ovr: '', pos: '', shards: '0', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: '' }
 ];
 
 let state = {
   mainTitle: 'TOP 10 CARD MUST CLAIM',
   subTitle: 'FROM SHARDS',
   theme: 'sunset',
-  cards: JSON.parse(JSON.stringify(SAMPLE_CARDS))
+  cards: JSON.parse(JSON.stringify(EMPTY_CARDS))
 };
 
 let currentEditingRank = 1;
@@ -1250,8 +1288,15 @@ function renderRow(containerId, cardsSlice) {
         <!-- Rank Circle Badge on Top-Right -->
         <div class="card-rank-badge">${c.rank}</div>
 
-        <!-- Player Card Image -->
-        <img class="card-img" src="${c.image || 'asset_player_card.png'}" alt="${c.name || 'Player'}">
+        <!-- Player Card Image or Placeholder -->
+        ${c.image ? `
+          <img class="card-img" src="${c.image}" alt="${c.name || 'Player'}">
+        ` : `
+          <div class="card-empty-placeholder">
+            <span class="placeholder-plus">+</span>
+            <span class="placeholder-lbl">Upload Card</span>
+          </div>
+        `}
 
         <!-- Hover Actions -->
         <div class="card-hover-actions">
@@ -1349,10 +1394,10 @@ function sortCardsByPrice() {
   showToast('Sorted cards by Shard Price (Low to High)!', '💎');
 }
 
-function loadReferenceDefaultCards() {
-  state.cards = JSON.parse(JSON.stringify(SAMPLE_CARDS));
+function resetAllSlots() {
+  state.cards = JSON.parse(JSON.stringify(EMPTY_CARDS));
   render();
-  showToast('Reloaded reference Top 10 sample cards!', '🔄');
+  showToast('Reset all 10 slots to clean template!', '🔄');
 }
 
 function clearAllCards() {
@@ -1749,6 +1794,12 @@ function loadStorage() {
       if (parsed.subTitle) state.subTitle = parsed.subTitle;
       if (parsed.theme) state.theme = parsed.theme;
       if (Array.isArray(parsed.cards) && parsed.cards.length === 10) {
+        parsed.cards.forEach(c => {
+          // Clean out dead demo image filenames
+          if (c.image && (c.image.endsWith('.png') || c.image.endsWith('.jpg') || c.image.endsWith('.webp')) && !c.image.startsWith('data:')) {
+            c.image = '';
+          }
+        });
         state.cards = parsed.cards;
       }
     }

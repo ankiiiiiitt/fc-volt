@@ -3766,7 +3766,7 @@ document.getElementById('saveMatchupBtn').addEventListener('click', () => {
   const pos = document.getElementById('opponentPosInput').value.trim() || 'LW';
   const shards = parseFormattedNumber(document.getElementById('opponentShardInput').value) || state.defaultShardValue;
   const winner = document.getElementById('battleWinnerSelect').value === 'main_wins' ? 'main' : 'opponent';
-  const image = tempOpponentImage || 'exact_ronaldinho.png';
+  const image = tempOpponentImage || '';
 
   if (editingBattleId) {
     const b = state.battles.find(item => item.id === editingBattleId);
@@ -4339,34 +4339,19 @@ function populateStudioCardSelect(selectedType = null, selectedKey = null) {
     bgCardSelect.appendChild(libGroup);
   }
 
-  // Samples
-  const sampleGroup = document.createElement('optgroup');
-  sampleGroup.label = '⭐ Reference Samples';
-  const sampleOpt = document.createElement('option');
-  sampleOpt.value = 'sample_ronaldo';
-  sampleOpt.textContent = '⭐ Ronaldo 124 ST (Transparent Cutout Reference)';
-  if (selectedType === 'sample') sampleOpt.selected = true;
-  sampleGroup.appendChild(sampleOpt);
-  bgCardSelect.appendChild(sampleGroup);
-}
-
-function loadCardIntoStudio(type, key) {
-  studioState.activeCardType = type;
-  studioState.activeCardKey = key;
-
   if (type === 'main') {
-    const src = state.mainPlayer.image || tempMainImage || 'ronaldo_sample.png';
+    const src = state.mainPlayer.image || tempMainImage || '';
     studioState.originalImageSrc = src;
     bgCardSelect.value = 'main_player';
     if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = '✅ APPLY TO STAR PLAYER';
-    runStudioUpdate();
+    if (src) runStudioUpdate();
   } else if (type === 'battle') {
     const b = state.battles.find(item => item.id === key);
     if (b) {
-      studioState.originalImageSrc = b.opponent.image;
+      studioState.originalImageSrc = b.opponent.image || '';
       bgCardSelect.value = `battle_${key}`;
       if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO VS ${(b.opponent.name || 'OPPONENT').toUpperCase()}`;
-      runStudioUpdate();
+      if (b.opponent.image) runStudioUpdate();
     }
   } else if (type === 'lib') {
     const c = state.uploadedCards.find(item => item.id === key);
@@ -4376,18 +4361,7 @@ function loadCardIntoStudio(type, key) {
       if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = '✅ APPLY TO LIBRARY CARD';
       runStudioUpdate();
     }
-  } else if (type === 'sample') {
-    loadSampleRonaldo();
   }
-}
-
-function loadSampleRonaldo() {
-  studioState.activeCardType = 'sample';
-  studioState.activeCardKey = 'ronaldo';
-  studioState.originalImageSrc = 'ronaldo_sample.png';
-  bgCardSelect.value = 'sample_ronaldo';
-  if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = '✅ SAVE TO UPLOADED LIBRARY';
-  runStudioUpdate();
 }
 
 async function runStudioUpdate() {
