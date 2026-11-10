@@ -929,6 +929,482 @@
     transform: translateY(0);
     opacity: 1;
   }
+
+/* BG REMOVER & OUTLIERS STUDIO CSS */
+.bg-studio-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 12, 0.92);
+    backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    padding: 16px;
+  }
+  .bg-studio-backdrop.hidden {
+    display: none !important;
+  }
+  .bg-studio-modal {
+    background: #080d16;
+    border: 1.5px solid #a855f7;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(168, 85, 247, 0.35);
+    border-radius: 18px;
+    width: 1040px;
+    max-width: 96vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  .bg-studio-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: #0d1524;
+    border-bottom: 1px solid #1f2b40;
+  }
+  .bg-studio-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bg-studio-title h3 {
+    margin: 0;
+    font-family: 'Titan One', 'Montserrat', sans-serif;
+    font-size: 19px;
+    letter-spacing: 0.8px;
+    background: linear-gradient(90deg, #c084fc, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .bg-studio-title small {
+    display: block;
+    color: #8fa5c5;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .bg-studio-close {
+    background: #141f30;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    line-height: 1;
+    padding: 0;
+  }
+  .bg-studio-close:hover {
+    background: #ff2a55;
+    border-color: #ff4466;
+    color: #fff;
+    transform: scale(1.1);
+  }
+  .bg-studio-body {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+  @media (max-width: 860px) {
+    .bg-studio-body {
+      grid-template-columns: 1fr;
+    }
+  }
+  .bg-preview-stage {
+    background: #060a12;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-right: 1px solid #1a2436;
+    gap: 12px;
+  }
+  .bg-canvas-container {
+    flex: 1;
+    width: 100%;
+    min-height: 320px;
+    max-height: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 12px;
+    border: 1px solid #1e2c42;
+    overflow: hidden;
+    background-color: #0c121d;
+    background-image: 
+      linear-gradient(45deg, #151e2c 25%, transparent 25%),
+      linear-gradient(-45deg, #151e2c 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #151e2c 75%),
+      linear-gradient(-45deg, transparent 75%, #151e2c 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    transition: background 0.2s ease;
+  }
+  .bg-canvas-container.theme-stadium {
+    background: url('stadium_pitch.jpg') center/cover no-repeat !important;
+  }
+  .bg-canvas-container.theme-black {
+    background: #000000 !important;
+  }
+  .bg-canvas-container.theme-white {
+    background: #ffffff !important;
+  }
+  #bgStudioCanvas {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.85));
+    transition: transform 0.1s ease;
+    cursor: crosshair;
+  }
+  .canvas-stage-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #0c1320;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #1a2538;
+  }
+  .stage-theme-toggles {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .theme-btn {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 5px;
+    background: #151e2e;
+    border: 1px solid #25354c;
+    color: #9cb1cb;
+    cursor: pointer;
+  }
+  .theme-btn.active {
+    background: #c084fc;
+    color: #040810;
+    border-color: #d8b4fe;
+    font-weight: 900;
+  }
+  .zoom-toggles {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #9cb1cb;
+    font-weight: 700;
+  }
+  .zoom-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 4px;
+    background: #151e2e;
+    border: 1px solid #25354c;
+    color: #cbd5e1;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .bg-controls-panel {
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+  }
+  .bg-section-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #c084fc;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .card-picker-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .card-picker-select {
+    flex: 1;
+    background: #101726;
+    border: 1.5px solid #2c3c54;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    outline: none;
+  }
+  .btn-sample-card {
+    background: linear-gradient(135deg, #d4af37, #996515);
+    color: #000;
+    font-weight: 900;
+    border: 1px solid #fff2a1;
+    font-size: 11px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .mode-card {
+    background: #101726;
+    border: 1.5px solid #1f2c40;
+    border-radius: 8px;
+    padding: 9px 10px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .mode-card:hover {
+    border-color: #a855f7;
+    background: #141e32;
+  }
+  .mode-card.active {
+    border-color: #c084fc;
+    background: rgba(168, 85, 247, 0.16);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+  }
+  .mode-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .mode-desc {
+    font-size: 9.5px;
+    color: #8c9eb5;
+    line-height: 1.3;
+  }
+  .slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 7px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    color: #cbd5e1;
+  }
+  .slider-val {
+    color: #c084fc;
+    font-weight: 900;
+  }
+  .bg-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #1a2538;
+    outline: none;
+  }
+  .bg-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #c084fc;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
+    border: 1.5px solid #fff;
+  }
+  .touchup-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #0f1624;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid #1e2c40;
+    width: 100%;
+  }
+  .touchup-btn {
+    padding: 5px 9px;
+    font-size: 10.5px;
+    font-weight: 800;
+    border-radius: 6px;
+    background: #162032;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .touchup-btn.active {
+    background: #9333ea;
+    border-color: #c084fc;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+  }
+  .bg-studio-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 22px;
+    background: #0b111c;
+    border-top: 1px solid #1a2538;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .footer-actions-left, .footer-actions-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn-apply-one {
+    background: linear-gradient(135deg, #00e676, #00b4d8);
+    color: #030810;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 14px rgba(0, 230, 118, 0.4);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-apply-all {
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    color: #ffffff;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.45);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-download-cutout {
+    background: #151e2e;
+    border: 1px solid #2b3e59;
+    color: #cbd5e1;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .btn-reset-original {
+    background: #1c1117;
+    border: 1px solid #3d1a25;
+    color: #ff8899;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .slot-btn-magic:hover, .bench-magic-btn:hover {
+    background: #a855f7 !important;
+    transform: scale(1.18);
+  }
+
+  /* CUSTOMIZATION CONTROLS BAR */
+  .controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: #090e17;
+    border: 1px solid #192436;
+    border-radius: 10px;
+    padding: 8px 14px;
+    margin-bottom: 14px;
+    font-size: 11px;
+    color: #9cb0cc;
+  }
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .control-group label {
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: #7b8fa8;
+    text-transform: uppercase;
+    font-size: 10px;
+  }
+  .custom-input {
+    background: #0f1624;
+    border: 1px solid #233249;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  .custom-input:focus {
+    border-color: #ff0092;
+  }
+  .theme-select {
+    background: #0f1624;
+    border: 1px solid #233249;
+    color: #ff00aa;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+  }
+  .color-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .color-picker-wrap input[type="color"] {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1px solid #29384e;
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+  }
+  .color-picker-wrap input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  .color-picker-wrap input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -1024,8 +1500,8 @@
           <span>⚡ Quick Batch Actions</span>
         </div>
         <div style="display:flex; flex-direction:column; gap:6px;">
-          <button type="button" class="btn btn-mini btn-primary" onclick="batchRemoveBackgroundAllCards()" style="justify-content:center; font-size:11.5px; padding:8px 10px;">
-            🪄 Remove Background (ALL Cards)
+          <button type="button" class="btn btn-mini btn-primary" onclick="openBgStudioWithCard()" style="justify-content:center; font-size:11.5px; padding:8px 10px; background:linear-gradient(135deg, #a855f7, #6366f1); border-color:#c084fc; box-shadow:0 0 16px rgba(168,85,247,0.4);">
+            🪄 Background & Outliers Studio (All 10 Cards)
           </button>
           <button type="button" class="btn btn-mini" style="justify-content:center; background:#190e29; border-color:#3f2268; color:#d6c7ea;" onclick="document.getElementById('batchCardsFileInput').click()">
             📂 Batch Upload Cards (Select 1-10 Files)
@@ -1117,6 +1593,164 @@
 
 </div>
 
+<!-- REMOVE BACKGROUND & OUTLIERS STUDIO MODAL -->
+<div class="custom-modal-backdrop bg-studio-backdrop hidden" id="bgStudioModal">
+  <div class="bg-studio-modal">
+    <div class="bg-studio-header">
+      <div class="bg-studio-title">
+        <span style="font-size: 26px;">🪄</span>
+        <div>
+          <h3>REMOVE BACKGROUND & OUTLIERS STUDIO</h3>
+          <small>Clean rectangular margins, black/white borders & isolate cards like FC Mobile transparent cutouts</small>
+        </div>
+      </div>
+      <button type="button" class="bg-studio-close" id="closeBgStudioBtn" title="Close Studio">&times;</button>
+    </div>
+
+    <div class="bg-studio-body">
+      <!-- Left: Interactive Canvas Preview Stage -->
+      <div class="bg-preview-stage">
+        <div class="canvas-stage-bar">
+          <div class="stage-theme-toggles">
+            <span style="font-size: 10px; color: #8fa5c5; font-weight: 800; margin-right: 4px;">BACKDROP:</span>
+            <button type="button" class="theme-btn active" data-stage="checker" id="stageBtnChecker" title="Checkered transparency pattern">🏁 Grid</button>
+            <button type="button" class="theme-btn" data-stage="stadium" id="stageBtnStadium" title="Live Stadium Grass">🏟️ Pitch</button>
+            <button type="button" class="theme-btn" data-stage="black" id="stageBtnBlack" title="Solid Dark">⬛ Black</button>
+            <button type="button" class="theme-btn" data-stage="white" id="stageBtnWhite" title="Solid Light">⬜ White</button>
+          </div>
+          <div class="zoom-toggles">
+            <button type="button" class="zoom-btn" id="zoomOutBtn" title="Zoom Out">−</button>
+            <span id="zoomLevelDisplay">100%</span>
+            <button type="button" class="zoom-btn" id="zoomInBtn" title="Zoom In">＋</button>
+            <button type="button" class="zoom-btn" id="zoomResetBtn" title="Reset Zoom">↺</button>
+          </div>
+        </div>
+
+        <div class="bg-canvas-container" id="bgCanvasContainer">
+          <canvas id="bgStudioCanvas"></canvas>
+        </div>
+
+        <div class="touchup-bar">
+          <span style="font-size: 11px; font-weight: 800; color: #c084fc;">TOOLS:</span>
+          <button type="button" class="touchup-btn active" id="toolPanBtn">🖐️ Inspect</button>
+          <button type="button" class="touchup-btn" id="toolEyedropperBtn">🎨 Eyedropper</button>
+          <button type="button" class="touchup-btn" id="toolEraserBtn">🧹 Eraser</button>
+          <div id="eraserSizeWrap" style="display: none; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; color: #8fa5c5;">Size:</span>
+            <input type="range" id="eraserSizeRange" min="4" max="60" value="18" style="width: 75px;">
+            <span id="eraserSizeVal" style="font-size: 10px; color: #c084fc; font-weight: 800;">18px</span>
+          </div>
+          <div style="margin-left: auto; font-size: 11px; color: #8fa5c5; font-weight: 700;" id="canvasInfoBadge">256 × 256 px</div>
+        </div>
+      </div>
+
+      <!-- Right: Controls Panel -->
+      <div class="bg-controls-panel">
+        <div>
+          <div class="bg-section-title"><span>🎴</span> 1. Select Card To Clean</div>
+          <div class="card-picker-row">
+            <select id="bgCardSelect" class="card-picker-select">
+              <!-- Dynamically populated with Rank 1-10 & Bench cards -->
+            </select>
+            <button type="button" id="loadRonaldoSampleBtn" class="btn-sample-card" title="Load Ronaldo 124 ST reference card">
+              ⭐ Sample R9
+            </button>
+          </div>
+          <div style="margin-top: 8px;">
+            <label for="bgUploadInput" class="btn" style="padding: 6px 12px; font-size: 11px; background: #151e2e; border: 1px dashed #304460; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+              📁 Upload New Image To Studio
+            </label>
+            <input type="file" id="bgUploadInput" class="hidden" accept="image/*">
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>⚙️</span> 2. Background & Outliers Removal Mode</div>
+          <div class="mode-grid">
+            <div class="mode-card active" data-mode="auto" id="modeAuto">
+              <div class="mode-header">🪄 Auto Detect</div>
+              <div class="mode-desc">Flood fills from borders inward. Protects white/dark kits and details inside.</div>
+            </div>
+            <div class="mode-card" data-mode="white" id="modeWhite">
+              <div class="mode-header">⚪ Remove White</div>
+              <div class="mode-desc">Removes bright/white screenshot backgrounds and rectangular margins.</div>
+            </div>
+            <div class="mode-card" data-mode="black" id="modeBlack">
+              <div class="mode-header">⚫ Remove Black</div>
+              <div class="mode-desc">Cleans black screenshot bars, letterboxing & dark margins.</div>
+            </div>
+            <div class="mode-card" data-mode="color" id="modeColor">
+              <div class="mode-header">🎨 Picked Color</div>
+              <div class="mode-desc">Click eyedropper or sample canvas to key out an exact outlier color.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>🎚️</span> 3. Edge & Tolerance Tuning</div>
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Color Tolerance:</span>
+              <span class="slider-val" id="tolValDisplay">28%</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgTolRange" min="5" max="80" value="28">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Fringe Choke / Halo Trim:</span>
+              <span class="slider-val" id="chokeValDisplay">1 px</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgChokeRange" min="0" max="4" value="1">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Edge Feather / Soften:</span>
+              <span class="slider-val" id="featherValDisplay">1 px</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgFeatherRange" min="0" max="5" value="1">
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding: 6px 10px; background: #121927; border-radius: 6px; border: 1px solid #1f2b3e;">
+            <span style="font-size: 11px; font-weight: 700; color: #cbd5e1;">✂️ Auto-Crop Outer Padding:</span>
+            <input type="checkbox" id="bgAutoCropCheck" checked style="accent-color: #a855f7; cursor: pointer;">
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>⚡</span> 4. Instant Clean Presets</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn" id="presetCleanWhite" style="font-size: 10.5px; padding: 6px 10px;">⚪ Clean White</button>
+            <button type="button" class="btn" id="presetCleanBlack" style="font-size: 10.5px; padding: 6px 10px;">⚫ Clean Black</button>
+            <button type="button" class="btn" id="presetRevert" style="font-size: 10.5px; padding: 6px 10px; color: #ff99aa;">↩️ Revert Original</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-studio-footer">
+      <div class="footer-actions-left">
+        <button type="button" class="btn-download-cutout" id="bgDownloadCutoutBtn" title="Download transparent PNG image">
+          💾 DOWNLOAD PNG
+        </button>
+        <button type="button" class="btn-reset-original" id="bgCloseCancelBtn">
+          ✕ CANCEL
+        </button>
+      </div>
+
+      <div class="footer-actions-right">
+        <button type="button" class="btn-apply-all" id="bgApplyAllCardsBtn" title="Clean and update all cards on the ranking board">
+          ✨ APPLY TO ALL 10 CARDS
+        </button>
+        <button type="button" class="btn-apply-one" id="bgApplyCurrentBtn" title="Apply clean cutout to the selected card">
+          ✅ APPLY TO SELECTED CARD
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- EDIT CARD MODAL -->
 <div class="custom-modal-backdrop hidden" id="cardEditModal">
   <div class="custom-modal">
@@ -1144,11 +1778,11 @@
           🔍 Auto-Detect Name & Rating (AI OCR)
         </button>
         <div style="display:flex; gap:6px;">
-          <button type="button" id="modalRemoveBgBtn" class="btn btn-mini" style="flex:1; justify-content:center; background:#291442; color:#c084fc; border-color:#532985;">
-            🪄 Remove BG (This Card)
+          <button type="button" id="modalRemoveBgBtn" class="btn btn-mini" onclick="openBgStudioWithCard(currentEditingRank)" style="flex:1; justify-content:center; background:linear-gradient(135deg, #a855f7, #6366f1); color:#fff; border:none; box-shadow:0 0 12px rgba(168,85,247,0.4);">
+            🪄 Remove Background (Studio)
           </button>
-          <button type="button" id="modalBatchRemoveBgBtn" class="btn btn-mini btn-primary" style="flex:1; justify-content:center;">
-            ⚡ Remove BG (ALL Cards)
+          <button type="button" id="modalBatchRemoveBgBtn" class="btn btn-mini btn-primary" onclick="openBgStudioWithCard(currentEditingRank)" style="flex:1; justify-content:center;">
+            ✨ Studio: Apply To All
           </button>
         </div>
       </div>
@@ -1904,6 +2538,624 @@ function loadStorage() {
 }
 
 loadStorage();
+
+
+// ========================================================
+// BG REMOVER & OUTLIERS STUDIO JAVASCRIPT
+// ========================================================
+const bgStudioModal = document.getElementById('bgStudioModal');
+const closeBgStudioBtn = document.getElementById('closeBgStudioBtn');
+const bgCloseCancelBtn = document.getElementById('bgCloseCancelBtn');
+const bgCardSelect = document.getElementById('bgCardSelect');
+const loadRonaldoSampleBtn = document.getElementById('loadRonaldoSampleBtn');
+const bgUploadInput = document.getElementById('bgUploadInput');
+const bgTolRange = document.getElementById('bgTolRange');
+const tolValDisplay = document.getElementById('tolValDisplay');
+const bgChokeRange = document.getElementById('bgChokeRange');
+const chokeValDisplay = document.getElementById('chokeValDisplay');
+const bgFeatherRange = document.getElementById('bgFeatherRange');
+const featherValDisplay = document.getElementById('featherValDisplay');
+const bgAutoCropCheck = document.getElementById('bgAutoCropCheck');
+const bgApplyCurrentBtn = document.getElementById('bgApplyCurrentBtn');
+const bgApplyAllPitchBtn = document.getElementById('bgApplyAllPitchBtn');
+const bgDownloadCutoutBtn = document.getElementById('bgDownloadCutoutBtn');
+const bgCanvasContainer = document.getElementById('bgCanvasContainer');
+const bgStudioCanvas = document.getElementById('bgStudioCanvas');
+const canvasInfoBadge = document.getElementById('canvasInfoBadge');
+
+// Mode buttons
+const modeAuto = document.getElementById('modeAuto');
+const modeWhite = document.getElementById('modeWhite');
+const modeBlack = document.getElementById('modeBlack');
+const modeColor = document.getElementById('modeColor');
+
+let studioState = {
+  activeCardType: null, // 'rank' | 'bench' | 'sample' | 'custom'
+  activeCardKey: null,
+  originalImageSrc: null,
+  currentWorkingDataUrl: null,
+  mode: 'auto',
+  tolerance: 0.28,
+  choke: 1,
+  feather: 1,
+  autoCrop: true,
+  pickedColor: { r: 255, g: 255, b: 255 },
+  activeTool: 'pan',
+  eraserSize: 18,
+  zoom: 1,
+  isDrawing: false
+};
+
+function openBgStudioWithCard(rank = null) {
+  if (!rank) rank = currentEditingRank || 1;
+  populateStudioCardSelect(rank);
+  bgStudioModal.classList.remove('hidden');
+  loadCardIntoStudio(rank);
+}
+
+function populateStudioCardSelect(selectedRank = null) {
+  bgCardSelect.innerHTML = '';
+  const group = document.createElement('optgroup');
+  group.label = '🔟 Top 10 Must Claim Cards';
+  state.cards.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.rank;
+    const hasImg = c.image && c.image.length > 50;
+    opt.textContent = `Rank #${c.rank}: ${c.name || 'Player ' + c.rank} ${hasImg ? '🖼️' : '(Empty)'}`;
+    if (selectedRank && Number(selectedRank) === Number(c.rank)) opt.selected = true;
+    group.appendChild(opt);
+  });
+  bgCardSelect.appendChild(group);
+}
+
+function loadCardIntoStudio(rank) {
+  rank = Number(rank) || 1;
+  studioState.activeCardKey = rank;
+  bgCardSelect.value = rank;
+  if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO RANK #${rank}`;
+
+  const card = state.cards.find(c => c.rank === rank);
+  if (!card || !card.image || card.image.length < 50) {
+    studioState.originalImageSrc = null;
+    studioState.currentWorkingDataUrl = null;
+    const ctx = bgStudioCanvas.getContext('2d');
+    ctx.clearRect(0, 0, bgStudioCanvas.width, bgStudioCanvas.height);
+    canvasInfoBadge.textContent = `Rank #${rank} is empty — click "Upload New Image To Studio" above!`;
+    return;
+  }
+  studioState.originalImageSrc = card.image;
+  runStudioUpdate();
+}
+
+async function runStudioUpdate() {
+  if (!studioState.originalImageSrc) return;
+  canvasInfoBadge.textContent = 'Processing cutout...';
+
+  try {
+    const cleaned = await processImageBackgroundRemoval(studioState.originalImageSrc, {
+      mode: studioState.mode,
+      tolerance: studioState.tolerance,
+      choke: studioState.choke,
+      feather: studioState.feather,
+      crop: studioState.autoCrop,
+      targetColor: studioState.pickedColor
+    });
+
+    studioState.currentWorkingDataUrl = cleaned;
+
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+
+      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Transparent Cutout Ready`;
+    };
+    img.src = cleaned;
+  } catch (err) {
+    console.error('Studio update error:', err);
+    canvasInfoBadge.textContent = 'Error processing image';
+  }
+}
+
+function processImageBackgroundRemoval(imgSource, options = {}) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onerror = reject;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const w = canvas.width;
+      const h = canvas.height;
+      if (w === 0 || h === 0) return resolve(imgSource);
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      const mode = options.mode || 'auto';
+      const tolerance = options.tolerance !== undefined ? options.tolerance : 0.28;
+      const choke = options.choke !== undefined ? options.choke : 1;
+      const crop = options.crop !== undefined ? options.crop : true;
+
+      let tr = 255, tg = 255, tb = 255;
+      if (mode === 'white') {
+        tr = 255; tg = 255; tb = 255;
+      } else if (mode === 'black') {
+        tr = 0; tg = 0; tb = 0;
+      } else if (mode === 'color' && options.targetColor) {
+        tr = options.targetColor.r;
+        tg = options.targetColor.g;
+        tb = options.targetColor.b;
+      } else {
+        const cornerCoords = [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]];
+        let sumR = 0, sumG = 0, sumB = 0, validSamples = 0;
+        cornerCoords.forEach(([cx, cy]) => {
+          const idx = (cy * w + cx) * 4;
+          if (data[idx + 3] > 20) {
+            sumR += data[idx];
+            sumG += data[idx + 1];
+            sumB += data[idx + 2];
+            validSamples++;
+          }
+        });
+        if (validSamples > 0) {
+          tr = Math.round(sumR / validSamples);
+          tg = Math.round(sumG / validSamples);
+          tb = Math.round(sumB / validSamples);
+        }
+      }
+
+      function colorDist(idx) {
+        const dr = data[idx] - tr;
+        const dg = data[idx + 1] - tg;
+        const db = data[idx + 2] - tb;
+        return Math.sqrt(dr * dr + dg * dg + db * db) / 441.673;
+      }
+
+      const visited = new Uint8Array(w * h);
+      const queue = new Int32Array(w * h);
+      let head = 0, tail = 0;
+
+      for (let x = 0; x < w; x++) {
+        [0, h - 1].forEach(y => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+      for (let y = 0; y < h; y++) {
+        [0, w - 1].forEach(x => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+
+      while (head < tail) {
+        const curr = queue[head++];
+        const cx = curr % w;
+        const cy = Math.floor(curr / w);
+
+        const neighbors = [
+          cx > 0 ? curr - 1 : -1,
+          cx < w - 1 ? curr + 1 : -1,
+          cy > 0 ? curr - w : -1,
+          cy < h - 1 ? curr + w : -1
+        ];
+
+        for (let i = 0; i < 4; i++) {
+          const nIdx = neighbors[i];
+          if (nIdx !== -1 && !visited[nIdx]) {
+            const pIdx = nIdx * 4;
+            if (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance) {
+              visited[nIdx] = 1;
+              queue[tail++] = nIdx;
+            }
+          }
+        }
+      }
+
+      for (let i = 0; i < w * h; i++) {
+        if (visited[i]) data[i * 4 + 3] = 0;
+      }
+
+      if (choke > 0) {
+        for (let pass = 0; pass < choke; pass++) {
+          const toErase = [];
+          for (let y = 1; y < h - 1; y++) {
+            for (let x = 1; x < w - 1; x++) {
+              const idx = y * w + x;
+              const pIdx = idx * 4;
+              if (data[pIdx + 3] > 0) {
+                const hasTrans = 
+                  data[(idx - 1) * 4 + 3] === 0 ||
+                  data[(idx + 1) * 4 + 3] === 0 ||
+                  data[(idx - w) * 4 + 3] === 0 ||
+                  data[(idx + w) * 4 + 3] === 0;
+
+                if (hasTrans && colorDist(pIdx) <= tolerance * 1.45) {
+                  toErase.push(pIdx);
+                }
+              }
+            }
+          }
+          toErase.forEach(p => { data[p + 3] = 0; });
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      let outCanvas = canvas;
+      if (crop) {
+        let minX = w, minY = h, maxX = 0, maxY = 0;
+        let hasVisible = false;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const a = data[(y * w + x) * 4 + 3];
+            if (a > 15) {
+              hasVisible = true;
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+        if (hasVisible && (minX > 1 || minY > 1 || maxX < w - 2 || maxY < h - 2)) {
+          const cropW = Math.max(1, maxX - minX + 1);
+          const cropH = Math.max(1, maxY - minY + 1);
+          const croppedCanvas = document.createElement('canvas');
+          croppedCanvas.width = cropW;
+          croppedCanvas.height = cropH;
+          const croppedCtx = croppedCanvas.getContext('2d');
+          croppedCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+          outCanvas = croppedCanvas;
+        }
+      }
+
+      resolve(outCanvas.toDataURL('image/png'));
+    };
+    img.src = imgSource;
+  });
+}
+
+if (bgRemoverBtn) bgRemoverBtn.addEventListener('click', () => openBgStudioWithCard());
+if (closeBgStudioBtn) closeBgStudioBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+if (bgCloseCancelBtn) bgCloseCancelBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+if (bgStudioModal) {
+  bgStudioModal.addEventListener('click', e => {
+    if (e.target === bgStudioModal) bgStudioModal.classList.add('hidden');
+  });
+}
+
+if (bgCardSelect) {
+  bgCardSelect.addEventListener('change', e => {
+    const val = e.target.value;
+    if (val.startsWith('rank_')) {
+      loadCardIntoStudio('rank', val.replace('rank_', ''));
+    } else if (val.startsWith('bench_')) {
+      loadCardIntoStudio('bench', val.replace('bench_', ''));
+    } else if (val === 'sample_ronaldo') {
+      loadSampleRonaldo();
+    }
+  });
+}
+
+function setStudioMode(newMode) {
+  studioState.mode = newMode;
+  [modeAuto, modeWhite, modeBlack, modeColor].forEach(el => {
+    if (el) el.classList.toggle('active', el.dataset.mode === newMode);
+  });
+  runStudioUpdate();
+}
+
+if (modeAuto) modeAuto.addEventListener('click', () => setStudioMode('auto'));
+if (modeWhite) modeWhite.addEventListener('click', () => setStudioMode('white'));
+if (modeBlack) modeBlack.addEventListener('click', () => setStudioMode('black'));
+if (modeColor) modeColor.addEventListener('click', () => setStudioMode('color'));
+
+if (bgTolRange) {
+  bgTolRange.addEventListener('input', e => {
+    studioState.tolerance = parseFloat(e.target.value) / 100;
+    tolValDisplay.textContent = `${e.target.value}%`;
+    runStudioUpdate();
+  });
+}
+if (bgChokeRange) {
+  bgChokeRange.addEventListener('input', e => {
+    studioState.choke = parseInt(e.target.value, 10);
+    chokeValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgFeatherRange) {
+  bgFeatherRange.addEventListener('input', e => {
+    studioState.feather = parseInt(e.target.value, 10);
+    featherValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgAutoCropCheck) {
+  bgAutoCropCheck.addEventListener('change', e => {
+    studioState.autoCrop = e.target.checked;
+    runStudioUpdate();
+  });
+}
+
+if (loadRonaldoSampleBtn) {
+  loadRonaldoSampleBtn.addEventListener('click', () => {
+    loadSampleRonaldo();
+    showToast('Loaded Ronaldo 124 ST reference card!');
+  });
+}
+
+if (bgUploadInput) {
+  bgUploadInput.addEventListener('change', async e => {
+    if (e.target.files && e.target.files.length > 0) {
+      const dataUrl = await compressImageFile(e.target.files[0]);
+      studioState.activeCardType = 'custom';
+      studioState.activeCardKey = 'uploaded_' + Date.now();
+      studioState.originalImageSrc = dataUrl;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = '✅ APPLY TO RANKING';
+      runStudioUpdate();
+      e.target.value = '';
+      showToast('Uploaded image into studio!');
+    }
+  });
+}
+
+const presetCleanWhite = document.getElementById('presetCleanWhite');
+const presetCleanBlack = document.getElementById('presetCleanBlack');
+const presetRevert = document.getElementById('presetRevert');
+
+if (presetCleanWhite) {
+  presetCleanWhite.addEventListener('click', () => {
+    bgTolRange.value = 28;
+    tolValDisplay.textContent = '28%';
+    bgChokeRange.value = 1;
+    chokeValDisplay.textContent = '1 px';
+    setStudioMode('white');
+  });
+}
+if (presetCleanBlack) {
+  presetCleanBlack.addEventListener('click', () => {
+    bgTolRange.value = 28;
+    tolValDisplay.textContent = '28%';
+    bgChokeRange.value = 1;
+    chokeValDisplay.textContent = '1 px';
+    setStudioMode('black');
+  });
+}
+if (presetRevert) {
+  presetRevert.addEventListener('click', () => {
+    if (!studioState.originalImageSrc) return;
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+      studioState.currentWorkingDataUrl = studioState.originalImageSrc;
+      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Reverted Original`;
+      showToast('Reverted to original image.');
+    };
+    img.src = studioState.originalImageSrc;
+  });
+}
+
+['checker', 'stadium', 'black', 'white'].forEach(theme => {
+  const btn = document.querySelector(`.theme-btn[data-stage="${theme}"]`);
+  if (btn) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.theme-btn[data-stage]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      bgCanvasContainer.className = `bg-canvas-container ${theme === 'checker' ? '' : 'theme-' + theme}`;
+    });
+  }
+});
+
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomOutBtn = document.getElementById('zoomOutBtn');
+const zoomResetBtn = document.getElementById('zoomResetBtn');
+const zoomLevelDisplay = document.getElementById('zoomLevelDisplay');
+
+function setStudioZoom(z) {
+  studioState.zoom = Math.max(0.4, Math.min(2.5, z));
+  bgStudioCanvas.style.transform = `scale(${studioState.zoom})`;
+  zoomLevelDisplay.textContent = `${Math.round(studioState.zoom * 100)}%`;
+}
+if (zoomInBtn) zoomInBtn.addEventListener('click', () => setStudioZoom(studioState.zoom + 0.2));
+if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => setStudioZoom(studioState.zoom - 0.2));
+if (zoomResetBtn) zoomResetBtn.addEventListener('click', () => setStudioZoom(1));
+
+const toolPanBtn = document.getElementById('toolPanBtn');
+const toolEyedropperBtn = document.getElementById('toolEyedropperBtn');
+const toolEraserBtn = document.getElementById('toolEraserBtn');
+const eraserSizeWrap = document.getElementById('eraserSizeWrap');
+const eraserSizeRange = document.getElementById('eraserSizeRange');
+const eraserSizeVal = document.getElementById('eraserSizeVal');
+
+function setActiveTool(tool) {
+  studioState.activeTool = tool;
+  toolPanBtn.classList.toggle('active', tool === 'pan');
+  toolEyedropperBtn.classList.toggle('active', tool === 'eyedropper');
+  toolEraserBtn.classList.toggle('active', tool === 'eraser');
+  eraserSizeWrap.style.display = tool === 'eraser' ? 'inline-flex' : 'none';
+
+  if (tool === 'eyedropper') {
+    bgStudioCanvas.style.cursor = 'crosshair';
+  } else if (tool === 'eraser') {
+    bgStudioCanvas.style.cursor = 'cell';
+  } else {
+    bgStudioCanvas.style.cursor = 'default';
+  }
+}
+
+if (toolPanBtn) toolPanBtn.addEventListener('click', () => setActiveTool('pan'));
+if (toolEyedropperBtn) toolEyedropperBtn.addEventListener('click', () => setActiveTool('eyedropper'));
+if (toolEraserBtn) toolEraserBtn.addEventListener('click', () => setActiveTool('eraser'));
+if (eraserSizeRange) {
+  eraserSizeRange.addEventListener('input', e => {
+    studioState.eraserSize = parseInt(e.target.value, 10);
+    eraserSizeVal.textContent = `${e.target.value}px`;
+  });
+}
+
+function getCanvasPos(e) {
+  const rect = bgStudioCanvas.getBoundingClientRect();
+  const scaleX = bgStudioCanvas.width / rect.width;
+  const scaleY = bgStudioCanvas.height / rect.height;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: Math.round((clientX - rect.left) * scaleX),
+    y: Math.round((clientY - rect.top) * scaleY)
+  };
+}
+
+bgStudioCanvas.addEventListener('mousedown', e => {
+  if (studioState.activeTool === 'eyedropper') {
+    const pos = getCanvasPos(e);
+    const ctx = bgStudioCanvas.getContext('2d');
+    const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+    studioState.pickedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
+    setStudioMode('color');
+    showToast(`Sampled color: rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`);
+    setActiveTool('pan');
+  } else if (studioState.activeTool === 'eraser') {
+    studioState.isDrawing = true;
+    eraseAt(e);
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  if (studioState.isDrawing) {
+    studioState.isDrawing = false;
+    studioState.currentWorkingDataUrl = bgStudioCanvas.toDataURL('image/png');
+  }
+});
+
+bgStudioCanvas.addEventListener('mousemove', e => {
+  if (studioState.isDrawing && studioState.activeTool === 'eraser') {
+    eraseAt(e);
+  }
+});
+
+function eraseAt(e) {
+  const pos = getCanvasPos(e);
+  const ctx = bgStudioCanvas.getContext('2d');
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, studioState.eraserSize, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+if (bgApplyCurrentBtn) {
+  bgApplyCurrentBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) return;
+
+    if (studioState.activeCardType === 'rank' && studioState.activeCardKey) {
+      rankCards[studioState.activeCardKey] = studioState.currentWorkingDataUrl;
+      renderBoard();
+      showToast(`Applied clean card to Rank #${studioState.activeCardKey}!`);
+    } else if (studioState.activeCardType === 'bench' && studioState.activeCardKey) {
+      const idx = pool.findIndex(c => c.id === studioState.activeCardKey);
+      if (idx !== -1) {
+        pool[idx].src = studioState.currentWorkingDataUrl;
+        renderBench();
+        showToast('Applied clean card to bench!');
+      }
+    } else {
+      const targetRank = (selectedCard && selectedCard.type === 'rank') ? selectedCard.rank : 1;
+      rankCards[targetRank] = studioState.currentWorkingDataUrl;
+      renderBoard();
+      showToast(`Placed clean card at Rank #${targetRank}!`);
+    }
+
+    bgStudioModal.classList.add('hidden');
+  });
+}
+
+
+if (bgApplyCurrentBtn) {
+  bgApplyCurrentBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) {
+      showToast('No clean cutout to apply! Upload or select a card image first.', '⚠️');
+      return;
+    }
+    const rank = Number(studioState.activeCardKey || bgCardSelect.value || 1);
+    const card = state.cards.find(c => c.rank === rank);
+    if (card) {
+      card.image = studioState.currentWorkingDataUrl;
+      const modalThumb = document.getElementById('modalPreviewThumb');
+      if (modalThumb && currentEditingRank === rank) {
+        modalThumb.src = studioState.currentWorkingDataUrl;
+      }
+      render();
+      bgStudioModal.classList.add('hidden');
+      showToast(`✅ Clean cutout applied to Rank #${rank}!`, '✨');
+    }
+  });
+}
+
+const bgApplyAllCardsBtn = document.getElementById('bgApplyAllCardsBtn');
+if (bgApplyAllCardsBtn) {
+  bgApplyAllCardsBtn.addEventListener('click', async () => {
+    const cardsWithImages = state.cards.filter(c => c.image && c.image.length > 50);
+    if (cardsWithImages.length === 0) {
+      showToast('No cards with images found to clean! Please upload card image(s) first.', '⚠️');
+      return;
+    }
+
+    showToast(`🪄 Cleaning background & outliers for all ${cardsWithImages.length} cards...`, '⏳');
+
+    let successCount = 0;
+    for (let i = 0; i < cardsWithImages.length; i++) {
+      const card = cardsWithImages[i];
+      try {
+        const cleaned = await processImageBackgroundRemoval(card.image, {
+          mode: studioState.mode,
+          tolerance: studioState.tolerance,
+          choke: studioState.choke,
+          feather: studioState.feather,
+          crop: studioState.autoCrop,
+          targetColor: studioState.pickedColor
+        });
+        card.image = cleaned;
+        successCount++;
+      } catch (err) {
+        console.error(`Error cleaning Rank #${card.rank}:`, err);
+      }
+    }
+
+    const modalThumb = document.getElementById('modalPreviewThumb');
+    const currentCard = state.cards.find(c => c.rank === currentEditingRank);
+    if (currentCard && modalThumb && currentCard.image) {
+      modalThumb.src = currentCard.image;
+    }
+
+    render();
+    bgStudioModal.classList.add('hidden');
+    showToast(`✨ Successfully cleaned & applied to all ${successCount} cards!`, '🎉');
+  });
+}
+
 </script>
 
 </body>
