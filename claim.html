@@ -1510,6 +1510,14 @@
           <button type="button" class="btn btn-mini" onclick="batchApplyLabels()" style="justify-content:center;">
             🏷️ Apply "MUST CLAIM" (1-3) & "CHEAP BEST" (4-10)
           </button>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn btn-mini" onclick="batchSetCustomTag()" style="flex:1; justify-content:center;" title="Set a custom tag for all 10 cards">
+              ✏️ Set All Tags
+            </button>
+            <button type="button" class="btn btn-mini" onclick="removeAllTopTags()" style="flex:1; justify-content:center; color:#ff7777; border-color:#552222; background:#1c0d12;" title="Remove/hide all top labels">
+              🚫 Remove All Tags
+            </button>
+          </div>
           <button type="button" class="btn btn-mini" onclick="sortCardsByPrice()" style="justify-content:center;">
             💎 Sort Cards by Shard Price (Low to High)
           </button>
@@ -1796,14 +1804,20 @@
 
     <!-- Top Label -->
     <div class="form-group">
-      <label>🏷️ Top Label Tag (e.g. MUST CLAIM, CHEAP BEST)</label>
-      <input type="text" id="modalTagInput" class="input-styled" placeholder="MUST CLAIM" value="MUST CLAIM">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <label>🏷️ Top Label Tag</label>
+        <button type="button" class="btn btn-mini" onclick="clearModalTag()" style="padding:2px 8px; font-size:10px; color:#ff7777; border-color:#552222; background:#1c0d12;" title="Clear tag for this card">
+          🚫 Remove / Hide Tag
+        </button>
+      </div>
+      <input type="text" id="modalTagInput" class="input-styled" placeholder="Leave empty to remove tag completely" value="">
       <div class="presets-cloud" style="margin-top:4px;">
         <span class="preset-pill" onclick="setModalTagPreset('MUST CLAIM', 'tag-green')">🟢 MUST CLAIM</span>
         <span class="preset-pill" onclick="setModalTagPreset('CHEAP BEST', 'tag-yellow')">🟡 CHEAP BEST</span>
         <span class="preset-pill" onclick="setModalTagPreset('BEST: RB', 'tag-cyan')">🔵 BEST IN SLOT</span>
         <span class="preset-pill" onclick="setModalTagPreset('VALUE BEAST', 'tag-orange')">🟠 VALUE BEAST</span>
         <span class="preset-pill" onclick="setModalTagPreset('SUPER OP', 'tag-purple')">🟣 SUPER OP</span>
+        <span class="preset-pill" onclick="clearModalTag()" style="border-color:#ff4444; color:#ff7777;">🚫 No Tag (Clear)</span>
       </div>
     </div>
 
@@ -1924,10 +1938,16 @@ function render() {
 
 function renderRow(containerId, cardsSlice) {
   const container = document.getElementById(containerId);
-  container.innerHTML = cardsSlice.map(c => `
+  container.innerHTML = cardsSlice.map(c => {
+    const hasTag = Boolean(c.tag && c.tag.trim());
+    const tagHtml = hasTag
+      ? `<div class="card-top-tag ${c.tagColor || 'tag-green'}" ondblclick="event.stopPropagation(); quickEditTag(${c.rank})" onclick="event.stopPropagation(); openEditModal(${c.rank}, 'tag')" title="Click or double-click to edit/remove label">${c.tag}</div>`
+      : `<div class="card-top-tag tag-empty" ondblclick="event.stopPropagation(); quickEditTag(${c.rank})" onclick="event.stopPropagation(); openEditModal(${c.rank}, 'tag')" title="Click to add label" style="opacity:0; height:26px; line-height:26px; margin-bottom:5px; user-select:none; cursor:pointer;">&nbsp;</div>`;
+
+    return `
     <div class="claim-card-unit" onclick="openEditModal(${c.rank})" title="Click to edit Rank ${c.rank}">
       <!-- Top Label -->
-      <div class="card-top-tag ${c.tagColor || 'tag-green'}">${c.tag || 'MUST CLAIM'}</div>
+      ${tagHtml}
 
       <!-- Card Display Box -->
       <div class="card-box">
@@ -1956,7 +1976,8 @@ function renderRow(containerId, cardsSlice) {
         <span class="shard-price-val">${formatNumber(c.shards)}</span>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function renderSidebarList() {
@@ -1967,7 +1988,7 @@ function renderSidebarList() {
       <img class="card-item-thumb" src="${c.image || 'shard_icon_hq.png'}" alt="${c.name}">
       <div class="card-item-info">
         <div class="card-item-name">${c.name || 'Select Player'} <small style="color:#ffaa66;">(${c.ovr || '--'} ${c.pos || ''})</small></div>
-        <div class="card-item-tag ${c.tagColor}">${c.tag || 'MUST CLAIM'}</div>
+        <div class="card-item-tag ${c.tagColor || 'tag-green'}">${c.tag ? c.tag : '<span style="color:#6e5b80; font-size:9px;">(No Tag)</span>'}</div>
       </div>
       <div class="card-item-shards">
         <img src="shard_icon_hq.png" style="width:14px; height:14px;">
@@ -2028,6 +2049,35 @@ function batchApplyLabels() {
   showToast('Applied MUST CLAIM (1-3) & CHEAP BEST (4-10)!', '🏷️');
 }
 
+function removeAllTopTags() {
+  if (!confirm('Remove all top tags from all 10 cards?')) return;
+  state.cards.forEach(c => c.tag = '');
+  render();
+  showToast('Removed all top tags from all 10 cards!', '🗑️');
+}
+
+function batchSetCustomTag() {
+  const custom = prompt('Enter top label tag for all 10 cards (e.g. MUST CLAIM, VALUE BEAST) or leave empty to remove all:');
+  if (custom !== null) {
+    const cleanTag = custom.trim().toUpperCase();
+    state.cards.forEach(c => c.tag = cleanTag);
+    render();
+    showToast(cleanTag ? `Applied "${cleanTag}" to all 10 cards!` : 'Removed top tags from all cards!', '🏷️');
+  }
+}
+
+function quickEditTag(rank) {
+  const card = state.cards.find(c => c.rank === rank);
+  if (!card) return;
+  const current = card.tag || '';
+  const result = prompt(`Edit Top Tag for Card #${rank} (Leave blank to remove tag):`, current);
+  if (result !== null) {
+    card.tag = result.trim().toUpperCase();
+    render();
+    showToast(card.tag ? `Updated Card #${rank} tag to "${card.tag}"!` : `Removed top tag from Card #${rank}!`, '🏷️');
+  }
+}
+
 function sortCardsByPrice() {
   state.cards.sort((a, b) => {
     const pA = parseInt(String(a.shards).replace(/[^0-9]/g, ''), 10) || 0;
@@ -2053,6 +2103,7 @@ function clearAllCards() {
     c.ovr = '';
     c.pos = '';
     c.shards = '0';
+    c.tag = '';
     c.image = '';
   });
   render();
@@ -2062,7 +2113,7 @@ function clearAllCards() {
 // ========================================================
 // EDIT MODAL & OCR
 // ========================================================
-function openEditModal(rank) {
+function openEditModal(rank, focusField = null) {
   currentEditingRank = rank;
   const card = state.cards.find(c => c.rank === rank);
   if (!card) return;
@@ -2070,13 +2121,23 @@ function openEditModal(rank) {
   document.getElementById('modalRankTitle').textContent = `Edit Card #${card.rank} — ${card.name || 'Player'}`;
   document.getElementById('modalPreviewThumb').src = card.image || 'shard_icon_hq.png';
   document.getElementById('modalShardInput').value = formatNumber(card.shards);
-  document.getElementById('modalTagInput').value = card.tag || 'MUST CLAIM';
+  document.getElementById('modalTagInput').value = card.tag || '';
   document.getElementById('modalTagColorSelect').value = card.tagColor || 'tag-green';
   document.getElementById('modalNameInput').value = card.name || '';
   document.getElementById('modalOvrInput').value = card.ovr || '';
   document.getElementById('modalPosInput').value = card.pos || '';
 
   document.getElementById('cardEditModal').classList.remove('hidden');
+
+  if (focusField === 'tag') {
+    setTimeout(() => {
+      const tagInput = document.getElementById('modalTagInput');
+      if (tagInput) {
+        tagInput.focus();
+        tagInput.select();
+      }
+    }, 120);
+  }
 }
 
 function closeEditModal() {
@@ -2085,7 +2146,14 @@ function closeEditModal() {
 
 function setModalTagPreset(tag, colorClass) {
   document.getElementById('modalTagInput').value = tag;
-  document.getElementById('modalTagColorSelect').value = colorClass;
+  if (colorClass) {
+    document.getElementById('modalTagColorSelect').value = colorClass;
+  }
+}
+
+function clearModalTag() {
+  document.getElementById('modalTagInput').value = '';
+  showToast('Top tag cleared! Click "Save Card" to apply changes.', '🏷️');
 }
 
 function saveEditModal() {
@@ -2096,12 +2164,12 @@ function saveEditModal() {
   card.ovr = document.getElementById('modalOvrInput').value.trim() || '120';
   card.pos = document.getElementById('modalPosInput').value.trim().toUpperCase() || 'ST';
   card.shards = formatNumber(document.getElementById('modalShardInput').value);
-  card.tag = document.getElementById('modalTagInput').value.trim().toUpperCase() || 'MUST CLAIM';
+  card.tag = document.getElementById('modalTagInput').value.trim().toUpperCase();
   card.tagColor = document.getElementById('modalTagColorSelect').value;
 
   closeEditModal();
   render();
-  showToast(`Updated Card #${card.rank} (${card.name})!`, '✅');
+  showToast(card.tag ? `Updated Card #${card.rank} (${card.name}) with tag "${card.tag}"!` : `Updated Card #${card.rank} (Tag removed)!`, '✅');
 }
 
 function clearCurrentModalCard() {
