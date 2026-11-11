@@ -1646,9 +1646,10 @@
           <button type="button" class="touchup-btn" id="toolEraserBtn">🧹 Eraser</button>
           <div id="eraserSizeWrap" style="display: none; align-items: center; gap: 6px;">
             <span style="font-size: 10px; color: #8fa5c5;">Size:</span>
-            <input type="range" id="eraserSizeRange" min="4" max="60" value="18" style="width: 75px;">
-            <span id="eraserSizeVal" style="font-size: 10px; color: #c084fc; font-weight: 800;">18px</span>
+            <input type="range" id="eraserSizeRange" min="6" max="150" value="30" style="width: 75px;">
+            <span id="eraserSizeVal" style="font-size: 10px; color: #c084fc; font-weight: 800;">30px</span>
           </div>
+          <button type="button" class="touchup-btn" id="toolUndoBtn" style="display: none;" title="Undo last eraser stroke">↩️ Undo</button>
           <div style="margin-left: auto; font-size: 11px; color: #8fa5c5; font-weight: 700;" id="canvasInfoBadge">256 × 256 px</div>
         </div>
       </div>
@@ -2552,6 +2553,8 @@ function loadCardIntoStudio(rank) {
     return;
   }
   studioState.originalImageSrc = card.image;
+  studioHistory = [];
+  if (toolUndoBtn) toolUndoBtn.style.display = "none";
   runStudioUpdate();
 }
 
@@ -2944,17 +2947,50 @@ if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => setStudioZoom(-0.2));
 if (zoomInBtn) zoomInBtn.addEventListener('click', () => setStudioZoom(0.2));
 if (zoomResetBtn) zoomResetBtn.addEventListener('click', () => setStudioZoom(0, 1.0));
 
-// Tools: Inspect, Eyedropper, Eraser
+// Tools: Inspect, Eyedropper, Eraser & Interactive Canvas Touchup
+const toolUndoBtn = document.getElementById('toolUndoBtn');
+let studioHistory = [];
+let lastErasePoint = null;
+
+function saveUndoState() {
+  if (!bgStudioCanvas || bgStudioCanvas.width === 0 || bgStudioCanvas.height === 0) return;
+  const ctx = bgStudioCanvas.getContext('2d');
+  if (studioHistory.length >= 15) studioHistory.shift();
+  studioHistory.push(ctx.getImageData(0, 0, bgStudioCanvas.width, bgStudioCanvas.height));
+  if (toolUndoBtn) toolUndoBtn.style.display = 'inline-flex';
+}
+
+function undoLastErase() {
+  if (studioHistory.length === 0) {
+    showToast('Nothing to undo!', 'ℹ️');
+    return;
+  }
+  const previousData = studioHistory.pop();
+  const ctx = bgStudioCanvas.getContext('2d');
+  ctx.putImageData(previousData, 0, 0);
+  studioState.currentWorkingDataUrl = bgStudioCanvas.toDataURL('image/png');
+  if (studioHistory.length === 0 && toolUndoBtn) {
+    toolUndoBtn.style.display = 'none';
+  }
+  showToast('Undid last eraser stroke!', '↩️');
+}
+
+if (toolUndoBtn) toolUndoBtn.addEventListener('click', undoLastErase);
+
 function setActiveTool(tool) {
   studioState.activeTool = tool;
   if (toolPanBtn) toolPanBtn.classList.toggle('active', tool === 'pan');
   if (toolEyedropperBtn) toolEyedropperBtn.classList.toggle('active', tool === 'picker');
   if (toolEraserBtn) toolEraserBtn.classList.toggle('active', tool === 'eraser');
   if (eraserSizeWrap) eraserSizeWrap.style.display = (tool === 'eraser') ? 'inline-flex' : 'none';
+  if (toolUndoBtn) toolUndoBtn.style.display = (tool === 'eraser' && studioHistory.length > 0) ? 'inline-flex' : 'none';
+
+  const ring = document.getElementById('eraserCursorRing');
+  if (ring && tool !== 'eraser') ring.style.display = 'none';
 
   if (bgStudioCanvas) {
     if (tool === 'picker') bgStudioCanvas.style.cursor = 'crosshair';
-    else if (tool === 'eraser') bgStudioCanvas.style.cursor = 'cell';
+    else if (tool === 'eraser') bgStudioCanvas.style.cursor = 'crosshair';
     else bgStudioCanvas.style.cursor = 'grab';
   }
 }
@@ -2970,55 +3006,144 @@ if (eraserSizeRange) {
   });
 }
 
-// Canvas Interaction for Eyedropper & Eraser
 function getCanvasPos(e) {
   const rect = bgStudioCanvas.getBoundingClientRect();
-  const scaleX = bgStudioCanvas.width / rect.width;
-  const scaleY = bgStudioCanvas.height / rect.height;
+  const scaleX = bgStudioCanvas.width / (rect.width || 1);
+  const scaleY = bgStudioCanvas.height / (rect.height || 1);
+  let clientX, clientY;
+  if (e.touches && e.touches.length > 0) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else if (e.changedTouches && e.changedTouches.length > 0) {
+    clientX = e.changedTouches[0].clientX;
+    clientY = e.changedTouches[0].clientY;
+  } else {
+    clientX = e.clientX;
+    clientY = e.clientY;
+  }
   return {
-    x: Math.round((e.clientX - rect.left) * scaleX),
-    y: Math.round((e.clientY - rect.top) * scaleY)
+    x: Math.round((clientX - rect.left) * scaleX),
+    y: Math.round((clientY - rect.top) * scaleY),
+    clientX,
+    clientY,
+    scale: (scaleX + scaleY) / 2
   };
 }
 
-if (bgStudioCanvas) {
-  bgStudioCanvas.addEventListener('click', e => {
-    if (studioState.activeTool === 'picker') {
-      const pos = getCanvasPos(e);
-      const ctx = bgStudioCanvas.getContext('2d');
-      const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
-      studioState.pickedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
-      const hex = '#' + ((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1);
-      setStudioMode('color');
-      showToast(`Selected color ${hex} to key out!`, '🎯');
-    }
-  });
-
-  bgStudioCanvas.addEventListener('mousedown', e => {
-    if (studioState.activeTool === 'eraser') {
-      studioState.isDrawing = true;
-      eraseAt(e);
-    }
-  });
-
-  bgStudioCanvas.addEventListener('mousemove', e => {
-    if (studioState.isDrawing && studioState.activeTool === 'eraser') {
-      eraseAt(e);
-    }
-  });
-
-  window.addEventListener('mouseup', () => { studioState.isDrawing = false; });
+function updateEraserCursorRing(e) {
+  const ring = document.getElementById('eraserCursorRing');
+  if (!ring) return;
+  if (studioState.activeTool !== 'eraser') {
+    ring.style.display = 'none';
+    return;
+  }
+  let clientX = e.clientX;
+  let clientY = e.clientY;
+  if (e.touches && e.touches.length > 0) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  }
+  if (clientX === undefined) {
+    ring.style.display = 'none';
+    return;
+  }
+  const rect = bgStudioCanvas.getBoundingClientRect();
+  if (clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom) {
+    ring.style.display = 'none';
+    return;
+  }
+  const sizePx = studioState.eraserSize * (studioState.zoom || 1);
+  ring.style.width = `${sizePx}px`;
+  ring.style.height = `${sizePx}px`;
+  ring.style.left = `${clientX}px`;
+  ring.style.top = `${clientY}px`;
+  ring.style.display = 'block';
 }
 
-function eraseAt(e) {
-  const pos = getCanvasPos(e);
+function eraseStroke(p1, p2) {
+  if (!bgStudioCanvas || !p2) return;
   const ctx = bgStudioCanvas.getContext('2d');
+  const rect = bgStudioCanvas.getBoundingClientRect();
+  const scale = ((bgStudioCanvas.width / (rect.width || 1)) + (bgStudioCanvas.height / (rect.height || 1))) / 2;
+  const radius = Math.max(2, (studioState.eraserSize * scale) / 2);
+
   ctx.save();
   ctx.globalCompositeOperation = 'destination-out';
+
+  if (p1) {
+    ctx.lineWidth = radius * 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+  }
+
   ctx.beginPath();
-  ctx.arc(pos.x, pos.y, studioState.eraserSize, 0, Math.PI * 2);
+  ctx.arc(p2.x, p2.y, radius, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
+}
+
+function startErase(e) {
+  if (studioState.activeTool === 'picker') {
+    const pos = getCanvasPos(e);
+    const ctx = bgStudioCanvas.getContext('2d');
+    const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+    studioState.pickedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
+    const hex = '#' + ((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1);
+    setStudioMode('color');
+    showToast(`Selected color ${hex} to key out!`, '🎯');
+    return;
+  }
+
+  if (studioState.activeTool === 'eraser') {
+    if (e.cancelable) e.preventDefault();
+    saveUndoState();
+    studioState.isDrawing = true;
+    lastErasePoint = getCanvasPos(e);
+    eraseStroke(null, lastErasePoint);
+    updateEraserCursorRing(e);
+  }
+}
+
+function moveErase(e) {
+  if (studioState.activeTool === 'eraser') {
+    updateEraserCursorRing(e);
+  }
+  if (studioState.isDrawing && studioState.activeTool === 'eraser') {
+    if (e.cancelable) e.preventDefault();
+    const curr = getCanvasPos(e);
+    eraseStroke(lastErasePoint, curr);
+    lastErasePoint = curr;
+  }
+}
+
+function stopErase() {
+  if (studioState.isDrawing && studioState.activeTool === 'eraser') {
+    studioState.isDrawing = false;
+    lastErasePoint = null;
+    if (bgStudioCanvas) {
+      studioState.currentWorkingDataUrl = bgStudioCanvas.toDataURL('image/png');
+    }
+  }
+}
+
+if (bgStudioCanvas) {
+  bgStudioCanvas.addEventListener('mousedown', startErase);
+  window.addEventListener('mousemove', moveErase);
+  window.addEventListener('mouseup', stopErase);
+
+  bgStudioCanvas.addEventListener('touchstart', startErase, { passive: false });
+  window.addEventListener('touchmove', moveErase, { passive: false });
+  window.addEventListener('touchend', stopErase);
+  window.addEventListener('touchcancel', stopErase);
+
+  bgStudioCanvas.addEventListener('mouseleave', () => {
+    const ring = document.getElementById('eraserCursorRing');
+    if (ring) ring.style.display = 'none';
+  });
 }
 
 // Download PNG Cutout
@@ -3105,5 +3230,6 @@ if (bgApplyAllCardsBtn) {
 
 </script>
 
+<div id="eraserCursorRing" style="position:fixed; pointer-events:none; border:2px solid #a855f7; background:rgba(168,85,247,0.2); border-radius:50%; transform:translate(-50%,-50%); display:none; z-index:999999; box-shadow:0 0 10px rgba(168,85,247,0.75);"></div>
 </body>
 </html>
