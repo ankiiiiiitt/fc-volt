@@ -1,0 +1,3044 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FC_VOLT — New Players & Shards Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Anton&family=Russo+One&display=swap" rel="stylesheet">
+<script src="html2canvas.min.js"></script>
+<script src="jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<style>
+  :root {
+    --bg-dark: #07040a;
+    --panel-bg: #0c0814;
+    --panel-border: #221530;
+    --accent-orange: #ff5500;
+    --accent-cyan: #00e5ff;
+    --accent-green: #00ff66;
+    --accent-yellow: #ffea00;
+    --accent-purple: #c084fc;
+    --font-heading: 'Teko', sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-display: 'Montserrat', sans-serif;
+    --font-impact: 'Anton', 'Montserrat', sans-serif;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #060309;
+    color: #edf2f9;
+    font-family: var(--font-body);
+  }
+
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* TOP NAVIGATION TOOLBAR */
+  .toolbar {
+    height: 56px;
+    background: #09060e;
+    border-bottom: 1px solid #1f142b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .brand-badge {
+    background: linear-gradient(135deg, #00e5ff, #7928ca);
+    color: #fff;
+    font-weight: 900;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    letter-spacing: 1.5px;
+    box-shadow: 0 0 14px rgba(0, 229, 255, 0.45);
+  }
+
+  .brand-text h1 {
+    font-size: 19px;
+    letter-spacing: 2px;
+    margin: 0;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  .brand-text small {
+    display: block;
+    color: #9f88b5;
+    font-size: 9.5px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+  }
+
+  .template-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 4px 0;
+  }
+
+  .nav-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #a497b5;
+    text-decoration: none;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.16s ease;
+  }
+
+  .nav-tab:hover {
+    color: #fff;
+    background: #191024;
+    border-color: #311c47;
+  }
+
+  .nav-tab.active {
+    color: #fff;
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.25), rgba(121, 40, 202, 0.25));
+    border-color: #00e5ff;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+  }
+
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 7px 14px;
+    border-radius: 7px;
+    border: 1px solid #33204a;
+    background: #140d1f;
+    color: #d1c5e0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .btn:hover {
+    background: #201430;
+    color: #fff;
+    border-color: #00e5ff;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #00e5ff 0%, #7928ca 100%);
+    color: #ffffff;
+    border: 1px solid #5eead4;
+    box-shadow: 0 0 16px rgba(0, 229, 255, 0.5);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #38bdf8 0%, #9333ea 100%);
+    box-shadow: 0 0 22px rgba(0, 229, 255, 0.7);
+  }
+
+  .btn-cyan {
+    background: linear-gradient(135deg, #00e5ff 0%, #0070f3 100%);
+    color: #020813;
+    border: 1px solid #33f0ff;
+    box-shadow: 0 0 14px rgba(0, 229, 255, 0.45);
+  }
+
+  .btn-mini {
+    padding: 5px 9px;
+    font-size: 10.5px;
+    border-radius: 6px;
+  }
+
+  /* MAIN WORKSPACE LAYOUT */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 390px 1fr;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 56px);
+  }
+
+  /* LEFT SIDEBAR CONTROLS */
+  .sidebar {
+    background: var(--panel-bg);
+    border-right: 1px solid var(--panel-border);
+    overflow-y: auto;
+    padding: 18px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .panel-card {
+    background: #0f0a18;
+    border: 1px solid #231633;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .panel-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 800;
+    color: #00e5ff;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-group label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #b2a2c4;
+  }
+
+  .input-styled {
+    background: #07040c;
+    border: 1px solid #281a3b;
+    color: #fff;
+    padding: 8px 11px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    outline: none;
+    transition: border 0.15s ease;
+  }
+
+  .input-styled:focus {
+    border-color: #00e5ff;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+  }
+
+  /* Preset Pills */
+  .presets-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .preset-pill {
+    background: #170f24;
+    border: 1px solid #2f1d47;
+    color: #d1c4e2;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 5px 9px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+
+  .preset-pill:hover {
+    background: #26163b;
+    border-color: #00e5ff;
+    color: #fff;
+  }
+
+  .preset-pill.active {
+    background: linear-gradient(135deg, #00e5ff, #7928ca);
+    color: #fff;
+    border-color: #5eead4;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+  }
+
+  /* Theme Options */
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .theme-btn {
+    background: #150e21;
+    border: 1.5px solid #2b1a3d;
+    color: #b8a8cb;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 8px 4px;
+    border-radius: 7px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+  }
+
+  .theme-btn:hover {
+    border-color: #00e5ff;
+    color: #fff;
+  }
+
+  .theme-btn.active {
+    background: linear-gradient(135deg, #00e5ff, #0070f3);
+    color: #020408;
+    border-color: #38bdf8;
+    font-weight: 900;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+  }
+
+  /* Cards Manager List */
+  .cards-manager-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .card-item-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: #09050e;
+    border: 1px solid #211530;
+    border-radius: 8px;
+    padding: 6px 9px;
+    transition: border 0.15s ease;
+  }
+
+  .card-item-row:hover {
+    border-color: #00e5ff;
+  }
+
+  .card-item-rank {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #00e5ff;
+    color: #020e18;
+    font-size: 11px;
+    font-weight: 900;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+
+  .card-item-thumb {
+    width: 32px;
+    height: 44px;
+    border-radius: 4px;
+    background: #140d1f;
+    object-fit: contain;
+    border: 1px solid #2a1b3c;
+    flex-shrink: 0;
+  }
+
+  .card-item-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .card-item-name {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-item-tag {
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #00ff66;
+    text-transform: uppercase;
+  }
+
+  .card-item-shards {
+    font-size: 11px;
+    font-weight: 900;
+    color: #00e5ff;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  /* RIGHT VIEWPORT (CANVAS STAGE) */
+  .viewport-stage {
+    background: #050307;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 20px 40px;
+  }
+
+  .stage-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1120px;
+    margin-bottom: 12px;
+    z-index: 10;
+  }
+
+  .graphic-scroll-wrapper {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+
+  /* ========================================================
+     THE POSTER GRAPHIC (DYNAMIC CANVAS)
+     ======================================================== */
+  #playersGraphic {
+    width: 1080px;
+    min-height: 1350px;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    padding: 34px 36px 30px 36px;
+    box-sizing: border-box;
+    transform-origin: top center;
+    border-radius: 8px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.95);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  /* THEME BACKGROUNDS */
+  /* 1. Champions Stadium Pitch */
+  #playersGraphic[data-theme="stadium"] {
+    background-color: #030a1c;
+    background-image: 
+      radial-gradient(ellipse at 50% 10%, rgba(0, 229, 255, 0.45) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(0, 100, 255, 0.35) 0%, transparent 70%),
+      linear-gradient(180deg, #051433 0%, #030c1f 60%, #020712 100%);
+  }
+
+  /* 2. Sunset Flame / Lava */
+  #playersGraphic[data-theme="sunset"] {
+    background-color: #ff3c00;
+    background-image: 
+      radial-gradient(ellipse at 50% 0%, rgba(255, 230, 0, 0.45) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(255, 30, 0, 0.8) 0%, transparent 70%),
+      linear-gradient(180deg, #ff5500 0%, #ff2a00 50%, #d41800 100%);
+  }
+
+  /* 3. Pitch Emerald Green */
+  #playersGraphic[data-theme="pitch"] {
+    background-color: #03140a;
+    background-image: 
+      radial-gradient(ellipse at 50% 15%, rgba(0, 255, 102, 0.35) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(0, 200, 80, 0.45) 0%, transparent 70%),
+      linear-gradient(180deg, #072e17 0%, #041a0d 60%, #020f07 100%);
+  }
+
+  /* 4. Golden Trophy Ballon d'Or */
+  #playersGraphic[data-theme="gold"] {
+    background-color: #171103;
+    background-image: 
+      radial-gradient(ellipse at 50% 10%, rgba(255, 215, 0, 0.5) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(212, 175, 55, 0.35) 0%, transparent 70%),
+      linear-gradient(180deg, #3d2c05 0%, #201703 60%, #0a0701 100%);
+  }
+
+  /* 5. Cyber Violet */
+  #playersGraphic[data-theme="violet"] {
+    background-color: #120320;
+    background-image: 
+      radial-gradient(ellipse at 50% 10%, rgba(192, 132, 252, 0.45) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(255, 0, 128, 0.4) 0%, transparent 70%),
+      linear-gradient(180deg, #2b0642 0%, #170324 60%, #0c0113 100%);
+  }
+
+  /* 6. Stealth Dark */
+  #playersGraphic[data-theme="dark"] {
+    background-color: #060608;
+    background-image: 
+      radial-gradient(ellipse at 50% 10%, rgba(0, 229, 255, 0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.08) 0%, transparent 70%),
+      linear-gradient(180deg, #121217 0%, #0a0a0d 60%, #040405 100%);
+  }
+
+  /* Custom Wallpaper Overlay */
+  .wallpaper-dimmer {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Speed light rays & dynamic diagonal cuts */
+  .graphic-backdrop-shapes {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+  }
+
+  .graphic-ray-1 {
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 600px;
+    height: 1400px;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0.12) 0%, transparent 45%);
+    transform: rotate(20deg);
+  }
+
+  .graphic-ray-2 {
+    position: absolute;
+    top: -50px;
+    right: -80px;
+    width: 500px;
+    height: 1200px;
+    background: linear-gradient(245deg, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
+    transform: rotate(-15deg);
+  }
+
+  /* HEADER TITLES */
+  .showcase-header {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .showcase-main-title {
+    font-family: var(--font-impact, 'Anton', 'Impact', sans-serif);
+    font-size: 62px;
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0;
+    text-align: center;
+    text-shadow: 
+      -3px -3px 0 #000,
+       3px -3px 0 #000,
+      -3px  3px 0 #000,
+       3px  3px 0 #000,
+       0 4px 0 #000,
+       0 6px 18px rgba(0,0,0,0.9);
+  }
+
+  .showcase-sub-pill {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 24px;
+    border-radius: 30px;
+    background: #020204;
+    border: 2px solid #00e5ff;
+    box-shadow: 0 4px 15px rgba(0, 229, 255, 0.5);
+  }
+
+  .showcase-sub-text {
+    font-family: var(--font-impact, 'Anton', 'Impact', sans-serif);
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #00e5ff;
+    text-transform: uppercase;
+    line-height: 1;
+    text-shadow: 
+      -2px -2px 0 #000,
+       2px -2px 0 #000,
+      -2px  2px 0 #000,
+       2px  2px 0 #000,
+       0 0 10px rgba(0, 229, 255, 0.8);
+  }
+
+  /* ========================================================
+     DYNAMIC PLAYERS GRID
+     ======================================================== */
+  .showcase-grid {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: grid;
+    gap: 20px;
+    justify-content: center;
+    align-content: start;
+    width: 100%;
+  }
+
+  .showcase-grid[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }
+  .showcase-grid[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
+  .showcase-grid[data-cols="4"] { grid-template-columns: repeat(4, 1fr); }
+  .showcase-grid[data-cols="5"] { grid-template-columns: repeat(5, 1fr); }
+
+  /* CARD UNIT */
+  .player-card-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.16s ease;
+  }
+
+  .player-card-unit:hover {
+    transform: translateY(-4px) scale(1.02);
+  }
+
+  /* Top Label above card */
+  .card-top-tag {
+    font-family: var(--font-impact, 'Anton', 'Impact', sans-serif);
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    line-height: 1;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 
+      -2.5px -2.5px 0 #000,
+       2.5px -2.5px 0 #000,
+      -2.5px  2.5px 0 #000,
+       2.5px  2.5px 0 #000,
+       0 3px 6px rgba(0,0,0,0.9);
+  }
+
+  .card-top-tag.tag-green { color: #00ff66; text-shadow: -2.5px -2.5px 0 #000, 2.5px -2.5px 0 #000, -2.5px 2.5px 0 #000, 2.5px 2.5px 0 #000, 0 0 12px rgba(0,255,102,0.8); }
+  .card-top-tag.tag-yellow { color: #ffe600; text-shadow: -2.5px -2.5px 0 #000, 2.5px -2.5px 0 #000, -2.5px 2.5px 0 #000, 2.5px 2.5px 0 #000, 0 0 12px rgba(255,230,0,0.8); }
+  .card-top-tag.tag-cyan { color: #00e5ff; text-shadow: -2.5px -2.5px 0 #000, 2.5px -2.5px 0 #000, -2.5px 2.5px 0 #000, 2.5px 2.5px 0 #000, 0 0 12px rgba(0,229,255,0.8); }
+  .card-top-tag.tag-white { color: #ffffff; text-shadow: -2.5px -2.5px 0 #000, 2.5px -2.5px 0 #000, -2.5px 2.5px 0 #000, 2.5px 2.5px 0 #000, 0 3px 6px #000; }
+  .card-top-tag.tag-orange { color: #ff6600; text-shadow: -2.5px -2.5px 0 #000, 2.5px -2.5px 0 #000, -2.5px 2.5px 0 #000, 2.5px 2.5px 0 #000, 0 0 12px rgba(255,102,0,0.8); }
+  .card-top-tag.tag-purple { color: #c084fc; text-shadow: -2.5px -2.5px 0 #000, 2.5px -2.5px 0 #000, -2.5px 2.5px 0 #000, 2.5px 2.5px 0 #000, 0 0 12px rgba(192,132,252,0.8); }
+
+  /* Card Display Box */
+  .card-box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 270px;
+  }
+
+  .showcase-grid[data-cols="4"] .card-box { width: 220px; height: 240px; }
+  .showcase-grid[data-cols="5"] .card-box { width: 180px; height: 200px; }
+
+  /* Card Image */
+  .card-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.85));
+    transition: transform 0.16s ease;
+  }
+
+  /* Empty Card Placeholder */
+  .card-empty-placeholder {
+    width: 82%;
+    height: 86%;
+    border: 2.5px dashed rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.18s ease;
+    cursor: pointer;
+  }
+
+  .player-card-unit:hover .card-empty-placeholder {
+    border-color: #00e5ff;
+    background: rgba(0, 229, 255, 0.12);
+    box-shadow: 0 0 16px rgba(0, 229, 255, 0.35);
+    transform: scale(1.02);
+  }
+
+  .placeholder-plus {
+    font-size: 34px;
+    line-height: 1;
+    color: #00e5ff;
+    font-weight: 900;
+  }
+
+  .placeholder-lbl {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #edf2f9;
+  }
+
+  /* Card Hover Actions */
+  .card-hover-actions {
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all 0.18s ease;
+    z-index: 8;
+  }
+
+  .player-card-unit:hover .card-hover-actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Bottom Shards Price Badge */
+  .card-shards-pill {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #020712;
+    border: 2.5px solid #00e5ff;
+    border-radius: 40px;
+    padding: 3px 14px 3px 6px;
+    box-shadow: 0 0 18px rgba(0, 229, 255, 0.7), 0 4px 10px rgba(0,0,0,0.8);
+    z-index: 4;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  .card-shards-pill:hover {
+    transform: scale(1.06);
+    border-color: #38bdf8;
+  }
+
+  .shard-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  .shard-price-val {
+    font-family: var(--font-impact, 'Anton', 'Impact', sans-serif);
+    font-size: 26px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+    letter-spacing: 0.8px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+  }
+
+  .card-player-caption {
+    margin-top: 4px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #d1c4e2;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* MODAL STYLES */
+  .custom-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 2, 7, 0.88);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+  }
+
+  .custom-modal-backdrop.hidden {
+    display: none !important;
+  }
+
+  .custom-modal {
+    background: #0c0816;
+    border: 1px solid #311c47;
+    border-radius: 12px;
+    width: 520px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 30px rgba(0, 229, 255, 0.2);
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #231633;
+    padding-bottom: 10px;
+  }
+
+  .modal-title {
+    font-size: 14px;
+    font-weight: 900;
+    color: #00e5ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .modal-close {
+    background: transparent;
+    border: none;
+    color: #a497b5;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .modal-close:hover {
+    color: #fff;
+    background: #1f142b;
+  }
+
+  .dropzone {
+    border: 2px dashed #3a2254;
+    border-radius: 8px;
+    padding: 18px 12px;
+    text-align: center;
+    background: #08040f;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .dropzone:hover {
+    border-color: #00e5ff;
+    background: #11081f;
+  }
+
+  /* TOAST NOTIFICATION */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #120921;
+    border: 1px solid #00e5ff;
+    color: #fff;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(0, 229, 255, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 9999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    pointer-events: none;
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* BG REMOVER STUDIO MODAL CSS */
+  .bg-studio-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 12, 0.92);
+    backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    padding: 16px;
+  }
+  .bg-studio-backdrop.hidden {
+    display: none !important;
+  }
+  .bg-studio-modal {
+    background: #080d16;
+    border: 1.5px solid #a855f7;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(168, 85, 247, 0.35);
+    border-radius: 18px;
+    width: 1040px;
+    max-width: 96vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  .bg-studio-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: #0d1524;
+    border-bottom: 1px solid #1f2b40;
+  }
+  .bg-studio-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bg-studio-title h3 {
+    margin: 0;
+    font-family: 'Anton', 'Montserrat', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.8px;
+    background: linear-gradient(90deg, #c084fc, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .bg-studio-title small {
+    display: block;
+    color: #8fa5c5;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .bg-studio-close {
+    background: #141f30;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    line-height: 1;
+    padding: 0;
+  }
+  .bg-studio-close:hover {
+    background: #ff2a55;
+    border-color: #ff4466;
+    color: #fff;
+  }
+  .bg-studio-body {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    flex: 1;
+    overflow: hidden;
+    min-height: 480px;
+  }
+  .bg-preview-stage {
+    background: #040810;
+    border-right: 1px solid #1a2538;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .canvas-stage-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #0a101c;
+    border-bottom: 1px solid #182335;
+    z-index: 10;
+  }
+  .stage-theme-toggles {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .stage-theme-toggles button {
+    background: #131b2a;
+    border: 1px solid #233247;
+    color: #9cb1cb;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .stage-theme-toggles button:hover {
+    background: #1d293d;
+    color: #fff;
+  }
+  .stage-theme-toggles button.active {
+    background: #a855f7;
+    color: #fff;
+    border-color: #d8b4fe;
+    font-weight: 900;
+  }
+  .zoom-toggles {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #9cb1cb;
+    font-weight: 700;
+  }
+  .zoom-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 4px;
+    background: #151e2e;
+    border: 1px solid #25354c;
+    color: #cbd5e1;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-weight: 800;
+  }
+  .canvas-stage-viewport {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .canvas-stage-viewport.backdrop-checker {
+    background-color: #0d131f;
+    background-image: 
+      linear-gradient(45deg, #182233 25%, transparent 25%), 
+      linear-gradient(-45deg, #182233 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, #182233 75%), 
+      linear-gradient(-45deg, transparent 75%, #182233 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  }
+  .canvas-stage-viewport.backdrop-stadium {
+    background-color: #03140a;
+    background-image: radial-gradient(circle at 50% 50%, rgba(0, 255, 102, 0.25) 0%, transparent 70%), linear-gradient(180deg, #072e17 0%, #020f07 100%);
+  }
+  .canvas-stage-viewport.backdrop-black {
+    background: #000000;
+  }
+  .canvas-stage-viewport.backdrop-white {
+    background: #ffffff;
+  }
+  #bgStudioCanvas {
+    max-width: 90%;
+    max-height: 85%;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.8));
+    transition: transform 0.08s ease-out;
+    transform-origin: center center;
+    cursor: grab;
+  }
+  .canvas-info-badge {
+    position: absolute;
+    bottom: 50px;
+    left: 16px;
+    background: rgba(8, 13, 22, 0.85);
+    border: 1px solid #23344d;
+    color: #9cb1cb;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+  }
+  .canvas-stage-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #090e18;
+    border-top: 1px solid #1a2538;
+    z-index: 10;
+  }
+  .touchup-btn {
+    background: #131c2b;
+    border: 1px solid #233349;
+    color: #cbd5e1;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s ease;
+  }
+  .touchup-btn.active {
+    background: #a855f7;
+    border-color: #c084fc;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+  }
+  .bg-controls-panel {
+    background: #0a0f1a;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 18px;
+    gap: 14px;
+    overflow-y: auto;
+  }
+  .bg-section-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: #c084fc;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .card-picker-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .card-picker-select {
+    flex: 1;
+    background: #101726;
+    border: 1.5px solid #2c3c54;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    outline: none;
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .mode-card {
+    background: #101726;
+    border: 1.5px solid #1f2c40;
+    border-radius: 8px;
+    padding: 9px 10px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .mode-card:hover {
+    border-color: #a855f7;
+    background: #141e32;
+  }
+  .mode-card.active {
+    border-color: #c084fc;
+    background: rgba(168, 85, 247, 0.16);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+  }
+  .mode-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .mode-desc {
+    font-size: 9.5px;
+    color: #8da4c4;
+    line-height: 1.3;
+  }
+  .slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #cbd5e1;
+    font-weight: 700;
+  }
+  .tuning-slider {
+    width: 100%;
+    accent-color: #a855f7;
+    cursor: pointer;
+  }
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #cbd5e1;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .checkbox-row input {
+    accent-color: #a855f7;
+    width: 16px;
+    height: 16px;
+  }
+  .preset-btns-row {
+    display: flex;
+    gap: 6px;
+  }
+  .preset-btn {
+    flex: 1;
+    background: #121927;
+    border: 1px solid #233349;
+    color: #cbd5e1;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 6px 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+  }
+  .preset-btn:hover {
+    background: #1b263b;
+    border-color: #a855f7;
+    color: #fff;
+  }
+  .bg-studio-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: #0d1524;
+    border-top: 1px solid #1f2b40;
+  }
+  .footer-actions-left {
+    display: flex;
+    gap: 8px;
+  }
+  .footer-actions-right {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-apply-one {
+    background: linear-gradient(135deg, #00e676, #00b0ff);
+    color: #030810;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 14px rgba(0, 230, 118, 0.4);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-apply-all {
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    color: #ffffff;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.45);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-download-cutout {
+    background: #151e2e;
+    border: 1px solid #2b3e59;
+    color: #cbd5e1;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- TOP TOOLBAR -->
+  <header class="toolbar">
+    <div style="display:flex; align-items:center; gap:16px;">
+      <a href="index.html" class="brand">
+        <span class="brand-badge">PRO</span>
+        <div class="brand-text">
+          <h1>FC_VOLT</h1>
+          <small>NEW PLAYERS & SHARDS SHOWCASE</small>
+        </div>
+      </a>
+
+      <!-- Template Navigation -->
+      <nav class="template-nav">
+        <a href="index.html" class="nav-tab" title="Tier List Maker">📊 Tier List</a>
+        <a href="top10.html" class="nav-tab" title="Top 10 Rankings">🔟 Top 10</a>
+        <a href="team11.html" class="nav-tab" title="Best Team 11 Squad">⚽ Best Team 11</a>
+        <a href="shards.html" class="nav-tab" title="Shard Comparison Battles">💎 Shard Comparison</a>
+        <a href="claim.html" class="nav-tab" title="Top 10 Must Claim Cards">🔥 Top 10 Must Claim</a>
+        <button class="nav-tab active" title="New Players Shards Showcase">✨ New Shards Players</button>
+      </nav>
+    </div>
+
+    <!-- Actions -->
+    <div class="top-actions">
+      <button type="button" class="btn btn-mini" onclick="addNewPlayer()">
+        ＋ Add Player
+      </button>
+      <button type="button" id="downloadPngBtn" class="btn btn-mini btn-primary">
+        ⬇️ Download PNG (HD)
+      </button>
+      <button type="button" id="downloadJpgBtn" class="btn btn-mini">
+        🖼️ Download JPG
+      </button>
+    </div>
+  </header>
+
+  <!-- WORKSPACE BODY -->
+  <main class="main-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+
+      <!-- PRESET TITLES -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>⚡ Title Presets</span>
+        </div>
+        <div class="presets-cloud">
+          <button type="button" class="preset-pill active" onclick="applyTitlePreset('new_releases')">✨ New Releases</button>
+          <button type="button" class="preset-pill" onclick="applyTitlePreset('shards_market')">💎 Shards Market</button>
+          <button type="button" class="preset-pill" onclick="applyTitlePreset('event_players')">🏆 Event Players</button>
+          <button type="button" class="preset-pill" onclick="applyTitlePreset('budget_beasts')">⚡ Budget Beasts</button>
+          <button type="button" class="preset-pill" onclick="applyTitlePreset('must_buy')">🔥 Must Claim</button>
+        </div>
+      </section>
+
+      <!-- HEADINGS CONFIGURATION -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>🏷️ Header Titles</span>
+        </div>
+        <div class="form-group">
+          <label>Main Headline</label>
+          <input type="text" id="titleMainInput" class="input-styled" value="NEW SHARDS PLAYERS">
+        </div>
+        <div class="form-group">
+          <label>Subtitle Capsule Text</label>
+          <input type="text" id="titleSubInput" class="input-styled" value="FC MOBILE 25">
+        </div>
+      </section>
+
+      <!-- GRID LAYOUT & COLUMNS -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>📐 Layout & Grid</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div class="form-group">
+            <label>Columns</label>
+            <select id="gridColsSelect" class="input-styled" onchange="setGridColumns(this.value)">
+              <option value="2">2 Columns</option>
+              <option value="3" selected>3 Columns</option>
+              <option value="4">4 Columns</option>
+              <option value="5">5 Columns</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Aspect Ratio</label>
+            <select id="aspectRatioSelect" class="input-styled" onchange="setCanvasAspect(this.value)">
+              <option value="4:5" selected>4:5 (1080×1350)</option>
+              <option value="9:16">9:16 Story (1080×1920)</option>
+              <option value="1:1">1:1 Square (1080×1080)</option>
+              <option value="16:9">16:9 Banner (1920×1080)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- BACKGROUND THEMES & CUSTOM WALLPAPER -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>🎨 Poster Background</span>
+        </div>
+        <div class="theme-grid">
+          <button type="button" class="theme-btn active" data-theme="stadium" onclick="setPosterTheme('stadium')">🏟️ Champions</button>
+          <button type="button" class="theme-btn" data-theme="sunset" onclick="setPosterTheme('sunset')">🍊 Sunset Flame</button>
+          <button type="button" class="theme-btn" data-theme="pitch" onclick="setPosterTheme('pitch')">⚽ Pitch Green</button>
+          <button type="button" class="theme-btn" data-theme="gold" onclick="setPosterTheme('gold')">🏆 Trophy Gold</button>
+          <button type="button" class="theme-btn" data-theme="violet" onclick="setPosterTheme('violet')">⚡ Cyber Violet</button>
+          <button type="button" class="theme-btn" data-theme="dark" onclick="setPosterTheme('dark')">⬛ Stealth Dark</button>
+        </div>
+
+        <!-- Custom Wallpaper Upload -->
+        <div style="margin-top:6px; display:flex; flex-direction:column; gap:6px;">
+          <label class="btn btn-mini" style="justify-content:center; background:#181026; border-color:#3d205c; cursor:pointer;">
+            📁 Upload Custom Wallpaper Background
+            <input type="file" id="customWallpaperInput" accept="image/*" style="display:none;">
+          </label>
+          <button type="button" id="removeWallpaperBtn" class="btn btn-mini" style="display:none; color:#ff7777; justify-content:center;" onclick="removeCustomWallpaper()">
+            ❌ Remove Custom Wallpaper
+          </button>
+        </div>
+      </section>
+
+      <!-- BATCH ACTIONS -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>⚡ Quick Actions</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <button type="button" class="btn btn-mini btn-primary" onclick="addNewPlayer()" style="justify-content:center; font-size:11.5px; padding:8px 10px;">
+            ＋ Add New Player Card
+          </button>
+          <button type="button" class="btn btn-mini" onclick="openBgStudioWithCard()" style="justify-content:center; background:linear-gradient(135deg, #a855f7, #6366f1); border-color:#c084fc; color:#fff;">
+            🪄 Background Remover Studio (All Cards)
+          </button>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn btn-mini" onclick="batchSetCustomTag()" style="flex:1; justify-content:center;">
+              ✏️ Set All Tags
+            </button>
+            <button type="button" class="btn btn-mini" onclick="removeAllTopTags()" style="flex:1; justify-content:center; color:#ff7777; border-color:#552222; background:#1c0d12;">
+              🚫 Remove All Tags
+            </button>
+          </div>
+          <button type="button" class="btn btn-mini" onclick="sortCardsByPrice()" style="justify-content:center;">
+            💎 Sort by Shards Price (Low to High)
+          </button>
+        </div>
+      </section>
+
+      <!-- PLAYERS COLLECTION MANAGER -->
+      <section class="panel-card">
+        <div class="panel-title">
+          <span>🎴 Players Collection (<span id="playersCount">0</span>)</span>
+          <span style="font-size:10px; color:#a497b5;">Click any card to edit</span>
+        </div>
+        <div class="cards-manager-list" id="cardsManagerList">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- RESET & CLEAR -->
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-mini" style="flex:1; justify-content:center;" onclick="resetDefaultPlayers()">
+          ↺ Reset 6 Sample Slots
+        </button>
+        <button type="button" class="btn btn-mini" style="color:#ff5555; justify-content:center;" onclick="clearAllCards()">
+          🗑️ Clear All
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- RIGHT STAGE: CANVAS GRAPHIC -->
+    <section class="viewport-stage">
+      <div class="stage-bar">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:11px; font-weight:800; color:#00e5ff;">CANVAS RATIO:</span>
+          <span id="ratioDisplay" style="font-size:11px; font-weight:900; color:#fff; background:#140c21; padding:3px 8px; border-radius:5px; border:1px solid #28183c;">4:5 PORTRAIT</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-mini" onclick="addNewPlayer()">＋ Add Card</button>
+          <button type="button" class="btn btn-mini btn-cyan" onclick="openBgStudioWithCard()">🪄 Studio Cutout</button>
+        </div>
+      </div>
+
+      <div class="graphic-scroll-wrapper" id="graphicScrollWrapper">
+        <div id="playersGraphic" data-theme="stadium">
+
+          <!-- Background Wallpaper Overlay (If custom image uploaded) -->
+          <div class="wallpaper-dimmer" id="wallpaperDimmer" style="display:none;"></div>
+
+          <!-- Light rays & dynamic diagonal cuts -->
+          <div class="graphic-backdrop-shapes">
+            <div class="graphic-ray-1"></div>
+            <div class="graphic-ray-2"></div>
+          </div>
+
+          <!-- HEADER -->
+          <div class="showcase-header">
+            <h2 id="gMainTitle" class="showcase-main-title">NEW SHARDS PLAYERS</h2>
+            <div class="showcase-sub-pill">
+              <span id="gSubTitle" class="showcase-sub-text">FC MOBILE 25</span>
+            </div>
+          </div>
+
+          <!-- DYNAMIC GRID -->
+          <div class="showcase-grid" id="showcaseGrid" data-cols="3">
+            <!-- Dynamically populated player cards -->
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<!-- EDIT PLAYER MODAL -->
+<div class="custom-modal-backdrop hidden" id="playerEditModal">
+  <div class="custom-modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalCardTitle">Edit Player Card</div>
+      <button type="button" class="modal-close" onclick="closeEditModal()">&times;</button>
+    </div>
+
+    <!-- Image Upload Area -->
+    <div class="form-group">
+      <label>Card Image</label>
+      <div class="dropzone" id="cardDropzone">
+        <div style="font-size:24px;">📁</div>
+        <div style="font-size:12px; font-weight:800; color:#fff;">Click or drag to upload card image</div>
+        <small style="color:#9f88b5;">Supports PNG transparent cutouts & screenshot cards</small>
+      </div>
+      <input type="file" id="cardFileInput" accept="image/*" style="display:none;">
+    </div>
+
+    <!-- Active Preview & Quick Studio -->
+    <div id="modalActivePreviewWrap" style="display:flex; align-items:center; gap:12px; background:#07040c; border:1px solid #241538; padding:8px 12px; border-radius:8px;">
+      <img id="modalPreviewThumb" src="" alt="Card" style="width:50px; height:70px; object-fit:contain; border-radius:4px; background:#120a1c;">
+      <div style="flex:1; display:flex; flex-direction:column; gap:5px;">
+        <button type="button" id="modalAutoDetectBtn" class="btn btn-mini btn-cyan" style="width:100%; justify-content:center;">
+          🔍 Auto-Detect Name & Rating (AI OCR)
+        </button>
+        <div style="display:flex; gap:6px;">
+          <button type="button" id="modalRemoveBgBtn" class="btn btn-mini" onclick="openBgStudioWithCard(currentEditingId)" style="flex:1; justify-content:center; background:linear-gradient(135deg, #a855f7, #6366f1); color:#fff; border:none; box-shadow:0 0 12px rgba(168,85,247,0.4);">
+            🪄 Remove Background (Studio)
+          </button>
+          <button type="button" id="modalBatchRemoveBgBtn" class="btn btn-mini btn-primary" onclick="openBgStudioWithCard(currentEditingId)" style="flex:1; justify-content:center;">
+            ✨ Studio: Apply To All
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shard Price (Directly editable) -->
+    <div class="form-group">
+      <label>💎 Shards Price (Formatted with Comma)</label>
+      <input type="text" id="modalShardInput" class="input-styled" placeholder="e.g. 25,000" value="25,000">
+    </div>
+
+    <!-- Top Label -->
+    <div class="form-group">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <label>🏷️ Top Label Tag</label>
+        <button type="button" class="btn btn-mini" onclick="clearModalTag()" style="padding:2px 8px; font-size:10px; color:#ff7777; border-color:#552222; background:#1c0d12;">
+          🚫 Remove / Hide Tag
+        </button>
+      </div>
+      <input type="text" id="modalTagInput" class="input-styled" placeholder="Leave empty to remove tag completely" value="">
+      <div class="presets-cloud" style="margin-top:4px;">
+        <span class="preset-pill" onclick="setModalTagPreset('NEW', 'tag-green')">🟢 NEW</span>
+        <span class="preset-pill" onclick="setModalTagPreset('HOT', 'tag-orange')">🟠 HOT</span>
+        <span class="preset-pill" onclick="setModalTagPreset('MUST CLAIM', 'tag-green')">🟢 MUST CLAIM</span>
+        <span class="preset-pill" onclick="setModalTagPreset('CHEAP BEST', 'tag-yellow')">🟡 CHEAP BEST</span>
+        <span class="preset-pill" onclick="setModalTagPreset('99+ OVR', 'tag-cyan')">🔵 99+ OVR</span>
+        <span class="preset-pill" onclick="setModalTagPreset('ICON', 'tag-purple')">🟣 ICON</span>
+        <span class="preset-pill" onclick="clearModalTag()" style="border-color:#ff4444; color:#ff7777;">🚫 No Tag (Clear)</span>
+      </div>
+    </div>
+
+    <!-- Tag Color Selection -->
+    <div class="form-group">
+      <label>Tag Color</label>
+      <select id="modalTagColorSelect" class="input-styled">
+        <option value="tag-green">🟢 Neon Green</option>
+        <option value="tag-yellow">🟡 Electric Yellow</option>
+        <option value="tag-cyan">🔵 Cyan Glow</option>
+        <option value="tag-white">⚪ Pure White</option>
+        <option value="tag-orange">🟠 Flame Orange</option>
+        <option value="tag-purple">🟣 Cyber Purple</option>
+      </select>
+    </div>
+
+    <!-- Player Name & OVR -->
+    <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:8px;">
+      <div class="form-group">
+        <label>Player Name</label>
+        <input type="text" id="modalNameInput" class="input-styled" placeholder="e.g. RONALDINHO">
+      </div>
+      <div class="form-group">
+        <label>OVR</label>
+        <input type="text" id="modalOvrInput" class="input-styled" placeholder="124">
+      </div>
+      <div class="form-group">
+        <label>POS</label>
+        <input type="text" id="modalPosInput" class="input-styled" placeholder="LW">
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+      <button type="button" class="btn btn-mini" style="color:#ff5555; border-color:#552222;" onclick="deleteCurrentModalPlayer()">
+        🗑️ Delete Player
+      </button>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-mini" onclick="closeEditModal()">Cancel</button>
+        <button type="button" class="btn btn-mini btn-primary" onclick="saveEditModal()">Save Card</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REMOVE BACKGROUND & OUTLIERS STUDIO MODAL -->
+<div class="custom-modal-backdrop bg-studio-backdrop hidden" id="bgStudioModal">
+  <div class="bg-studio-modal">
+    <div class="bg-studio-header">
+      <div class="bg-studio-title">
+        <span style="font-size: 26px;">🪄</span>
+        <div>
+          <h3>REMOVE BACKGROUND & OUTLIERS STUDIO</h3>
+          <small>Clean rectangular margins, black/white borders & isolate cards like FC Mobile transparent cutouts</small>
+        </div>
+      </div>
+      <button type="button" class="bg-studio-close" id="closeBgStudioBtn" title="Close Studio">&times;</button>
+    </div>
+
+    <div class="bg-studio-body">
+      <!-- Left: Interactive Canvas Preview Stage -->
+      <div class="bg-preview-stage">
+        <div class="canvas-stage-bar">
+          <div class="stage-theme-toggles">
+            <span style="font-size: 10px; color: #8fa5c5; font-weight: 800; margin-right: 4px;">BACKDROP:</span>
+            <button type="button" class="theme-btn active" data-stage="checker" id="stageBtnChecker" title="Checkered pattern">🏁 Grid</button>
+            <button type="button" class="theme-btn" data-stage="stadium" id="stageBtnStadium" title="Live Stadium Grass">🏟️ Pitch</button>
+            <button type="button" class="theme-btn" data-stage="black" id="stageBtnBlack" title="Solid Dark">⬛ Black</button>
+            <button type="button" class="theme-btn" data-stage="white" id="stageBtnWhite" title="Solid Light">⬜ White</button>
+          </div>
+          <div class="zoom-toggles">
+            <button type="button" class="zoom-btn" id="zoomOutBtn" title="Zoom Out">−</button>
+            <span id="zoomLevelDisplay">100%</span>
+            <button type="button" class="zoom-btn" id="zoomInBtn" title="Zoom In">＋</button>
+            <button type="button" class="zoom-btn" id="zoomResetBtn" title="Reset Zoom">↺</button>
+          </div>
+        </div>
+
+        <div class="canvas-stage-viewport backdrop-checker" id="bgCanvasContainer">
+          <canvas id="bgStudioCanvas"></canvas>
+          <div class="canvas-info-badge" id="canvasInfoBadge">Interactive Studio Ready</div>
+        </div>
+
+        <div class="canvas-stage-tools">
+          <span style="font-size: 10px; font-weight: 800; color: #c084fc;">TOOLS:</span>
+          <button type="button" class="touchup-btn active" id="toolPanBtn">🖐️ Inspect</button>
+          <button type="button" class="touchup-btn" id="toolEyedropperBtn">🎨 Eyedropper</button>
+          <button type="button" class="touchup-btn" id="toolEraserBtn">🧹 Eraser</button>
+          <div id="eraserSizeWrap" style="display: none; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; color: #8fa5c5;">Size:</span>
+            <input type="range" id="eraserSizeRange" min="4" max="60" value="18" style="width: 70px;">
+            <span id="eraserSizeVal" style="font-size: 10px; color: #cbd5e1;">18px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Tuning & Mode Controls -->
+      <div class="bg-controls-panel">
+        <div>
+          <div class="bg-section-title"><span>🎴</span> 1. Select Card To Clean</div>
+          <div class="card-picker-row">
+            <select class="card-picker-select" id="bgCardSelect">
+              <!-- Dynamically populated -->
+            </select>
+            <label for="bgUploadInput" class="btn-sample-card" style="background: #182438; color: #cbd5e1; border: 1px dashed #304460; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+              📁 Upload New Image To Studio
+            </label>
+            <input type="file" id="bgUploadInput" class="hidden" accept="image/*" style="display:none;">
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>⚙️</span> 2. Background & Outliers Removal Mode</div>
+          <div class="mode-grid">
+            <div class="mode-card active" data-mode="auto" id="modeAuto">
+              <div class="mode-header">🪄 Auto Detect</div>
+              <div class="mode-desc">Flood fills from borders inward. Protects white/dark kits and details inside.</div>
+            </div>
+            <div class="mode-card" data-mode="white" id="modeWhite">
+              <div class="mode-header">⚪ Remove White</div>
+              <div class="mode-desc">Removes bright/white screenshot backgrounds and rectangular margins.</div>
+            </div>
+            <div class="mode-card" data-mode="black" id="modeBlack">
+              <div class="mode-header">⚫ Remove Black</div>
+              <div class="mode-desc">Cleans black screenshot bars, letterboxing & dark margins.</div>
+            </div>
+            <div class="mode-card" data-mode="color" id="modeColor">
+              <div class="mode-header">🎨 Picked Color</div>
+              <div class="mode-desc">Click eyedropper or sample canvas to key out an exact outlier color.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>🎚️</span> 3. Edge & Tolerance Tuning</div>
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Color Tolerance:</span>
+              <span id="tolValDisplay">28%</span>
+            </div>
+            <input type="range" class="tuning-slider" id="bgTolRange" min="5" max="80" value="28">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Fringe Choke / Halo Trim:</span>
+              <span id="chokeValDisplay">1 px</span>
+            </div>
+            <input type="range" class="tuning-slider" id="bgChokeRange" min="0" max="6" value="1">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Edge Feather / Soften:</span>
+              <span id="featherValDisplay">1 px</span>
+            </div>
+            <input type="range" class="tuning-slider" id="bgFeatherRange" min="0" max="4" value="1">
+          </div>
+          <label class="checkbox-row">
+            <input type="checkbox" id="bgAutoCropCheck" checked>
+            <span>✂️ Auto-Crop Outer Padding</span>
+          </label>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>⚡</span> 4. Instant Clean Presets</div>
+          <div class="preset-btns-row">
+            <button type="button" class="preset-btn" id="presetCleanWhite">⚪ Clean White</button>
+            <button type="button" class="preset-btn" id="presetCleanBlack">⚫ Clean Black</button>
+            <button type="button" class="preset-btn" id="presetRevert">↺ Revert Original</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-studio-footer">
+      <div class="footer-actions-left">
+        <button type="button" class="btn-download-cutout" id="bgDownloadCutoutBtn">💾 Download PNG</button>
+        <button type="button" class="btn-download-cutout" id="bgCloseCancelBtn">✕ Cancel</button>
+      </div>
+
+      <div class="footer-actions-right">
+        <button type="button" class="btn-apply-all" id="bgApplyAllCardsBtn" title="Clean and update all cards">
+          ✨ APPLY TO ALL CARDS
+        </button>
+        <button type="button" class="btn-apply-one" id="bgApplyCurrentBtn" title="Apply clean cutout to the selected card">
+          ✅ APPLY TO SELECTED CARD
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast">✨ Toast message</div>
+
+<script>
+// ========================================================
+// STATE MANAGEMENT & DATA
+// ========================================================
+function uid() {
+  return 'card_' + Math.random().toString(36).substr(2, 9);
+}
+
+const DEFAULT_PLAYERS = [
+  { id: uid(), name: 'RONALDINHO', ovr: '124', pos: 'LW', shards: '45,000', tag: 'NEW', tagColor: 'tag-green', image: '' },
+  { id: uid(), name: 'CRUYFF', ovr: '124', pos: 'CF', shards: '52,000', tag: 'HOT', tagColor: 'tag-orange', image: '' },
+  { id: uid(), name: 'ZIDANE', ovr: '123', pos: 'CAM', shards: '38,000', tag: 'ICON', tagColor: 'tag-purple', image: '' },
+  { id: uid(), name: 'MALDONADO', ovr: '122', pos: 'CB', shards: '18,500', tag: 'CHEAP BEST', tagColor: 'tag-yellow', image: '' },
+  { id: uid(), name: 'BARESI', ovr: '122', pos: 'CB', shards: '14,200', tag: 'MUST CLAIM', tagColor: 'tag-green', image: '' },
+  { id: uid(), name: 'GULLIT', ovr: '123', pos: 'CM', shards: '48,000', tag: '99+ OVR', tagColor: 'tag-cyan', image: '' }
+];
+
+let state = {
+  mainTitle: 'NEW SHARDS PLAYERS',
+  subTitle: 'FC MOBILE 25',
+  theme: 'stadium',
+  customWallpaper: '',
+  columns: 3,
+  aspectRatio: '4:5',
+  cards: JSON.parse(JSON.stringify(DEFAULT_PLAYERS))
+};
+
+let currentEditingId = null;
+
+// ========================================================
+// FORMATTING & HELPERS
+// ========================================================
+function formatNumber(num) {
+  const n = parseInt(String(num).replace(/[^0-9]/g, ''), 10);
+  return isNaN(n) ? '0' : n.toLocaleString('en-US');
+}
+
+function showToast(msg, icon = '✨') {
+  const t = document.getElementById('toast');
+  t.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = ev => resolve(ev.target.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ========================================================
+// CORE RENDERING
+// ========================================================
+function render() {
+  // Update Titles
+  document.getElementById('gMainTitle').textContent = state.mainTitle;
+  document.getElementById('gSubTitle').textContent = state.subTitle;
+  document.getElementById('titleMainInput').value = state.mainTitle;
+  document.getElementById('titleSubInput').value = state.subTitle;
+
+  // Update Theme & Wallpaper
+  const graphic = document.getElementById('playersGraphic');
+  graphic.setAttribute('data-theme', state.theme);
+  const dimmer = document.getElementById('wallpaperDimmer');
+  const rmBtn = document.getElementById('removeWallpaperBtn');
+
+  if (state.customWallpaper) {
+    graphic.style.backgroundImage = `url(${state.customWallpaper})`;
+    dimmer.style.display = 'block';
+    rmBtn.style.display = 'block';
+  } else {
+    graphic.style.backgroundImage = '';
+    dimmer.style.display = 'none';
+    rmBtn.style.display = 'none';
+  }
+
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === state.theme);
+  });
+
+  // Aspect Ratio & Columns
+  const grid = document.getElementById('showcaseGrid');
+  grid.setAttribute('data-cols', state.columns);
+  document.getElementById('gridColsSelect').value = state.columns;
+  document.getElementById('aspectRatioSelect').value = state.aspectRatio;
+  applyAspectStyles(graphic, state.aspectRatio);
+
+  // Render Grid Cards
+  renderCardsGrid();
+
+  // Render Sidebar List
+  renderSidebarList();
+
+  adjustScale();
+  saveStorage();
+}
+
+function applyAspectStyles(el, ratio) {
+  const disp = document.getElementById('ratioDisplay');
+  if (ratio === '9:16') {
+    el.style.width = '1080px';
+    el.style.minHeight = '1920px';
+    disp.textContent = '9:16 STORY';
+  } else if (ratio === '1:1') {
+    el.style.width = '1080px';
+    el.style.minHeight = '1080px';
+    disp.textContent = '1:1 SQUARE';
+  } else if (ratio === '16:9') {
+    el.style.width = '1920px';
+    el.style.minHeight = '1080px';
+    disp.textContent = '16:9 BANNER';
+  } else {
+    // 4:5
+    el.style.width = '1080px';
+    el.style.minHeight = '1350px';
+    disp.textContent = '4:5 PORTRAIT';
+  }
+}
+
+function renderCardsGrid() {
+  const grid = document.getElementById('showcaseGrid');
+  grid.innerHTML = state.cards.map((c, idx) => {
+    const hasTag = Boolean(c.tag && c.tag.trim());
+    const tagHtml = hasTag
+      ? `<div class="card-top-tag ${c.tagColor || 'tag-green'}" ondblclick="event.stopPropagation(); quickEditTag('${c.id}')" onclick="event.stopPropagation(); openEditModal('${c.id}', 'tag')" title="Click or double-click to edit label">${c.tag}</div>`
+      : `<div class="card-top-tag tag-empty" ondblclick="event.stopPropagation(); quickEditTag('${c.id}')" onclick="event.stopPropagation(); openEditModal('${c.id}', 'tag')" title="Click to add label" style="opacity:0; height:24px; line-height:24px; margin-bottom:5px; user-select:none; cursor:pointer;">&nbsp;</div>`;
+
+    return `
+      <div class="player-card-unit" onclick="openEditModal('${c.id}')" title="Click to edit player card">
+        <!-- Top Label -->
+        ${tagHtml}
+
+        <!-- Card Box -->
+        <div class="card-box">
+          ${c.image ? `
+            <img class="card-img" src="${c.image}" alt="${c.name || 'Player'}">
+          ` : `
+            <div class="card-empty-placeholder">
+              <span class="placeholder-plus">＋</span>
+              <span class="placeholder-lbl">Upload Card</span>
+            </div>
+          `}
+
+          <!-- Hover Actions -->
+          <div class="card-hover-actions">
+            <button type="button" class="btn btn-mini btn-primary" onclick="event.stopPropagation(); openEditModal('${c.id}')">✏️ Edit</button>
+            <button type="button" class="btn btn-mini" style="color:#ff6666; border-color:#552222; background:#1c0d12;" onclick="event.stopPropagation(); deletePlayer('${c.id}')">🗑️</button>
+          </div>
+        </div>
+
+        <!-- Shards Price Badge (Clickable to edit price) -->
+        <div class="card-shards-pill" onclick="event.stopPropagation(); quickEditPrice('${c.id}')" title="Click to modify shards price">
+          <img class="shard-icon-img" src="shard_icon_hq.png" alt="Shard">
+          <span class="shard-price-val">${formatNumber(c.shards)}</span>
+        </div>
+
+        <!-- Optional Name / OVR Caption -->
+        ${(c.name || c.ovr) ? `
+          <div class="card-player-caption">${c.ovr ? `<span style="color:#00e5ff;">${c.ovr}</span> ` : ''}${c.pos ? `${c.pos} ` : ''}${c.name || ''}</div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('playersCount').textContent = state.cards.length;
+}
+
+function renderSidebarList() {
+  const container = document.getElementById('cardsManagerList');
+  container.innerHTML = state.cards.map((c, idx) => `
+    <div class="card-item-row" onclick="openEditModal('${c.id}')">
+      <div class="card-item-rank">${idx + 1}</div>
+      <img class="card-item-thumb" src="${c.image || 'shard_icon_hq.png'}" alt="${c.name}">
+      <div class="card-item-info">
+        <div class="card-item-name">${c.name || 'Slot ' + (idx + 1)} <small style="color:#00e5ff;">(${c.ovr || '--'} ${c.pos || ''})</small></div>
+        <div class="card-item-tag ${c.tagColor || 'tag-green'}">${c.tag ? c.tag : '<span style="color:#6e5b80; font-size:9px;">(No Tag)</span>'}</div>
+      </div>
+      <div class="card-item-shards">
+        <img src="shard_icon_hq.png" style="width:14px; height:14px;">
+        ${formatNumber(c.shards)}
+      </div>
+      <button type="button" class="btn btn-mini" style="padding:3px 7px;" onclick="event.stopPropagation(); openEditModal('${c.id}')">✏️</button>
+      <button type="button" class="btn btn-mini" style="padding:3px 7px; color:#ff6666;" onclick="event.stopPropagation(); deletePlayer('${c.id}')">🗑️</button>
+    </div>
+  `).join('');
+}
+
+// Responsive Scale
+function adjustScale() {
+  const graphic = document.getElementById('playersGraphic');
+  const wrapper = document.getElementById('graphicScrollWrapper');
+  if (!graphic || !wrapper) return;
+
+  const w = graphic.offsetWidth || 1080;
+  const availW = wrapper.clientWidth - 40;
+  if (availW < w) {
+    const scale = Math.max(0.25, availW / w);
+    graphic.style.transform = `scale(${scale})`;
+    wrapper.style.height = `${(graphic.offsetHeight * scale) + 40}px`;
+  } else {
+    graphic.style.transform = 'scale(1)';
+    wrapper.style.height = 'auto';
+  }
+}
+
+window.addEventListener('resize', adjustScale);
+
+// ========================================================
+// CONTROLS & ACTIONS
+// ========================================================
+function addNewPlayer() {
+  const newCard = {
+    id: uid(),
+    name: 'NEW PLAYER',
+    ovr: '120',
+    pos: 'ST',
+    shards: '20,000',
+    tag: 'NEW',
+    tagColor: 'tag-green',
+    image: ''
+  };
+  state.cards.push(newCard);
+  render();
+  openEditModal(newCard.id);
+  showToast('Added new player card slot!', '✨');
+}
+
+function deletePlayer(id) {
+  if (state.cards.length <= 1) {
+    showToast('At least 1 card is required!', '⚠️');
+    return;
+  }
+  state.cards = state.cards.filter(c => c.id !== id);
+  render();
+  showToast('Deleted player card.', '🗑️');
+}
+
+function deleteCurrentModalPlayer() {
+  if (currentEditingId) {
+    deletePlayer(currentEditingId);
+    closeEditModal();
+  }
+}
+
+function setGridColumns(cols) {
+  state.columns = parseInt(cols, 10) || 3;
+  render();
+}
+
+function setCanvasAspect(ratio) {
+  state.aspectRatio = ratio;
+  render();
+}
+
+function setPosterTheme(t) {
+  state.theme = t;
+  state.customWallpaper = '';
+  render();
+  showToast(`Applied ${t.toUpperCase()} background theme!`, '🎨');
+}
+
+// Custom Wallpaper Upload
+const customWallpaperInput = document.getElementById('customWallpaperInput');
+customWallpaperInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    const dataUrl = await readFileAsDataUrl(file);
+    state.customWallpaper = dataUrl;
+    render();
+    showToast('Applied custom wallpaper background!', '🖼️');
+  }
+});
+
+function removeCustomWallpaper() {
+  state.customWallpaper = '';
+  customWallpaperInput.value = '';
+  render();
+  showToast('Removed custom wallpaper.', '🗑️');
+}
+
+function applyTitlePreset(type) {
+  document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
+  if (event && event.target) event.target.classList.add('active');
+
+  if (type === 'new_releases') {
+    state.mainTitle = 'NEW SHARDS PLAYERS';
+    state.subTitle = 'FC MOBILE 25';
+  } else if (type === 'shards_market') {
+    state.mainTitle = 'SHARDS MARKET UPDATE';
+    state.subTitle = 'LATEST CARD PRICES';
+  } else if (type === 'event_players') {
+    state.mainTitle = 'NEW EVENT PLAYERS';
+    state.subTitle = 'MUST CLAIM SHARDS';
+  } else if (type === 'budget_beasts') {
+    state.mainTitle = 'BEST BUDGET BEASTS';
+    state.subTitle = 'SHARDS VALUE EDITION';
+  } else if (type === 'must_buy') {
+    state.mainTitle = 'TOP MUST BUY CARDS';
+    state.subTitle = 'FROM SHARDS';
+  }
+  render();
+  showToast(`Applied preset: ${state.mainTitle}`);
+}
+
+document.getElementById('titleMainInput').addEventListener('input', e => {
+  state.mainTitle = e.target.value.toUpperCase();
+  document.getElementById('gMainTitle').textContent = state.mainTitle;
+  saveStorage();
+});
+
+document.getElementById('titleSubInput').addEventListener('input', e => {
+  state.subTitle = e.target.value.toUpperCase();
+  document.getElementById('gSubTitle').textContent = state.subTitle;
+  saveStorage();
+});
+
+function sortCardsByPrice() {
+  state.cards.sort((a, b) => {
+    const pA = parseInt(String(a.shards).replace(/[^0-9]/g, ''), 10) || 0;
+    const pB = parseInt(String(b.shards).replace(/[^0-9]/g, ''), 10) || 0;
+    return pA - pB;
+  });
+  render();
+  showToast('Sorted cards by Shard Price (Low to High)!', '💎');
+}
+
+function batchSetCustomTag() {
+  const custom = prompt('Enter top label tag for all cards (e.g. NEW, MUST GET, EVENT) or leave blank to remove:');
+  if (custom !== null) {
+    const cleanTag = custom.trim().toUpperCase();
+    state.cards.forEach(c => c.tag = cleanTag);
+    render();
+    showToast(cleanTag ? `Applied "${cleanTag}" to all cards!` : 'Removed top tags from all cards!', '🏷️');
+  }
+}
+
+function removeAllTopTags() {
+  if (!confirm('Remove all top tags from all cards?')) return;
+  state.cards.forEach(c => c.tag = '');
+  render();
+  showToast('Removed all top tags from all cards!', '🗑️');
+}
+
+function quickEditPrice(id) {
+  const card = state.cards.find(c => c.id === id);
+  if (!card) return;
+  const current = formatNumber(card.shards);
+  const result = prompt(`Modify Shards Price for ${card.name || 'Player'}:`, current);
+  if (result !== null && result.trim() !== '') {
+    card.shards = formatNumber(result);
+    render();
+    showToast(`Updated price to ${card.shards} shards!`, '💎');
+  }
+}
+
+function quickEditTag(id) {
+  const card = state.cards.find(c => c.id === id);
+  if (!card) return;
+  const current = card.tag || '';
+  const result = prompt(`Edit Top Tag for ${card.name || 'Player'} (Leave blank to remove):`, current);
+  if (result !== null) {
+    card.tag = result.trim().toUpperCase();
+    render();
+    showToast(card.tag ? `Updated tag to "${card.tag}"!` : 'Removed top tag!', '🏷️');
+  }
+}
+
+function resetDefaultPlayers() {
+  state.cards = JSON.parse(JSON.stringify(DEFAULT_PLAYERS));
+  render();
+  showToast('Reset to 6 sample slots!', '🔄');
+}
+
+function clearAllCards() {
+  if (!confirm('Clear all cards to an empty collection?')) return;
+  state.cards.forEach(c => {
+    c.name = '';
+    c.ovr = '';
+    c.pos = '';
+    c.shards = '0';
+    c.tag = '';
+    c.image = '';
+  });
+  render();
+  showToast('All cards cleared!', '🗑️');
+}
+
+// ========================================================
+// EDIT MODAL & OCR
+// ========================================================
+function openEditModal(id, focusField = null) {
+  currentEditingId = id;
+  const card = state.cards.find(c => c.id === id);
+  if (!card) return;
+
+  document.getElementById('modalCardTitle').textContent = `Edit Player — ${card.name || 'Player'}`;
+  document.getElementById('modalPreviewThumb').src = card.image || 'shard_icon_hq.png';
+  document.getElementById('modalShardInput').value = formatNumber(card.shards);
+  document.getElementById('modalTagInput').value = card.tag || '';
+  document.getElementById('modalTagColorSelect').value = card.tagColor || 'tag-green';
+  document.getElementById('modalNameInput').value = card.name || '';
+  document.getElementById('modalOvrInput').value = card.ovr || '';
+  document.getElementById('modalPosInput').value = card.pos || '';
+
+  document.getElementById('playerEditModal').classList.remove('hidden');
+
+  if (focusField === 'tag') {
+    setTimeout(() => {
+      const tagInput = document.getElementById('modalTagInput');
+      if (tagInput) { tagInput.focus(); tagInput.select(); }
+    }, 120);
+  }
+}
+
+function closeEditModal() {
+  document.getElementById('playerEditModal').classList.add('hidden');
+}
+
+function setModalTagPreset(tag, colorClass) {
+  document.getElementById('modalTagInput').value = tag;
+  if (colorClass) {
+    document.getElementById('modalTagColorSelect').value = colorClass;
+  }
+}
+
+function clearModalTag() {
+  document.getElementById('modalTagInput').value = '';
+  showToast('Cleared tag for this card! Click "Save Card" to apply.', '🏷️');
+}
+
+function saveEditModal() {
+  const card = state.cards.find(c => c.id === currentEditingId);
+  if (!card) return;
+
+  card.name = document.getElementById('modalNameInput').value.trim().toUpperCase() || 'PLAYER';
+  card.ovr = document.getElementById('modalOvrInput').value.trim() || '120';
+  card.pos = document.getElementById('modalPosInput').value.trim().toUpperCase() || 'ST';
+  card.shards = formatNumber(document.getElementById('modalShardInput').value);
+  card.tag = document.getElementById('modalTagInput').value.trim().toUpperCase();
+  card.tagColor = document.getElementById('modalTagColorSelect').value;
+
+  closeEditModal();
+  render();
+  showToast(`Saved Card for ${card.name}!`, '✅');
+}
+
+// File dropzone
+const cardDropzone = document.getElementById('cardDropzone');
+const cardFileInput = document.getElementById('cardFileInput');
+cardDropzone.addEventListener('click', () => cardFileInput.click());
+cardFileInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    const dataUrl = await readFileAsDataUrl(file);
+    const card = state.cards.find(c => c.id === currentEditingId);
+    if (card) {
+      card.image = dataUrl;
+      document.getElementById('modalPreviewThumb').src = dataUrl;
+      render();
+      autoDetectCardData(dataUrl, file.name);
+    }
+  }
+});
+
+// AI OCR
+document.getElementById('modalAutoDetectBtn').addEventListener('click', () => {
+  const card = state.cards.find(c => c.id === currentEditingId);
+  if (card && card.image) {
+    autoDetectCardData(card.image, card.name);
+  } else {
+    showToast('Please upload a card image first!', '⚠️');
+  }
+});
+
+async function autoDetectCardData(imageSrc, hint = '') {
+  showToast('🔍 Analyzing card with AI OCR...', '⏳');
+  if (hint) {
+    const cleanHint = hint.replace(/\.[^/.]+$/, '').toUpperCase();
+    const ovrM = cleanHint.match(/\b(1[0-2][0-9]|9[0-9])\b/);
+    if (ovrM) document.getElementById('modalOvrInput').value = ovrM[1];
+    const posM = cleanHint.match(/\b(ST|CF|LW|RW|CAM|CM|CDM|LM|RM|CB|LB|RB|LWB|RWB|GK)\b/i);
+    if (posM) document.getElementById('modalPosInput').value = posM[1].toUpperCase();
+    const nameClean = cleanHint.replace(/\b(1[0-2][0-9]|9[0-9]|ST|CF|LW|RW|CAM|CM|CDM|LM|RM|CB|LB|RB|LWB|RWB|GK|CARD|FC|VOLT|SCREENSHOT)\b/gi, '').trim().split(/[\s_-]+/);
+    if (nameClean[0] && nameClean[0].length >= 3) {
+      document.getElementById('modalNameInput').value = nameClean[0];
+    }
+  }
+
+  try {
+    if (window.Tesseract) {
+      const res = await Tesseract.recognize(imageSrc, 'eng');
+      const text = res.data.text.toUpperCase();
+      const ovrMatch = text.match(/\b(1[0-2][0-9]|9[0-9])\b/);
+      if (ovrMatch) document.getElementById('modalOvrInput').value = ovrMatch[1];
+      const posMatch = text.match(/\b(ST|CF|LW|RW|CAM|CM|CDM|LM|RM|CB|LB|RB|LWB|RWB|GK)\b/);
+      if (posMatch) document.getElementById('modalPosInput').value = posMatch[1];
+      showToast('AI Card Metadata Detected!', '✨');
+    }
+  } catch(e) {
+    console.warn('OCR error', e);
+  }
+}
+
+// ========================================================
+// HD EXPORT
+// ========================================================
+async function exportPoster(format = 'png') {
+  showToast('⚡ Generating High-Resolution Poster...', '⏳');
+  const graphic = document.getElementById('playersGraphic');
+
+  try {
+    const origTransform = graphic.style.transform;
+    graphic.style.transform = 'none';
+
+    const canvas = await html2canvas(graphic, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      logging: false,
+      onclone: (clonedDoc) => {
+        const cloned = clonedDoc.getElementById('playersGraphic');
+        if (cloned) {
+          cloned.style.transform = 'none';
+          cloned.style.borderRadius = '0';
+          cloned.style.boxShadow = 'none';
+        }
+      }
+    });
+
+    graphic.style.transform = origTransform;
+
+    const safeTitle = state.mainTitle.replace(/[^a-z0-9_-]/gi, '_');
+    const filename = `FC_VOLT_New_Players_Shards_${safeTitle}.${format}`;
+
+    let dataUrl;
+    if (format === 'jpg' || format === 'jpeg') {
+      const solidCanvas = document.createElement('canvas');
+      solidCanvas.width = canvas.width;
+      solidCanvas.height = canvas.height;
+      const ctx = solidCanvas.getContext('2d');
+      ctx.fillStyle = '#030a1c';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(canvas, 0, 0);
+      dataUrl = solidCanvas.toDataURL('image/jpeg', 0.94);
+    } else {
+      dataUrl = canvas.toDataURL('image/png');
+    }
+
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast(`✅ Downloaded ${filename}!`, '🎉');
+  } catch(e) {
+    console.error('Export failed', e);
+    showToast('Failed to export image.', '⚠️');
+  }
+}
+
+document.getElementById('downloadPngBtn').addEventListener('click', () => exportPoster('png'));
+document.getElementById('downloadJpgBtn').addEventListener('click', () => exportPoster('jpg'));
+
+// ========================================================
+// PERSISTENCE (LOCALSTORAGE)
+// ========================================================
+function saveStorage() {
+  try {
+    localStorage.setItem('fcvolt_new_players_shards_save', JSON.stringify(state));
+  } catch(e) {}
+}
+
+function loadStorage() {
+  try {
+    const raw = localStorage.getItem('fcvolt_new_players_shards_save');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed.mainTitle) state.mainTitle = parsed.mainTitle;
+      if (parsed.subTitle) state.subTitle = parsed.subTitle;
+      if (parsed.theme) state.theme = parsed.theme;
+      if (parsed.columns) state.columns = parsed.columns;
+      if (parsed.aspectRatio) state.aspectRatio = parsed.aspectRatio;
+      if (parsed.customWallpaper) state.customWallpaper = parsed.customWallpaper;
+      if (Array.isArray(parsed.cards) && parsed.cards.length > 0) {
+        state.cards = parsed.cards;
+      }
+    }
+  } catch(e) {}
+  render();
+}
+
+// ========================================================
+// REMOVE BACKGROUND & OUTLIERS STUDIO ENGINE (BULLETPROOF)
+// ========================================================
+const bgStudioModal = document.getElementById('bgStudioModal');
+const closeBgStudioBtn = document.getElementById('closeBgStudioBtn');
+const bgCloseCancelBtn = document.getElementById('bgCloseCancelBtn');
+const bgCardSelect = document.getElementById('bgCardSelect');
+const bgUploadInput = document.getElementById('bgUploadInput');
+const bgApplyCurrentBtn = document.getElementById('bgApplyCurrentBtn');
+const bgApplyAllCardsBtn = document.getElementById('bgApplyAllCardsBtn');
+const bgDownloadCutoutBtn = document.getElementById('bgDownloadCutoutBtn');
+const bgCanvasContainer = document.getElementById('bgCanvasContainer');
+const bgStudioCanvas = document.getElementById('bgStudioCanvas');
+const canvasInfoBadge = document.getElementById('canvasInfoBadge');
+
+// Mode buttons
+const modeAuto = document.getElementById('modeAuto');
+const modeWhite = document.getElementById('modeWhite');
+const modeBlack = document.getElementById('modeBlack');
+const modeColor = document.getElementById('modeColor');
+
+// Sliders & Controls
+const bgTolRange = document.getElementById('bgTolRange');
+const tolValDisplay = document.getElementById('tolValDisplay');
+const bgChokeRange = document.getElementById('bgChokeRange');
+const chokeValDisplay = document.getElementById('chokeValDisplay');
+const bgFeatherRange = document.getElementById('bgFeatherRange');
+const featherValDisplay = document.getElementById('featherValDisplay');
+const bgAutoCropCheck = document.getElementById('bgAutoCropCheck');
+
+// Presets
+const presetCleanWhite = document.getElementById('presetCleanWhite');
+const presetCleanBlack = document.getElementById('presetCleanBlack');
+const presetRevert = document.getElementById('presetRevert');
+
+// Backdrop buttons
+const stageBtnChecker = document.getElementById('stageBtnChecker');
+const stageBtnStadium = document.getElementById('stageBtnStadium');
+const stageBtnBlack = document.getElementById('stageBtnBlack');
+const stageBtnWhite = document.getElementById('stageBtnWhite');
+
+// Zoom buttons
+const zoomOutBtn = document.getElementById('zoomOutBtn');
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomResetBtn = document.getElementById('zoomResetBtn');
+const zoomLevelDisplay = document.getElementById('zoomLevelDisplay');
+
+// Tool buttons
+const toolPanBtn = document.getElementById('toolPanBtn');
+const toolEyedropperBtn = document.getElementById('toolEyedropperBtn');
+const toolEraserBtn = document.getElementById('toolEraserBtn');
+const eraserSizeWrap = document.getElementById('eraserSizeWrap');
+const eraserSizeRange = document.getElementById('eraserSizeRange');
+const eraserSizeVal = document.getElementById('eraserSizeVal');
+
+let studioState = {
+  activeCardKey: null,
+  originalImageSrc: null,
+  currentWorkingDataUrl: null,
+  mode: 'auto',
+  tolerance: 0.28,
+  choke: 1,
+  feather: 1,
+  autoCrop: true,
+  pickedColor: { r: 0, g: 0, b: 0 },
+  activeTool: 'pan',
+  eraserSize: 18,
+  zoom: 1,
+  isDrawing: false
+};
+
+function openBgStudioWithCard(cardId = null) {
+  if (!cardId && state.cards.length > 0) cardId = state.cards[0].id;
+  populateStudioCardSelect(cardId);
+  if (bgStudioModal) bgStudioModal.classList.remove('hidden');
+  loadCardIntoStudio(cardId);
+}
+
+function populateStudioCardSelect(selectedId = null) {
+  if (!bgCardSelect) return;
+  bgCardSelect.innerHTML = '';
+  const group = document.createElement('optgroup');
+  group.label = '🎴 Current Player Cards';
+  state.cards.forEach((c, idx) => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    const hasImg = c.image && c.image.length > 50;
+    opt.textContent = `#${idx + 1}: ${c.name || 'Player'} (${formatNumber(c.shards)} Shards) ${hasImg ? '🖼️' : '(Empty)'}`;
+    if (selectedId && String(selectedId) === String(c.id)) opt.selected = true;
+    group.appendChild(opt);
+  });
+  bgCardSelect.appendChild(group);
+}
+
+function loadCardIntoStudio(id) {
+  studioState.activeCardKey = id;
+  if (bgCardSelect) bgCardSelect.value = id;
+  const card = state.cards.find(c => c.id === id);
+  if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO ${card ? (card.name || 'CURRENT CARD') : 'CARD'}`;
+
+  if (!card || !card.image || card.image.length < 50) {
+    studioState.originalImageSrc = null;
+    studioState.currentWorkingDataUrl = null;
+    if (bgStudioCanvas) {
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, bgStudioCanvas.width, bgStudioCanvas.height);
+    }
+    if (canvasInfoBadge) canvasInfoBadge.textContent = 'Selected card has no photo — click "Upload New Image" above!';
+    return;
+  }
+  studioState.originalImageSrc = card.image;
+  runStudioUpdate();
+}
+
+async function runStudioUpdate() {
+  if (!studioState.originalImageSrc) return;
+  if (canvasInfoBadge) canvasInfoBadge.textContent = 'Processing cutout...';
+
+  try {
+    const cleaned = await processImageBackgroundRemoval(studioState.originalImageSrc, {
+      mode: studioState.mode,
+      tolerance: studioState.tolerance,
+      choke: studioState.choke,
+      feather: studioState.feather,
+      crop: studioState.autoCrop,
+      targetColor: studioState.pickedColor
+    });
+
+    studioState.currentWorkingDataUrl = cleaned;
+
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+
+      if (canvasInfoBadge) canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Transparent Cutout Ready`;
+    };
+    img.src = cleaned;
+  } catch (err) {
+    console.error('Studio update error:', err);
+    if (canvasInfoBadge) canvasInfoBadge.textContent = 'Error processing image';
+  }
+}
+
+/**
+ * Robust Background & Outliers Removal Algorithm
+ */
+function processImageBackgroundRemoval(imgSource, options = {}) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onerror = reject;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const w = canvas.width;
+      const h = canvas.height;
+      if (w === 0 || h === 0) return resolve(imgSource);
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      const mode = options.mode || 'auto';
+      const tolerance = options.tolerance !== undefined ? options.tolerance : 0.28;
+      const choke = options.choke !== undefined ? options.choke : 1;
+      const crop = options.crop !== undefined ? options.crop : true;
+
+      let tr = 0, tg = 0, tb = 0;
+      if (mode === 'white') {
+        tr = 255; tg = 255; tb = 255;
+      } else if (mode === 'black') {
+        tr = 0; tg = 0; tb = 0;
+      } else if (mode === 'color' && options.targetColor) {
+        tr = options.targetColor.r;
+        tg = options.targetColor.g;
+        tb = options.targetColor.b;
+      } else {
+        // Sample all 4 borders to get outer background color
+        let sumR = 0, sumG = 0, sumB = 0, validSamples = 0;
+        const step = Math.max(1, Math.floor(Math.min(w, h) / 40));
+        for (let x = 0; x < w; x += step) {
+          [0, h - 1].forEach(y => {
+            const pIdx = (y * w + x) * 4;
+            if (data[pIdx + 3] > 20) {
+              sumR += data[pIdx]; sumG += data[pIdx + 1]; sumB += data[pIdx + 2];
+              validSamples++;
+            }
+          });
+        }
+        for (let y = 0; y < h; y += step) {
+          [0, w - 1].forEach(x => {
+            const pIdx = (y * w + x) * 4;
+            if (data[pIdx + 3] > 20) {
+              sumR += data[pIdx]; sumG += data[pIdx + 1]; sumB += data[pIdx + 2];
+              validSamples++;
+            }
+          });
+        }
+        if (validSamples > 0) {
+          tr = Math.round(sumR / validSamples);
+          tg = Math.round(sumG / validSamples);
+          tb = Math.round(sumB / validSamples);
+        }
+      }
+
+      function colorDist(pIdx) {
+        const dr = data[pIdx] - tr;
+        const dg = data[pIdx + 1] - tg;
+        const db = data[pIdx + 2] - tb;
+        return Math.sqrt(dr * dr + dg * dg + db * db) / 441.673;
+      }
+
+      const visited = new Uint8Array(w * h);
+      const queue = new Int32Array(w * h);
+      let head = 0, tail = 0;
+
+      // Seed all border pixels
+      for (let x = 0; x < w; x++) {
+        [0, h - 1].forEach(y => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+      for (let y = 0; y < h; y++) {
+        [0, w - 1].forEach(x => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+
+      // Inward Flood Fill
+      while (head < tail) {
+        const curr = queue[head++];
+        const cx = curr % w;
+        const cy = Math.floor(curr / w);
+
+        const neighbors = [
+          cx > 0 ? curr - 1 : -1,
+          cx < w - 1 ? curr + 1 : -1,
+          cy > 0 ? curr - w : -1,
+          cy < h - 1 ? curr + w : -1
+        ];
+
+        for (let i = 0; i < 4; i++) {
+          const nIdx = neighbors[i];
+          if (nIdx !== -1 && !visited[nIdx]) {
+            const pIdx = nIdx * 4;
+            if (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance) {
+              visited[nIdx] = 1;
+              queue[tail++] = nIdx;
+            }
+          }
+        }
+      }
+
+      // Set visited pixels transparent
+      for (let i = 0; i < w * h; i++) {
+        if (visited[i]) data[i * 4 + 3] = 0;
+      }
+
+      // Edge Choke / Halo Trim
+      if (choke > 0) {
+        for (let pass = 0; pass < choke; pass++) {
+          const toErase = [];
+          for (let y = 1; y < h - 1; y++) {
+            for (let x = 1; x < w - 1; x++) {
+              const idx = y * w + x;
+              const pIdx = idx * 4;
+              if (data[pIdx + 3] > 0) {
+                const hasTrans = 
+                  data[(idx - 1) * 4 + 3] === 0 ||
+                  data[(idx + 1) * 4 + 3] === 0 ||
+                  data[(idx - w) * 4 + 3] === 0 ||
+                  data[(idx + w) * 4 + 3] === 0;
+
+                if (hasTrans && colorDist(pIdx) <= tolerance * 1.5) {
+                  toErase.push(pIdx);
+                }
+              }
+            }
+          }
+          toErase.forEach(p => { data[p + 3] = 0; });
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      // Auto crop bounding box
+      let outCanvas = canvas;
+      if (crop) {
+        let minX = w, minY = h, maxX = 0, maxY = 0;
+        let hasVisible = false;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const a = data[(y * w + x) * 4 + 3];
+            if (a > 15) {
+              hasVisible = true;
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+        if (hasVisible && (minX > 1 || minY > 1 || maxX < w - 2 || maxY < h - 2)) {
+          const pad = 4;
+          minX = Math.max(0, minX - pad);
+          minY = Math.max(0, minY - pad);
+          maxX = Math.min(w - 1, maxX + pad);
+          maxY = Math.min(h - 1, maxY + pad);
+          const cropW = Math.max(1, maxX - minX + 1);
+          const cropH = Math.max(1, maxY - minY + 1);
+          const croppedCanvas = document.createElement('canvas');
+          croppedCanvas.width = cropW;
+          croppedCanvas.height = cropH;
+          const croppedCtx = croppedCanvas.getContext('2d');
+          croppedCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+          outCanvas = croppedCanvas;
+        }
+      }
+
+      resolve(outCanvas.toDataURL('image/png'));
+    };
+    img.src = imgSource;
+  });
+}
+
+// Card select change
+if (bgCardSelect) {
+  bgCardSelect.addEventListener('change', e => {
+    loadCardIntoStudio(e.target.value);
+  });
+}
+
+// Upload new image directly in Studio
+if (bgUploadInput) {
+  bgUploadInput.addEventListener('change', async e => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const dataUrl = await readFileAsDataUrl(file);
+      const cardId = studioState.activeCardKey || (bgCardSelect ? bgCardSelect.value : null);
+      const card = state.cards.find(c => c.id === cardId);
+      if (card) {
+        card.image = dataUrl;
+        populateStudioCardSelect(cardId);
+      }
+      studioState.originalImageSrc = dataUrl;
+      runStudioUpdate();
+      showToast('Loaded image into Studio!', '🖼️');
+    }
+  });
+}
+
+// Studio Modal close handlers
+if (closeBgStudioBtn) closeBgStudioBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+if (bgCloseCancelBtn) bgCloseCancelBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+if (bgStudioModal) {
+  bgStudioModal.addEventListener('click', e => {
+    if (e.target === bgStudioModal) bgStudioModal.classList.add('hidden');
+  });
+}
+
+// Mode Selection
+function setStudioMode(newMode) {
+  studioState.mode = newMode;
+  [modeAuto, modeWhite, modeBlack, modeColor].forEach(el => {
+    if (el) el.classList.toggle('active', el.dataset.mode === newMode);
+  });
+  runStudioUpdate();
+}
+
+if (modeAuto) modeAuto.addEventListener('click', () => setStudioMode('auto'));
+if (modeWhite) modeWhite.addEventListener('click', () => setStudioMode('white'));
+if (modeBlack) modeBlack.addEventListener('click', () => setStudioMode('black'));
+if (modeColor) modeColor.addEventListener('click', () => setStudioMode('color'));
+
+// Tuning Sliders
+if (bgTolRange) {
+  bgTolRange.addEventListener('input', e => {
+    studioState.tolerance = parseFloat(e.target.value) / 100;
+    if (tolValDisplay) tolValDisplay.textContent = `${e.target.value}%`;
+    runStudioUpdate();
+  });
+}
+if (bgChokeRange) {
+  bgChokeRange.addEventListener('input', e => {
+    studioState.choke = parseInt(e.target.value, 10);
+    if (chokeValDisplay) chokeValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgFeatherRange) {
+  bgFeatherRange.addEventListener('input', e => {
+    studioState.feather = parseInt(e.target.value, 10);
+    if (featherValDisplay) featherValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgAutoCropCheck) {
+  bgAutoCropCheck.addEventListener('change', e => {
+    studioState.autoCrop = e.target.checked;
+    runStudioUpdate();
+  });
+}
+
+// Presets
+if (presetCleanWhite) {
+  presetCleanWhite.addEventListener('click', () => {
+    if (bgTolRange) bgTolRange.value = 28;
+    if (tolValDisplay) tolValDisplay.textContent = '28%';
+    if (bgChokeRange) bgChokeRange.value = 1;
+    if (chokeValDisplay) chokeValDisplay.textContent = '1 px';
+    setStudioMode('white');
+  });
+}
+if (presetCleanBlack) {
+  presetCleanBlack.addEventListener('click', () => {
+    if (bgTolRange) bgTolRange.value = 28;
+    if (tolValDisplay) tolValDisplay.textContent = '28%';
+    if (bgChokeRange) bgChokeRange.value = 1;
+    if (chokeValDisplay) chokeValDisplay.textContent = '1 px';
+    setStudioMode('black');
+  });
+}
+if (presetRevert) {
+  presetRevert.addEventListener('click', () => {
+    if (!studioState.originalImageSrc) return;
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+      studioState.currentWorkingDataUrl = studioState.originalImageSrc;
+      if (canvasInfoBadge) canvasInfoBadge.textContent = 'Reverted to original source';
+    };
+    img.src = studioState.originalImageSrc;
+  });
+}
+
+// Backdrop Toggles
+function setStudioBackdrop(type) {
+  if (!bgCanvasContainer) return;
+  bgCanvasContainer.classList.remove('backdrop-checker', 'backdrop-stadium', 'backdrop-black', 'backdrop-white');
+  [stageBtnChecker, stageBtnStadium, stageBtnBlack, stageBtnWhite].forEach(b => {
+    if (b) b.classList.remove('active');
+  });
+
+  if (type === 'checker') {
+    bgCanvasContainer.classList.add('backdrop-checker');
+    if (stageBtnChecker) stageBtnChecker.classList.add('active');
+  } else if (type === 'stadium') {
+    bgCanvasContainer.classList.add('backdrop-stadium');
+    if (stageBtnStadium) stageBtnStadium.classList.add('active');
+  } else if (type === 'black') {
+    bgCanvasContainer.classList.add('backdrop-black');
+    if (stageBtnBlack) stageBtnBlack.classList.add('active');
+  } else if (type === 'white') {
+    bgCanvasContainer.classList.add('backdrop-white');
+    if (stageBtnWhite) stageBtnWhite.classList.add('active');
+  }
+}
+
+if (stageBtnChecker) stageBtnChecker.addEventListener('click', () => setStudioBackdrop('checker'));
+if (stageBtnStadium) stageBtnStadium.addEventListener('click', () => setStudioBackdrop('stadium'));
+if (stageBtnBlack) stageBtnBlack.addEventListener('click', () => setStudioBackdrop('black'));
+if (stageBtnWhite) stageBtnWhite.addEventListener('click', () => setStudioBackdrop('white'));
+
+// Zoom Controls
+function setStudioZoom(delta, absolute = null) {
+  if (absolute !== null) {
+    studioState.zoom = absolute;
+  } else {
+    studioState.zoom = Math.max(0.4, Math.min(3.0, studioState.zoom + delta));
+  }
+  if (bgStudioCanvas) {
+    bgStudioCanvas.style.transform = `scale(${studioState.zoom})`;
+  }
+  if (zoomLevelDisplay) {
+    zoomLevelDisplay.textContent = `${Math.round(studioState.zoom * 100)}%`;
+  }
+}
+
+if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => setStudioZoom(-0.2));
+if (zoomInBtn) zoomInBtn.addEventListener('click', () => setStudioZoom(0.2));
+if (zoomResetBtn) zoomResetBtn.addEventListener('click', () => setStudioZoom(0, 1.0));
+
+// Tools: Inspect, Eyedropper, Eraser
+function setActiveTool(tool) {
+  studioState.activeTool = tool;
+  if (toolPanBtn) toolPanBtn.classList.toggle('active', tool === 'pan');
+  if (toolEyedropperBtn) toolEyedropperBtn.classList.toggle('active', tool === 'picker');
+  if (toolEraserBtn) toolEraserBtn.classList.toggle('active', tool === 'eraser');
+  if (eraserSizeWrap) eraserSizeWrap.style.display = (tool === 'eraser') ? 'inline-flex' : 'none';
+
+  if (bgStudioCanvas) {
+    if (tool === 'picker') bgStudioCanvas.style.cursor = 'crosshair';
+    else if (tool === 'eraser') bgStudioCanvas.style.cursor = 'cell';
+    else bgStudioCanvas.style.cursor = 'grab';
+  }
+}
+
+if (toolPanBtn) toolPanBtn.addEventListener('click', () => setActiveTool('pan'));
+if (toolEyedropperBtn) toolEyedropperBtn.addEventListener('click', () => setActiveTool('picker'));
+if (toolEraserBtn) toolEraserBtn.addEventListener('click', () => setActiveTool('eraser'));
+
+if (eraserSizeRange) {
+  eraserSizeRange.addEventListener('input', e => {
+    studioState.eraserSize = parseInt(e.target.value, 10);
+    if (eraserSizeVal) eraserSizeVal.textContent = `${e.target.value}px`;
+  });
+}
+
+// Canvas Interaction for Eyedropper & Eraser
+function getCanvasPos(e) {
+  const rect = bgStudioCanvas.getBoundingClientRect();
+  const scaleX = bgStudioCanvas.width / rect.width;
+  const scaleY = bgStudioCanvas.height / rect.height;
+  return {
+    x: Math.round((e.clientX - rect.left) * scaleX),
+    y: Math.round((e.clientY - rect.top) * scaleY)
+  };
+}
+
+if (bgStudioCanvas) {
+  bgStudioCanvas.addEventListener('click', e => {
+    if (studioState.activeTool === 'picker') {
+      const pos = getCanvasPos(e);
+      const ctx = bgStudioCanvas.getContext('2d');
+      const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+      studioState.pickedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
+      const hex = '#' + ((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1);
+      setStudioMode('color');
+      showToast(`Selected color ${hex} to key out!`, '🎯');
+    }
+  });
+
+  bgStudioCanvas.addEventListener('mousedown', e => {
+    if (studioState.activeTool === 'eraser') {
+      studioState.isDrawing = true;
+      eraseAt(e);
+    }
+  });
+
+  bgStudioCanvas.addEventListener('mousemove', e => {
+    if (studioState.isDrawing && studioState.activeTool === 'eraser') {
+      eraseAt(e);
+    }
+  });
+
+  window.addEventListener('mouseup', () => { studioState.isDrawing = false; });
+}
+
+function eraseAt(e) {
+  const pos = getCanvasPos(e);
+  const ctx = bgStudioCanvas.getContext('2d');
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, studioState.eraserSize, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+// Download PNG Cutout
+if (bgDownloadCutoutBtn) {
+  bgDownloadCutoutBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) {
+      showToast('No cutout available to download!', '⚠️');
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = studioState.currentWorkingDataUrl;
+    a.download = `FC_VOLT_Player_Cutout_${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('Cutout downloaded as transparent PNG!', '💾');
+  });
+}
+
+// ✅ APPLY TO SELECTED PLAYER CARD
+if (bgApplyCurrentBtn) {
+  bgApplyCurrentBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) {
+      showToast('No clean cutout to apply! Upload or select a card image first.', '⚠️');
+      return;
+    }
+    const id = studioState.activeCardKey || (bgCardSelect ? bgCardSelect.value : null);
+    const card = state.cards.find(c => c.id === id);
+    if (card) {
+      card.image = studioState.currentWorkingDataUrl;
+      const modalThumb = document.getElementById('modalPreviewThumb');
+      if (modalThumb && currentEditingId === id) {
+        modalThumb.src = studioState.currentWorkingDataUrl;
+      }
+      render();
+      if (bgStudioModal) bgStudioModal.classList.add('hidden');
+      showToast(`✅ Clean cutout applied to ${card.name || 'Card'}!`, '✨');
+    }
+  });
+}
+
+// ✨ APPLY TO ALL CARDS
+if (bgApplyAllCardsBtn) {
+  bgApplyAllCardsBtn.addEventListener('click', async () => {
+    const cardsWithImages = state.cards.filter(c => c.image && c.image.length > 50);
+    if (cardsWithImages.length === 0) {
+      showToast('No cards with images found to clean! Upload card image(s) first.', '⚠️');
+      return;
+    }
+
+    showToast(`🪄 Cleaning background & outliers for all ${cardsWithImages.length} cards...`, '⏳');
+
+    let successCount = 0;
+    for (let i = 0; i < cardsWithImages.length; i++) {
+      const card = cardsWithImages[i];
+      showToast(`🪄 Cleaning ${card.name || 'Card'} (${i + 1}/${cardsWithImages.length})...`, '⏳');
+      try {
+        const cleaned = await processImageBackgroundRemoval(card.image, {
+          mode: studioState.mode,
+          tolerance: studioState.tolerance,
+          choke: studioState.choke,
+          feather: studioState.feather,
+          crop: studioState.autoCrop,
+          targetColor: studioState.pickedColor
+        });
+        card.image = cleaned;
+        successCount++;
+      } catch (err) {
+        console.error(`Error cleaning ${card.name || 'Card'}:`, err);
+      }
+    }
+
+    const modalThumb = document.getElementById('modalPreviewThumb');
+    const currentCard = state.cards.find(c => c.id === currentEditingId);
+    if (currentCard && modalThumb && currentCard.image) {
+      modalThumb.src = currentCard.image;
+    }
+
+    render();
+    if (bgStudioModal) bgStudioModal.classList.add('hidden');
+    showToast(`✨ Successfully cleaned & applied to all ${successCount} cards!`, '🎉');
+  });
+}
+
+// Init
+loadStorage();
+</script>
+
+</body>
+</html>
