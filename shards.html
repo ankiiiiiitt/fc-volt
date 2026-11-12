@@ -2513,10 +2513,10 @@
             Is card ko sabhi opponent cards ke sath compare kiya jayega.
           </p>
 
-          <div id="mainCardDropzone" class="main-card-dropzone">
-            <span style="font-size:26px;">📁</span>
-            <span style="font-size:12px; font-weight:800; color:#fff;">Click or Drop Main Card Image</span>
-            <small style="color:#7d97b8; font-size:10px;">PNG Cutout ya Screenshot (Zero forms needed)</small>
+          <div id="mainCardDropzone" class="main-card-dropzone" style="cursor:pointer;" onclick="triggerMainUpload(event)" ondragover="handleCardDragOver(event)" ondragleave="handleCardDragLeave(event)" ondrop="handleCardDrop(event, 'main')">
+            <span style="font-size:26px; pointer-events:none;">📁</span>
+            <span style="font-size:12px; font-weight:800; color:#fff; pointer-events:none;">Click or Drop Main Card Image</span>
+            <small style="color:#7d97b8; font-size:10px; pointer-events:none;">PNG Cutout ya Screenshot (Zero forms needed)</small>
           </div>
           <input type="file" id="mainCardFileInput" accept="image/*" style="display:none;">
 
@@ -3200,15 +3200,25 @@ function setBattleWinner(id, winner) {
   showToast(winner === 'main' ? 'Set: Main is Better (✓)' : 'Set: Opponent is Better (✕)', winner === 'main' ? '✅' : '❌');
 }
 
-function triggerMainUpload() {
-  document.getElementById('mainCardFileInput').click();
+function triggerMainUpload(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  const input = document.getElementById('mainCardFileInput');
+  if (input) {
+    input.value = '';
+    input.click();
+  }
 }
 
 function triggerOpponentUpload(battleId) {
   currentTargetSlot = battleId;
   const input = document.getElementById('slotCardFileInput');
-  input.value = '';
-  input.click();
+  if (input) {
+    input.value = '';
+    input.click();
+  }
 }
 
 function clearMainCard() {
@@ -3273,28 +3283,46 @@ function editOpponentShard(id) {
 function handleCardDragOver(e) {
   e.preventDefault();
   e.stopPropagation();
+  if (e.currentTarget && e.currentTarget.style) {
+    e.currentTarget.style.borderColor = '#00e5ff';
+  }
+}
+
+function handleCardDragLeave(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.currentTarget && e.currentTarget.style) {
+    e.currentTarget.style.borderColor = '';
+  }
 }
 
 function handleCardDrop(e, target) {
   e.preventDefault();
   e.stopPropagation();
+  if (e.currentTarget && e.currentTarget.style) {
+    e.currentTarget.style.borderColor = '';
+  }
   if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
     const file = e.dataTransfer.files[0];
     readFileAsDataUrl(file).then(dataUrl => {
       if (target === 'main') {
         state.mainCard = dataUrl;
+        render();
         showToast('Updated Main Card!', '👑');
       } else {
         const b = state.battles.find(item => item.id === target);
         if (b) {
           b.opponentImage = dataUrl;
+          render();
           showToast('Updated Opponent Card!', '🎴');
         }
       }
-      render();
     });
   }
 }
+
+window.addEventListener('dragover', e => { e.preventDefault(); }, false);
+window.addEventListener('drop', e => { e.preventDefault(); }, false);
 
 // File Readers
 function readFileAsDataUrl(file) {
@@ -3307,14 +3335,22 @@ function readFileAsDataUrl(file) {
 }
 
 // Main Card File Input Change
-document.getElementById('mainCardFileInput').addEventListener('change', async e => {
-  if (e.target.files && e.target.files[0]) {
-    const dataUrl = await readFileAsDataUrl(e.target.files[0]);
-    state.mainCard = dataUrl;
-    render();
-    showToast('Loaded Main Card!', '👑');
-  }
-});
+const mainCardInputEl = document.getElementById('mainCardFileInput');
+const mainCardDropzoneEl = document.getElementById('mainCardDropzone');
+if (mainCardDropzoneEl) {
+  mainCardDropzoneEl.addEventListener('click', triggerMainUpload);
+}
+
+if (mainCardInputEl) {
+  mainCardInputEl.addEventListener('change', async e => {
+    if (e.target.files && e.target.files[0]) {
+      const dataUrl = await readFileAsDataUrl(e.target.files[0]);
+      state.mainCard = dataUrl;
+      render();
+      showToast('Loaded Main Card!', '👑');
+    }
+  });
+}
 
 // Slot Card File Input Change (Opponent)
 document.getElementById('slotCardFileInput').addEventListener('change', async e => {
