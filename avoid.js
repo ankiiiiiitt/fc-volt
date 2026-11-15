@@ -3,31 +3,41 @@
  'use strict';
  const $=id=>document.getElementById(id),canvas=$('poster'),g=canvas.getContext('2d');
  const cards=Array.from({length:10},()=>({image:null,url:null,cost:''}));
- const scenes=[['Champions Night','champions-night','#071833'],['Derby Red','champions-night','#56101d'],['Golden Arena','golden-arena','#221707'],['Neon Tunnel','neon-tunnel','#190d30'],['Cosmic Stadium','cosmic-stadium','#130b30'],['Midnight','cosmic-stadium','#030911']];
+ const W=1080,H=1240;
+ function slot(i){const bottom=i>=6,col=bottom?i-6:i%3;return {x:bottom?65+col*240:130+col*280,y:bottom?950:(i<3?185:560),w:bottom?230:260,h:bottom?220:270};}
+ const scenes=[['Sunset Flame',null,'#ff3c00'],['Cyber Violet',null,'#7c12bd'],['Champions Cyan',null,'#082d65'],['Pitch Green',null,'#075d35'],['Champions Night','champions-night','#071833'],['Derby Red','champions-night','#56101d'],['Golden Arena','golden-arena','#221707'],['Neon Tunnel','neon-tunnel','#190d30'],['Cosmic Stadium','cosmic-stadium','#130b30'],['Midnight','cosmic-stadium','#030911']];
  let background=null,activeScene=0,custom=null,pending=0,selected=null,dragged=null;
  const pool=[];let nextId=1;const shardIcon=new Image();shardIcon.onload=draw;shardIcon.src='shard_icon_hq.png';
  function status(text,error=false){$('status').textContent=text;$('status').classList.toggle('error',error);}
  function rounded(x,y,w,h,r,fill,stroke){g.beginPath();g.roundRect(x,y,w,h,r);g.fillStyle=fill;g.fill();if(stroke){g.strokeStyle=stroke;g.lineWidth=2;g.stroke();}}
  function fit(image,x,y,w,h,cover=false){const scale=(cover?Math.max:Math.min)(w/image.width,h/image.height);g.drawImage(image,x+(w-image.width*scale)/2,y+(h-image.height*scale)/2,image.width*scale,image.height*scale);}
  function text(value,x,y,max,size,color='#fff',weight=800){g.font=`${weight} ${size}px Arial, sans-serif`;while(g.measureText(value).width>max&&size>10){size--;g.font=`${weight} ${size}px Arial, sans-serif`;}g.fillStyle=color;g.textAlign='center';g.textBaseline='middle';g.fillText(value,x,y);}
+ function impact(value,x,y,max,size,color='#fff',outline=5){
+  value=value.toUpperCase();g.font=`${size}px Anton, Impact, sans-serif`;while(g.measureText(value).width>max&&size>12){size--;g.font=`${size}px Anton, Impact, sans-serif`;}
+  g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';g.strokeStyle='#050505';g.lineWidth=outline;g.shadowColor='#000b';g.shadowBlur=10;g.shadowOffsetY=4;g.strokeText(value,x,y);g.fillStyle=color;g.fillText(value,x,y);g.shadowBlur=0;g.shadowOffsetY=0;
+ }
  function draw(){
-  g.clearRect(0,0,1920,1080);g.fillStyle='#08111f';g.fillRect(0,0,1920,1080);
-  if(background)fit(background,0,0,1920,1080,true);
-  g.fillStyle=custom?'#03071170':scenes[activeScene][2]+'66';g.fillRect(0,0,1920,1080);
-  const shade=g.createLinearGradient(0,0,0,1080);shade.addColorStop(0,'#03060ee6');shade.addColorStop(.22,'#03060e30');shade.addColorStop(1,'#03060eb0');g.fillStyle=shade;g.fillRect(0,0,1920,1080);
-  rounded(787,28,346,40,20,'#ed3450');text('FC VOLT  /  RANKED PICKS',960,49,320,18,'#fff');
-  text($('posterTitle').value.trim()||'TOP 10 • DO NOT CLAIM',960,118,1730,68);
-  g.fillStyle='#ff485f';g.fillRect(860,167,200,4);
+  g.clearRect(0,0,W,H);
+  if(background){fit(background,0,0,W,H,true);g.fillStyle=custom?'#02050b25':scenes[activeScene][2]+'55';g.fillRect(0,0,W,H);}
+  else{
+   const colors=activeScene===0?['#ff790d','#ff3200','#df1400']:activeScene===1?['#b531e7','#7212b7','#35046a']:activeScene===2?['#075d91','#05214d','#020a20']:['#09834c','#06482b','#021a12'];
+   const gradient=g.createLinearGradient(0,0,0,H);colors.forEach((c,i)=>gradient.addColorStop(i/2,c));g.fillStyle=gradient;g.fillRect(0,0,W,H);
+   const glow=g.createRadialGradient(W/2,0,0,W/2,0,820);glow.addColorStop(0,'#fff38355');glow.addColorStop(1,'#ffffff00');g.fillStyle=glow;g.fillRect(0,0,W,H);
+  }
+  g.fillStyle='#ffffff12';g.beginPath();g.moveTo(0,0);g.lineTo(110,0);g.lineTo(0,310);g.fill();g.beginPath();g.moveTo(W-80,0);g.lineTo(W,0);g.lineTo(W,300);g.fill();
+  g.beginPath();g.arc(540,660,345,0,Math.PI*2);g.setLineDash([7,6]);g.strokeStyle='#ffffff24';g.lineWidth=2;g.stroke();g.setLineDash([]);
+  impact($('posterTitle').value.trim()||'TOP 10 DO NOT CLAIM',540,56,990,61,'#fff',6);
+  const subtitle=$('posterSubtitle').value.trim();if(subtitle){g.font='32px Anton, Impact, sans-serif';const sw=Math.min(900,g.measureText(subtitle.toUpperCase()).width+48);g.shadowColor='#000a';g.shadowBlur=13;g.shadowOffsetY=5;rounded((W-sw)/2,98,sw,46,24,'#030305','#ffffff');g.shadowBlur=0;g.shadowOffsetY=0;impact(subtitle,540,121,sw-36,31,'#fff',2);}
   cards.forEach((card,i)=>{
-   const x=76+(i%5)*358,y=204+Math.floor(i/5)*414;
-   rounded(x,y,336,390,20,'#050b17b8','#ffffff20');
-   if(card.image)fit(card.image,x+42,y+23,252,292);
-   else{rounded(x+58,y+31,220,272,18,'#12203390','#ffffff18');text('CARD '+(i+1),x+168,y+160,185,26,'#a4b5cb');}
-   rounded(x+13,y+13,62,46,12,'#f1c768');text('#'+(i+1),x+44,y+37,53,26,'#1d1707');
-   g.beginPath();g.arc(x+301,y+35,25,0,Math.PI*2);g.fillStyle='#e52d4b';g.fill();g.strokeStyle='#ffb4bf';g.lineWidth=2;g.stroke();g.strokeStyle='#fff';g.lineWidth=5;g.lineCap='round';g.beginPath();g.moveTo(x+293,y+27);g.lineTo(x+309,y+43);g.moveTo(x+309,y+27);g.lineTo(x+293,y+43);g.stroke();
-   rounded(x+40,y+326,256,45,23,'#030b16','#00d6f3');if(shardIcon.complete&&shardIcon.naturalWidth)g.drawImage(shardIcon,x+48,y+331,35,35);text(card.cost.trim()||'—',x+184,y+349,192,30,'#ffffff');
+   const {x,y,w,h}=slot(i);
+   impact('#'+(i+1),x+w/2,y-22,w,26,'#ffeb50',3);
+   if(card.image){g.shadowColor='#000b';g.shadowBlur=18;g.shadowOffsetY=9;fit(card.image,x,y,w,h);g.shadowBlur=0;g.shadowOffsetY=0;}
+   else{g.setLineDash([9,7]);rounded(x+15,y+10,w-30,h-20,12,'#00000020','#ffffff66');g.setLineDash([]);impact('ADD CARD',x+w/2,y+h/2,w-40,25,'#ffffffbb',2);}
+   const cx=x+w-5,cy=y+7,r=i<6?23:20;
+   g.shadowColor='#000a';g.shadowBlur=10;g.beginPath();g.arc(cx,cy,r,0,Math.PI*2);g.fillStyle='#e81738';g.fill();g.strokeStyle='#fff';g.lineWidth=2.5;g.stroke();g.shadowBlur=0;g.strokeStyle='#fff';g.lineWidth=5;g.lineCap='round';g.beginPath();g.moveTo(cx-7,cy-7);g.lineTo(cx+7,cy+7);g.moveTo(cx+7,cy-7);g.lineTo(cx-7,cy+7);g.stroke();
+   const ph=i<6?42:36,py=y+h+10,cost=card.cost.trim()||'—';g.font=`${i<6?32:27}px Anton, Impact, sans-serif`;const pw=Math.max(120,Math.min(w-5,g.measureText(cost).width+62)),px=x+(w-pw)/2;
+   g.shadowColor='#00dfff';g.shadowBlur=16;rounded(px,py,pw,ph,ph/2,'#020712','#00e5ff');g.shadowBlur=0;if(shardIcon.complete&&shardIcon.naturalWidth)g.drawImage(shardIcon,px+5,py+4,ph-8,ph-8);impact(cost,px+ph+(pw-ph)/2-3,py+ph/2+1,pw-ph-12,i<6?32:27,'#fff',2);
   });
-  text('FC VOLT  •  FC MOBILE',960,1058,1600,18,'#c2ccdc');
  }
  async function loadImage(file){
   if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>15*1024*1024)throw Error('Choose a PNG, JPG or WebP image up to 15 MB.');
@@ -96,18 +106,19 @@
  $('restoreCard').onclick=async()=>{if(!selectedExists()||pending)return;const card=selected;setPending(1);try{const image=await createImageBitmap(await(await fetch(card.originalURL)).blob());card.image.close();card.image=image;card.url=card.originalURL;card.cleaned=false;status('Original card restored.');}catch(e){status('Could not restore this card. Please upload it again.',true);}finally{setPending(-1);render();}};
  let sceneRequest=0;
  async function chooseScene(index){const request=++sceneRequest;setPending(1);try{
-  const image=new Image();image.src='assets/comparison-backgrounds/'+scenes[index][1]+'.jpg';await image.decode();if(request!==sceneRequest)return;
+  let image=null;if(scenes[index][1]){image=new Image();image.src='assets/comparison-backgrounds/'+scenes[index][1]+'.jpg';await image.decode();}if(request!==sceneRequest)return;
   custom?.close();custom=null;background=image;activeScene=index;$('backgroundName').textContent=scenes[index][0];document.querySelectorAll('[data-scene]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.scene===index)));draw();
  }catch(e){status('Background could not load. Try another preset or upload your own.',true);}finally{setPending(-1);}}
- scenes.forEach(([name,file],i)=>{const button=document.createElement('button');button.type='button';button.dataset.scene=i;button.setAttribute('aria-pressed',String(i===0));button.innerHTML=`<img src="assets/comparison-backgrounds/${file}.jpg" alt=""><span>${name}</span>`;button.onclick=()=>chooseScene(i);$('backgrounds').append(button);});
+ scenes.forEach(([name,file],i)=>{const button=document.createElement('button');button.type='button';button.dataset.scene=i;button.setAttribute('aria-pressed',String(i===0));button.innerHTML=(file?`<img src="assets/comparison-backgrounds/${file}.jpg" alt="">`:`<i class="scene-swatch" style="background:linear-gradient(145deg,${scenes[i][2]},#150714)"></i>`)+`<span>${name}</span>`;button.onclick=()=>chooseScene(i);$('backgrounds').append(button);});
  $('customBackground').onchange=async e=>{const file=e.target.files[0];if(!file)return;const request=++sceneRequest;setPending(1);try{const image=await loadImage(file);if(request!==sceneRequest){image.close();return;}custom?.close();custom=image;background=image;$('backgroundName').textContent='Your background';document.querySelectorAll('[data-scene]').forEach(b=>b.setAttribute('aria-pressed','false'));draw();status('Your background is applied.');}catch(err){status(err.message,true);}finally{setPending(-1);e.target.value='';}};
- $('posterTitle').oninput=draw;
- canvas.onclick=e=>{const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*1920/r.width,y=(e.clientY-r.top)*1080/r.height;for(let i=0;i<10;i++){const sx=76+i%5*358,sy=204+Math.floor(i/5)*414;if(x>=sx&&x<=sx+336&&y>=sy&&y<=sy+390){if(selected&&pool.includes(selected))place(selected,i);else if(cards[i].image)select(cards[i]);else if(selected)place(selected,i);break;}}};
- dropTarget(canvas,card=>{ /* Rank rows provide precise drag targets; canvas drop uses pointer position below. */ });
- canvas.ondrop=e=>{e.preventDefault();canvas.classList.remove('drag-over');const card=dragged;dragged=null;if(!card)return;const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*1920/r.width,y=(e.clientY-r.top)*1080/r.height;for(let i=0;i<10;i++){const sx=76+i%5*358,sy=204+Math.floor(i/5)*414;if(x>=sx&&x<=sx+336&&y>=sy&&y<=sy+390){place(card,i);break;}}};
+ $('posterTitle').oninput=draw;$('posterSubtitle').oninput=draw;document.fonts.ready.then(draw);
+ function rankAt(e){const r=canvas.getBoundingClientRect(),px=(e.clientX-r.left)*W/r.width,py=(e.clientY-r.top)*H/r.height;return cards.findIndex((_,i)=>{const {x,y,w,h}=slot(i);return px>=x&&px<=x+w&&py>=y-35&&py<=y+h+60;});}
+ canvas.onclick=e=>{const i=rankAt(e);if(i<0)return;if(selected&&pool.includes(selected))place(selected,i);else if(cards[i].image)select(cards[i]);else if(selected)place(selected,i);};
+ dropTarget(canvas,()=>{});
+ canvas.ondrop=e=>{e.preventDefault();canvas.classList.remove('drag-over');const card=dragged;dragged=null;const i=rankAt(e);if(card&&i>=0)place(card,i);};
  $('download').onclick=async()=>{
   if(!cards.some(c=>c.image)){status('Add at least one player card before downloading.',true);return;}
-  setPending(1);try{draw();const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('PNG export failed. Please try again.');const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='FC-VOLT-do-not-claim-top10.png';link.click();setTimeout(()=>URL.revokeObjectURL(url),60000);status('Downloaded 1920 × 1080 PNG.');}catch(e){status(e.message,true);}finally{setPending(-1);}
+  setPending(1);try{await document.fonts.ready;draw();const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('PNG export failed. Please try again.');const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='FC-VOLT-do-not-claim-top10.png';link.click();setTimeout(()=>URL.revokeObjectURL(url),60000);status('Downloaded 1080 × 1240 PNG.');}catch(e){status(e.message,true);}finally{setPending(-1);}
  };
  render();chooseScene(0);
 })();
