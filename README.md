@@ -2,7 +2,7 @@
 
 Start at [Home](index.html). All tools share a consistent sidebar on desktop and a compact Tools menu on mobile. The Tier List has moved to [tierlist.html](tierlist.html); existing tool pages retain their editing and export features. Secondary actions and visual settings are grouped under More options and appearance sections.
 
-The Max Card creator uses three steps: Upload → Review → Download. RenderZ scanning starts automatically; a guided screenshot setup is remembered locally after a successful export. First-time calibration and manual OCR corrections can still take longer than two minutes.
+The Max Card creator now runs automatically: upload a base Player Profile screenshot and the matching square RenderZ export, then download the result. The supported Gabriel-style layout requires no forms, confirmations or box marking. Other layouts are rejected with a clear error. See [automatic mode support, privacy and tests](MAXCARD-AUTO.md).
 
 A high-performance, dark esports tier list creator designed specifically for FC Mobile weekly player rankings.
 
@@ -134,9 +134,9 @@ open team11.html
 
 ## Max Card Generator
 
-[Max Card Generator](maxcard.html) adds a browser-local, fan-made level-30 preview tool with RenderZ OCR suggestions, manual value confirmation, calibrated edit masks, approved skill-icon crops, before/after comparison and original-resolution PNG export. Every export verifies that pixels outside the selected masks remain identical. New screenshot layouts require manual calibration; real screenshot visual accuracy remains to be validated.
+[Max Card Generator](maxcard.html) automatically creates a fan-made level-30 preview from the supported full landscape profile and square RenderZ export. It reads stats and skill allocations, validates the layout, preserves original artwork and PlayStyles, and exports an original-resolution PNG with an outside-mask pixel check. The supplied real Gabriel references are used for integration testing. Support for other layouts remains limited; see [automatic-mode documentation](MAXCARD-AUTO.md). The previous advanced tool is retained at [maxcard-manual.html](maxcard-manual.html).
 
-See [setup, workflow, limitations, tests and deployment instructions](MAXCARD.md). Run core tests with `node --test tests/maxcard-core.test.cjs`; open `tests/maxcard-browser.html` through the local server for browser integration checks.
+See [automatic-mode setup, limitations, tests and deployment](MAXCARD-AUTO.md), or [advanced-editor documentation](MAXCARD.md). Run core tests with `node --test tests/maxcard-core.test.cjs`; open `tests/maxcard-browser.html` through the local server for browser integration checks.
 
 ## Player Comparison backgrounds and downloads
 

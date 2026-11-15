@@ -1,6 +1,8 @@
-# FC-VOLT Max Card Generator
+# FC-VOLT Advanced Max Card Editor
 
-Open `maxcard.html` through the same static hosting used for the existing pages. No build, backend, database, account, API key, or environment variable is needed.
+The default `maxcard.html` now uses automatic recognition; see [MAXCARD-AUTO.md](MAXCARD-AUTO.md). These instructions describe the retained advanced editor.
+
+Open `maxcard-manual.html` through the same static hosting used for the existing pages. No build, backend, database, account, API key, or environment variable is needed.
 
 ## Implementation plan and architecture
 
@@ -19,7 +21,7 @@ Open `maxcard.html` through the same static hosting used for the existing pages.
 python3 -m http.server 8088
 ```
 
-Visit `http://localhost:8088/maxcard.html`. Use a current browser with Canvas, createImageBitmap, WebAssembly, Pointer Events and document.fonts support.
+Visit `http://localhost:8088/maxcard-manual.html`. Use a current browser with Canvas, createImageBitmap, WebAssembly, Pointer Events and document.fonts support.
 
 ## Workflow
 
