@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const $=id=>document.getElementById(id),L=MaxCardLayout,C=MaxCardCore;
-  const images={base:null,render:null},urls={},canvases={};let busy=false,outputURL=null,detected=null;
+  const images={base:null,render:null},urls={},canvases={};let basePixels=null;let busy=false,outputURL=null,detected=null;
   const makeCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
   function message(text,error=false,progress){$('status').textContent=text;$('status').classList.toggle('error',error);if(progress!==undefined)$('progress').value=progress;}
   function resetResult(){if(outputURL)URL.revokeObjectURL(outputURL);outputURL=null;detected=null;$('result').hidden=true;$('retry').hidden=true;}
@@ -13,9 +13,19 @@
       if(!file||!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>15*1024*1024)throw Error('Choose a PNG, JPG or WebP image up to 15 MB.');
       const image=await createImageBitmap(file);
       if(image.width*image.height>12000000||image.width<300||image.height<300||Math.max(image.width,image.height)>8192){image.close();throw Error('Use a full screenshot, at least 300 px per edge and at most 12 megapixels.');}
-      images[kind]?.close();images[kind]=image;
+      // Snapshot the original only once. PNG uploads use file bytes directly,
+      // avoiding privacy-randomized canvas pixels and preserving their ICC profile.
+      let decoded=null;
+      if(kind==='base'&&file.type==='image/png'){
+        try{decoded=await MaxCardPNG.decode(await file.arrayBuffer());}catch(e){if(e.code!=='UNSUPPORTED_PNG'){image.close();throw e;}}
+      }
+      const c=makeCanvas(image.width,image.height),cg=c.getContext('2d',{willReadFrequently:true});
+      if(decoded){if(decoded.width!==image.width||decoded.height!==image.height){image.close();throw Error('PNG orientation or dimensions do not match the profile screenshot.');}cg.putImageData(new ImageData(decoded.data,decoded.width,decoded.height),0,0);}
+      else cg.drawImage(image,0,0);
+      if(kind==='base')basePixels=decoded||{width:image.width,height:image.height,data:cg.getImageData(0,0,image.width,image.height).data,metadata:[]};
+      images[kind]?.close();images[kind]=image;canvases[kind]=c;
       if(urls[kind])URL.revokeObjectURL(urls[kind]);urls[kind]=URL.createObjectURL(file);$(kind+'Thumb').src=urls[kind];$(kind+'Thumb').hidden=false;$(kind+'Info').textContent=`${image.width} × ${image.height} · Added`;
-      const c=makeCanvas(image.width,image.height);c.getContext('2d',{willReadFrequently:true}).drawImage(image,0,0);canvases[kind]=c;resetResult();
+      resetResult();
       if(images.base&&images.render)await run();else message('Image added. Add the other screenshot to generate automatically.');
     }catch(e){message(e.message,true);}
   }
@@ -134,8 +144,8 @@
   }
   async function loadAsset(path){const image=new Image();image.src=path;await image.decode();return image;}
   async function composite(target){
-    const source=canvases.base,w=source.width,h=source.height,out=makeCanvas(w,h),g=out.getContext('2d',{willReadFrequently:true}),original=source.getContext('2d',{willReadFrequently:true}).getImageData(0,0,w,h),regions=L.regions(target.allocation);
-    g.putImageData(original,0,0);
+    const source=canvases.base,w=source.width,h=source.height,out=makeCanvas(w,h),g=out.getContext('2d',{willReadFrequently:true}),original=basePixels,regions=L.regions(target.allocation);
+    g.putImageData(new ImageData(new Uint8ClampedArray(original.data),w,h),0,0);
     const [badge,diamond]=await Promise.all([loadAsset('assets/maxcard/level30.png'),loadAsset('assets/maxcard/rank-orange.png')]);
     for(const id of ['cardOVR','panelOVR',...C.stats])bounded(g,regions[id],w,h,p=>{clearArea(source,out,regions[id]);writeNumber(g,target[id==='cardOVR'||id==='panelOVR'?'ovr':id],p,C.stats.includes(id)?'#00c72c':'#ffffff');});
     bounded(g,regions.training,w,h,p=>{clearArea(source,out,regions.training);writeNumber(g,'30/30',p,'#ffffff','Arial, sans-serif',400);});
@@ -150,14 +160,14 @@
         const badge={x:p.x+p.w*.75,y:p.y+p.h*.79,w:p.w*.24,h:p.h*.21};g.fillStyle='#07090b';g.fillRect(badge.x,badge.y,badge.w,badge.h);writeNumber(g,points,badge,'#ffffff','Arial,sans-serif');
       });
     });
-    // Commit integer-aligned patches onto a fresh source copy. Canvas glyph/clip
-    // antialiasing must never leak a fringe beyond an approved edit rectangle.
-    const committed=makeCanvas(w,h),committedContext=committed.getContext('2d',{willReadFrequently:true});committedContext.putImageData(original,0,0);
-    for(const region of Object.values(regions)){const p=C.rect(region,w,h);committedContext.putImageData(g.getImageData(p.x,p.y,p.w,p.h),p.x,p.y);}
-    C.assertPreserved(original.data,committedContext.getImageData(0,0,w,h).data,w,h,Object.values(regions));
-    const blob=await new Promise(r=>committed.toBlob(r,'image/png'));if(!blob)throw Error('PNG encoding failed. Please retry.');
-    const decoded=await createImageBitmap(blob),verify=makeCanvas(w,h),v=verify.getContext('2d',{willReadFrequently:true});v.drawImage(decoded,0,0);decoded.close();
-    C.assertPreserved(original.data,v.getImageData(0,0,w,h).data,w,h,Object.values(regions));
+    // Assemble exact patches in CPU memory. Never read back a full output
+    // canvas: privacy browsers may perturb those pixels independently per call.
+    const patches=Object.values(regions).map(region=>{const p=C.rect(region,w,h);return {...p,data:g.getImageData(p.x,p.y,p.w,p.h).data};});
+    const finalPixels=MaxCardPNG.commitPatches(original.data,w,h,patches);
+    C.assertPreserved(original.data,finalPixels,w,h,Object.values(regions));
+    const blob=await MaxCardPNG.encode({width:w,height:h,data:finalPixels,metadata:original.metadata});
+    const decoded=await MaxCardPNG.decode(await blob.arrayBuffer());
+    C.assertPreserved(original.data,decoded.data,w,h,Object.values(regions));
     return {blob,regions};
   }
   async function run(){
