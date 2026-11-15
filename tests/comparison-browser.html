@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Comparison backgrounds and export checks</title><style>body{background:#08111b;color:#d9ffe8;font:14px monospace}iframe{width:100%;height:800px;border:1px solid #234}pre{white-space:pre-wrap}</style><h1>Comparison background and PNG checks</h1><button id="run">Run background and export checks</button><pre id="result">Ready</pre><a id="sample" hidden download="fcvolt-verified-comparison.png">Download tested sample PNG</a><iframe id="app" src="../shards.html"></iframe>
+<script>
+const frame=document.getElementById('app'),result=document.getElementById('result');
+const wait=async fn=>{for(let i=0;i<300;i++){if(fn())return;await new Promise(r=>setTimeout(r,100));}throw Error('Timed out');};
+const assert=(v,m)=>{if(!v)throw Error(m);};
+function upload(w,id,files){const dt=new w.DataTransfer();files.forEach(f=>dt.items.add(f));const el=w.document.getElementById(id);el.files=dt.files;el.dispatchEvent(new w.Event('change',{bubbles:true}));}
+document.getElementById('run').onclick=async()=>{
+ result.textContent='Running…';
+ try{
+  await wait(()=>frame.contentWindow.captureComparison&&frame.contentWindow.ComparisonBackgrounds);
+  const w=frame.contentWindow,d=w.document,$=id=>d.getElementById(id);
+  assert($('backgroundGallery').children.length===12,'12 presets missing');
+  for(const preset of w.ComparisonBackgrounds.presets){w.setTheme(preset.id);await w.ComparisonBackgrounds.ready(preset.id);assert($('comparisonGraphic').dataset.scene===preset.id,'preset did not apply');assert($('selectedBackground').textContent===preset.name,'label mismatch');}
+  result.textContent+='\nPASS all 12 background presets and all 4 locally hosted assets.';
+  const c=document.createElement('canvas');c.width=180;c.height=240;const g=c.getContext('2d');g.fillStyle='#3366ff';g.fillRect(0,0,180,240);g.fillStyle='white';g.font='bold 26px Arial';g.fillText('TEST CARD',12,120);g.fillText('127 CB',12,155);const blob=await new Promise(r=>c.toBlob(r));
+  const file=new w.File([blob],'test-card.png',{type:'image/png'});upload(w,'mainCardFileInput',[file]);await wait(()=>$('mainCardThumb').getAttribute('src')?.startsWith('data:'));
+  upload(w,'batchFileInput',Array.from({length:6},()=>file));await wait(()=>d.querySelectorAll('.unit-card-img').length>=12);
+  w.setTheme('golden-final');w.setColumns(2);w.setRows(3);
+  const originalTransform=$('comparisonGraphic').style.transform;
+  const hd=await w.captureComparison(1);assert(hd.width===1080&&hd.height===1800,'HD dimensions incorrect');assert($('comparisonGraphic').style.transform===originalTransform,'capture changed live transform');
+  const pixel=hd.getContext('2d').getImageData(40,1550,1,1).data;assert(pixel[3]===255,'export background is transparent');
+  const png=await new Promise(r=>hd.toBlob(r,'image/png')),decoded=await createImageBitmap(png);assert(decoded.width===1080&&decoded.height===1800,'encoded PNG dimensions wrong');decoded.close();
+  const url=URL.createObjectURL(png),sample=document.getElementById('sample');sample.href=url;sample.hidden=false;
+  const hi=await w.captureComparison(2);assert(hi.width===2160&&hi.height===3600,'2x dimensions incorrect');
+  const oldPixels=hd.getContext('2d').getImageData(8,500,1,1).data;
+  w.setTheme('neon-tunnel');const neon=await w.captureComparison(1);const newPixels=neon.getContext('2d').getImageData(8,500,1,1).data;assert(oldPixels.some((v,i)=>v!==newPixels[i]),'background did not change in export');
+  w.setColumns(3);const wide=await w.captureComparison(1);assert(wide.width===1560&&wide.height===1800,'3-column export cropped');
+  const scale=+$('comparisonGraphic').style.transform.match(/scale\(([^)]+)/)[1];assert(scale*1560<=$('graphicViewport').clientWidth+1,'wide preview exceeds viewport');
+  w.setColumns(2);w.setTheme('golden-final');
+  result.textContent+='\nPASS actual file-input uploads, 1080×1800 PNG, 2160×3600 PNG, 1560×1800 three-column export, opaque background, selected-background pixels and unchanged live preview.\nALL CHECKS PASSED';
+ }catch(e){result.textContent+='\nFAIL: '+e.message;}
+};
+</script></html>

@@ -137,3 +137,11 @@ open team11.html
 [Max Card Generator](maxcard.html) adds a browser-local, fan-made level-30 preview tool with RenderZ OCR suggestions, manual value confirmation, calibrated edit masks, approved skill-icon crops, before/after comparison and original-resolution PNG export. Every export verifies that pixels outside the selected masks remain identical. New screenshot layouts require manual calibration; real screenshot visual accuracy remains to be validated.
 
 See [setup, workflow, limitations, tests and deployment instructions](MAXCARD.md). Run core tests with `node --test tests/maxcard-core.test.cjs`; open `tests/maxcard-browser.html` through the local server for browser integration checks.
+
+## Player Comparison backgrounds and downloads
+
+Player Comparison now offers **Choose background** above the preview: twelve looks built from four original locally hosted images (Champions Night, Neon Tunnel, Golden Arena and Cosmic Stadium), plus the existing classic themes. **Surprise me** selects a different look. Background selection persists with the existing comparison save. See [asset provenance and exact generation prompts](assets/comparison-backgrounds/README.md).
+
+**Download quality** offers original-size HD and 2× export. With the standard two-column layout these are 1080×1800 and 2160×3600 PNGs; three columns export at 1560×1800 or 3120×3600. The displayed size follows the actual canvas. Capture waits for fonts, player images and the selected background, excludes editing controls, keeps the live preview transform unchanged and prevents overlapping downloads. Green subtitle/arrow glow has been replaced with dark fills, crisp white lettering and restrained status outlines for readable exports.
+
+Run `python3 -m http.server 8088`, open `http://localhost:8088/tests/comparison-browser.html`, and click **Run background and export checks**. The browser checks all twelve presets and four image assets, actual fixture uploads, HD/2× dimensions, background pixels, opaque PNG encoding, three-column capture and preview scaling. The synthetic blue test cards are fixtures, not new default cards. The page saves test comparisons to the local preview origin; production browser data is separate. Use the real **Export PNG** button on `shards.html` to verify the browser download, then inspect the saved PNG.

@@ -2458,6 +2458,8 @@
 
   </style>
 <link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="comparison-backgrounds.css">
+<script src="comparison-backgrounds.js"></script>
 <script defer src="site.js"></script>
 </head>
 <body data-tool="shards" data-page-title="Player Comparison">
@@ -2486,7 +2488,7 @@
         <button type="button" id="resetAllBtn" class="btn" style="color:#ff7777; border-color:#552222; background:#1c0d12;" title="Reset all cards to empty">
           🗑️ Clear Cards
         </button>
-        <button type="button" id="exportPngBtn" class="btn btn-primary" title="Export as 1080×1800 HD PNG">
+        <button type="button" id="exportPngBtn" class="btn btn-primary" title="Download PNG at the selected quality">
           📸 Export PNG
         </button>
         <button type="button" id="exportPdfBtn" class="btn btn-primary" title="Export as Printable PDF">
@@ -2630,8 +2632,9 @@
 
       <!-- RIGHT PANE: LIVE GRAPHIC VIEWPORT -->
       <section class="preview-panel">
+        <div class="comparison-style-bar"><div><small>BACKGROUND</small><strong id="selectedBackground">Classic stadium</strong></div><button type="button" id="openBackgrounds" class="btn">Choose background</button><label>Download quality<select id="exportSize"><option value="1">HD · Original size</option><option value="2">2× · Extra sharp</option></select></label></div>
         <div class="preview-controls-bar">
-          <span>📸 <strong>Live 3:5 Ratio Preview</strong> (1080 × 1800 - Exact Reference Graphic)</span>
+          <span id="exportDimensions">PNG · 1080 × 1800</span>
           <div style="display:flex; gap:6px;">
             <button id="zoomFitBtn" class="btn-mini">Fit View</button>
             <button id="zoom100Btn" class="btn-mini">100% Full Res</button>
@@ -2904,6 +2907,7 @@
     <span id="toastMessage">Action completed</span>
   </div>
 
+  <dialog id="backgroundDialog" class="background-dialog" aria-labelledby="backgroundTitle"><div class="background-dialog-header"><div><h2 id="backgroundTitle">Give every comparison a new look</h2><p>12 looks · 4 original image backgrounds. Pick one and keep creating.</p></div><button id="closeBackgrounds" type="button" aria-label="Close background picker">×</button></div><div id="backgroundGallery" class="background-gallery"></div><div class="background-dialog-bottom"><span>Backgrounds are included in your PNG download.</span><button type="button" id="shuffleBackground">Surprise me ↗</button></div></dialog>
   <script>
 /**
  * FC_VOLT PLAYER COMPARISON ENGINE
@@ -2993,6 +2997,8 @@ function render() {
   }
   document.getElementById('glowRange').value = state.stadiumGlow;
   document.getElementById('glowVal').textContent = `${state.stadiumGlow}%`;
+
+  ComparisonBackgrounds.apply(state.stadiumTheme);
 
   // Selector active states
   document.querySelectorAll('.btn-col-opt').forEach(b => {
@@ -3401,6 +3407,7 @@ function setRows(r) {
 }
 
 function setTheme(t) {
+  if(!['champions','pitch','neon','dark','sunset','gold','cyber','stealth'].includes(t)&&!ComparisonBackgrounds.presets.some(p=>p.id===t))return;
   state.stadiumTheme = t;
   state.theme = t;
   render();
@@ -3413,6 +3420,7 @@ function setGlow(val) {
     lights.style.opacity = (state.stadiumGlow / 100).toFixed(2);
   }
   document.getElementById('glowVal').textContent = `${state.stadiumGlow}%`;
+  saveToLocalStorage();
 }
 
 // Shards Toggle
@@ -3454,75 +3462,59 @@ function adjustGraphicScale() {
   const vp = document.getElementById('graphicViewport');
   const graphic = document.getElementById('comparisonGraphic');
   if (!vp || !graphic) return;
-  const availW = vp.clientWidth - 40;
-  const availH = vp.clientHeight - 40;
-  const scale = Math.min(availW / 1080, availH / 1800, 1);
-  graphic.style.transform = `scale(${scale.toFixed(4)})`;
+  const width=graphic.offsetWidth, height=graphic.offsetHeight;
+  const scale=Math.min(Math.max(1,vp.clientWidth-24)/width,Math.max(360,window.innerHeight-180)/height,1);
+  graphic.style.transform=`scale(${scale})`;
+  vp.style.height=`${Math.ceil(height*scale)+24}px`;
 }
-
 window.addEventListener('resize', adjustGraphicScale);
 document.getElementById('zoomFitBtn').addEventListener('click', adjustGraphicScale);
 document.getElementById('zoom100Btn').addEventListener('click', () => {
-  document.getElementById('comparisonGraphic').style.transform = 'scale(1)';
+  const graphic=document.getElementById('comparisonGraphic');graphic.style.transform='scale(1)';
+  document.getElementById('graphicViewport').style.height=`${graphic.offsetHeight+24}px`;
 });
 
-// Export PNG & PDF
-document.getElementById('exportPngBtn').addEventListener('click', async () => {
-  const graphic = document.getElementById('comparisonGraphic');
-  showToast('Generating HD 1080×1800 PNG...', '📸');
-
-  const prevTransform = graphic.style.transform;
-  graphic.style.transform = 'none';
-
+// One shared capture path for PNG and PDF; never change the live preview transform.
+let exportInProgress=false;
+async function captureComparison(scale=1) {
+  const graphic=document.getElementById('comparisonGraphic');
+  if(!graphic.querySelector('.unit-card-img'))throw Error('Upload player cards before downloading.');
+  await document.fonts.ready;
+  await ComparisonBackgrounds.ready(state.stadiumTheme);
+  await Promise.all([...graphic.querySelectorAll('img')].map(img=>img.decode().catch(()=>{throw Error('A player card could not load. Re-upload that card before downloading.');})));
+  const width=graphic.offsetWidth,height=graphic.offsetHeight;
+  const canvas=await html2canvas(graphic,{
+    width,height,scale,useCORS:true,allowTaint:false,backgroundColor:'#030814',scrollX:0,scrollY:0,
+    onclone(doc){
+      const copy=doc.getElementById('comparisonGraphic');
+      copy.classList.add('exporting');copy.style.transform='none';copy.style.position='fixed';copy.style.left='0';copy.style.top='0';copy.style.margin='0';
+      copy.style.width=width+'px';copy.style.minWidth=width+'px';copy.style.height=height+'px';copy.style.minHeight=height+'px';
+    }
+  });
+  if(canvas.width!==width*scale||canvas.height!==height*scale)throw Error('Unexpected export size. Please retry.');
+  return canvas;
+}
+async function exportComparison(kind) {
+  if(exportInProgress)return;exportInProgress=true;
+  const png=document.getElementById('exportPngBtn'),pdfButton=document.getElementById('exportPdfBtn');
+  png.disabled=pdfButton.disabled=true;
+  const scale=Number(document.getElementById('exportSize').value)||1;
+  showToast('Preparing your '+kind.toUpperCase()+'…','⏳');
   try {
-    const canvas = await html2canvas(graphic, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: null
-    });
-    graphic.style.transform = prevTransform;
-
-    const link = document.createElement('a');
-    link.download = `FC_VOLT_Player_Comparison_${Date.now()}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    showToast('Exported HD PNG successfully!', '✅');
-  } catch (err) {
-    graphic.style.transform = prevTransform;
-    console.error(err);
-    showToast('Export failed! Check console.', '⚠️');
-  }
-});
-
-document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-  const graphic = document.getElementById('comparisonGraphic');
-  showToast('Generating PDF...', '📄');
-
-  const prevTransform = graphic.style.transform;
-  graphic.style.transform = 'none';
-
-  try {
-    const canvas = await html2canvas(graphic, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: null
-    });
-    graphic.style.transform = prevTransform;
-
-    const imgData = canvas.toDataURL('image/jpeg', 0.95);
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
-    pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
-    pdf.save(`FC_VOLT_Player_Comparison_${Date.now()}.pdf`);
-    showToast('Exported PDF successfully!', '✅');
-  } catch (err) {
-    graphic.style.transform = prevTransform;
-    console.error(err);
-    showToast('PDF export failed!', '⚠️');
-  }
-});
+    const canvas=await captureComparison(scale);
+    if(kind==='png'){
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('PNG encoding failed.');
+      const url=URL.createObjectURL(blob),link=document.createElement('a');link.download=`FC_VOLT_Comparison_${state.stadiumTheme}_${canvas.width}x${canvas.height}.png`;link.href=url;link.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
+    }else{
+      const {jsPDF}=window.jspdf;const pdf=new jsPDF({orientation:canvas.width>canvas.height?'l':'p',unit:'px',format:[canvas.width,canvas.height],hotfixes:['px_scaling']});
+      pdf.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',0,0,canvas.width,canvas.height);pdf.save('FC_VOLT_Player_Comparison.pdf');
+    }
+    showToast(`Downloaded ${canvas.width} × ${canvas.height} ${kind.toUpperCase()}`,'✅');
+  }catch(err){console.error(err);showToast(err.message||'Download failed. Please retry.','⚠️');}
+  finally{exportInProgress=false;png.disabled=pdfButton.disabled=false;}
+}
+document.getElementById('exportPngBtn').addEventListener('click',()=>exportComparison('png'));
+document.getElementById('exportPdfBtn').addEventListener('click',()=>exportComparison('pdf'));
 
 // LocalStorage Persistence
 function saveToLocalStorage() {
@@ -4357,6 +4349,7 @@ if (bgApplyAllCardsBtn) {
 }
 
 // Initialization
+ComparisonBackgrounds.init();
 loadFromLocalStorage();
   </script>
 
