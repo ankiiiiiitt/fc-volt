@@ -1,0 +1,3198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FC_VOLT — Player Tier List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #05070a;
+    --panel-bg: #0b0f16;
+    --border-color: #1a2230;
+    --super-glow: #00ff55;
+    --good-glow: #00d2ff;
+    --average-glow: #ffaa00;
+    --bad-glow: #ff2233;
+    --tier-label-w: 210px;
+    --card-w: 124px;
+    --card-h: 170px;
+    --tier-min-h: 188px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #040507;
+    color: #f0f4fc;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  body {
+    padding: 14px;
+    background: radial-gradient(ellipse at 50% 0%, #111728 0%, #030508 75%);
+    background-attachment: fixed;
+  }
+  .app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Top Toolbar */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    background: rgba(11, 16, 26, 0.85);
+    border: 1px solid #1f2b3e;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    margin-bottom: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brandmark {
+    width: 44px;
+    height: 44px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #00ff66, #00c8ff);
+    color: #030805;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 26px;
+    font-style: italic;
+    box-shadow: 0 0 16px rgba(0, 255, 102, 0.4);
+    user-select: none;
+  }
+  .brand h1 {
+    font-size: 20px;
+    letter-spacing: 2.5px;
+    margin: 0;
+    font-weight: 900;
+    background: linear-gradient(90deg, #ffffff, #a5b8d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .brand small {
+    display: block;
+    color: #6d7f99;
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .template-nav {
+    display: flex;
+    background: #070a10;
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid #1f2b3e;
+    gap: 4px;
+  }
+  .nav-tab {
+    padding: 7px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #8c9eb5;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.16s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+  }
+  .nav-tab:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .nav-tab.active {
+    background: linear-gradient(135deg, #00ff66, #00c8ff);
+    color: #030805;
+    box-shadow: 0 0 12px rgba(0, 255, 102, 0.35);
+  }
+
+  .week-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #070a10;
+    padding: 4px 10px;
+    border: 1px solid #202b3c;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #9cb0cc;
+  }
+  .week-selector input {
+    background: transparent;
+    border: none;
+    color: #00ff88;
+    font-weight: 800;
+    font-size: 13px;
+    width: 110px;
+    outline: none;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  button, .btn {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    padding: 9px 14px;
+    border-radius: 6px;
+    border: 1px solid #2d3b52;
+    background: #0f1522;
+    color: #e4edf8;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  button:hover, .btn:hover {
+    background: #192438;
+    border-color: #00d2ff;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.25);
+    transform: translateY(-1px);
+  }
+  button:active, .btn:active {
+    transform: translateY(0);
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #00ff66, #00d2ff);
+    color: #030a05;
+    border: none;
+    box-shadow: 0 0 14px rgba(0, 255, 102, 0.35);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #22ff77, #33dcff);
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 102, 0.6);
+  }
+  .btn-export {
+    background: linear-gradient(135deg, #ffaa00, #ff5500);
+    color: #000;
+    border: none;
+    box-shadow: 0 0 14px rgba(255, 170, 0, 0.35);
+  }
+  .btn-export:hover {
+    background: linear-gradient(135deg, #ffbb22, #ff6611);
+    box-shadow: 0 0 20px rgba(255, 170, 0, 0.6);
+    color: #000;
+  }
+  .btn-danger {
+    background: #1a0c10;
+    border-color: #4a1924;
+    color: #ff6b7d;
+  }
+  .btn-danger:hover {
+    background: #2d1017;
+    border-color: #ff334b;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 51, 75, 0.3);
+  }
+  .btn-bg-remover {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: #ffffff;
+    border: 1.5px solid #c084fc;
+    font-weight: 900;
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.45);
+  }
+  .btn-bg-remover:hover {
+    background: linear-gradient(135deg, #a855f7 0%, #818cf8 100%);
+    border-color: #e9d5ff;
+    color: #ffffff;
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.7);
+    transform: translateY(-1px);
+  }
+  .btn-remove-all {
+    background: linear-gradient(135deg, #2e0915 0%, #17040a 100%);
+    border: 1.5px solid #ff2a55;
+    color: #ff6688;
+    font-weight: 900;
+  }
+  .btn-remove-all:hover {
+    background: linear-gradient(135deg, #ff1a44 0%, #c40026 100%);
+    border-color: #ff4466;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(255, 26, 68, 0.55);
+    transform: translateY(-1px);
+  }
+
+  /* CUSTOM IN-APP CONFIRMATION MODAL */
+  .custom-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 5, 10, 0.88);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  }
+  .custom-modal-backdrop.hidden {
+    display: none !important;
+  }
+  .custom-modal {
+    background: #0d1422;
+    border: 1.5px solid #ff2a55;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.85), 0 0 30px rgba(255, 42, 85, 0.35);
+    border-radius: 16px;
+    padding: 26px 28px;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    animation: modalPop 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  @keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-icon {
+    font-size: 38px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 10px rgba(255, 42, 85, 0.5));
+  }
+  .custom-modal h3 {
+    margin: 0 0 8px;
+    font-family: 'Titan One', 'Montserrat', sans-serif;
+    font-size: 21px;
+    color: #ffffff;
+    letter-spacing: 0.8px;
+  }
+  .custom-modal p {
+    margin: 0 0 22px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #9cb0cc;
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .modal-btn-cancel {
+    background: #151e2e;
+    border: 1px solid #293a52;
+    color: #ccd9eb;
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal-btn-cancel:hover {
+    background: #1f2b40;
+    color: #fff;
+    border-color: #3b506e;
+  }
+  .modal-btn-confirm {
+    background: linear-gradient(135deg, #ff1a44, #c40026);
+    border: 1px solid #ff4466;
+    color: #ffffff;
+    padding: 10px 22px;
+    font-size: 12px;
+    font-weight: 900;
+    border-radius: 8px;
+    box-shadow: 0 0 16px rgba(255, 26, 68, 0.5);
+    cursor: pointer;
+  }
+  .modal-btn-confirm:hover {
+    background: linear-gradient(135deg, #ff335a, #e6002e);
+    box-shadow: 0 0 24px rgba(255, 26, 68, 0.8);
+    transform: translateY(-1px);
+    color: #fff;
+  }
+
+  /* ========================================================
+     REMOVE BACKGROUND STUDIO MODAL STYLES
+     ======================================================== */
+  .bg-studio-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 12, 0.92);
+    backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    padding: 16px;
+  }
+  .bg-studio-backdrop.hidden {
+    display: none !important;
+  }
+  .bg-studio-modal {
+    background: #080d16;
+    border: 1.5px solid #a855f7;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(168, 85, 247, 0.35);
+    border-radius: 18px;
+    width: 1040px;
+    max-width: 96vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  .bg-studio-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: #0d1524;
+    border-bottom: 1px solid #1f2b40;
+  }
+  .bg-studio-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bg-studio-title h3 {
+    margin: 0;
+    font-family: 'Titan One', 'Montserrat', sans-serif;
+    font-size: 19px;
+    letter-spacing: 0.8px;
+    background: linear-gradient(90deg, #c084fc, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .bg-studio-title small {
+    display: block;
+    color: #8fa5c5;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .bg-studio-close {
+    background: #141f30;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    line-height: 1;
+    padding: 0;
+  }
+  .bg-studio-close:hover {
+    background: #ff2a55;
+    border-color: #ff4466;
+    color: #fff;
+    transform: scale(1.1);
+  }
+  .bg-studio-body {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+  @media (max-width: 860px) {
+    .bg-studio-body {
+      grid-template-columns: 1fr;
+    }
+  }
+  .bg-preview-stage {
+    background: #060a12;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-right: 1px solid #1a2436;
+    gap: 12px;
+  }
+  .bg-canvas-container {
+    flex: 1;
+    width: 100%;
+    min-height: 320px;
+    max-height: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 12px;
+    border: 1px solid #1e2c42;
+    overflow: hidden;
+    background-color: #0c121d;
+    background-image:
+      linear-gradient(45deg, #151e2c 25%, transparent 25%),
+      linear-gradient(-45deg, #151e2c 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #151e2c 75%),
+      linear-gradient(-45deg, transparent 75%, #151e2c 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    transition: background 0.2s ease;
+  }
+  .bg-canvas-container.theme-stadium {
+    background: url('stadium_pitch.jpg') center/cover no-repeat !important;
+  }
+  .bg-canvas-container.theme-black {
+    background: #000000 !important;
+  }
+  .bg-canvas-container.theme-white {
+    background: #ffffff !important;
+  }
+  #bgStudioCanvas {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.85));
+    transition: transform 0.1s ease;
+    cursor: crosshair;
+  }
+  .canvas-stage-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #0c1320;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #1a2538;
+  }
+  .stage-theme-toggles {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .theme-btn {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 5px;
+    background: #151e2e;
+    border: 1px solid #25354c;
+    color: #9cb1cb;
+    cursor: pointer;
+  }
+  .theme-btn.active {
+    background: #c084fc;
+    color: #040810;
+    border-color: #d8b4fe;
+    font-weight: 900;
+  }
+  .zoom-toggles {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #9cb1cb;
+    font-weight: 700;
+  }
+  .zoom-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 4px;
+    background: #151e2e;
+    border: 1px solid #25354c;
+    color: #cbd5e1;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .bg-controls-panel {
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+  }
+  .bg-section-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #c084fc;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .card-picker-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .card-picker-select {
+    flex: 1;
+    background: #101726;
+    border: 1.5px solid #2c3c54;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    outline: none;
+  }
+  .btn-sample-card {
+    background: linear-gradient(135deg, #d4af37, #996515);
+    color: #000;
+    font-weight: 900;
+    border: 1px solid #fff2a1;
+    font-size: 11px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .mode-card {
+    background: #101726;
+    border: 1.5px solid #1f2c40;
+    border-radius: 8px;
+    padding: 9px 10px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .mode-card:hover {
+    border-color: #a855f7;
+    background: #141e32;
+  }
+  .mode-card.active {
+    border-color: #c084fc;
+    background: rgba(168, 85, 247, 0.16);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+  }
+  .mode-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .mode-desc {
+    font-size: 9.5px;
+    color: #8c9eb5;
+    line-height: 1.3;
+  }
+  .slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 7px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    color: #cbd5e1;
+  }
+  .slider-val {
+    color: #c084fc;
+    font-weight: 900;
+  }
+  .bg-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #1a2538;
+    outline: none;
+  }
+  .bg-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #c084fc;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
+    border: 1.5px solid #fff;
+  }
+  .touchup-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #0f1624;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid #1e2c40;
+    width: 100%;
+  }
+  .touchup-btn {
+    padding: 5px 9px;
+    font-size: 10.5px;
+    font-weight: 800;
+    border-radius: 6px;
+    background: #162032;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .touchup-btn.active {
+    background: #9333ea;
+    border-color: #c084fc;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+  }
+  .bg-studio-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 22px;
+    background: #0b111c;
+    border-top: 1px solid #1a2538;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .footer-actions-left, .footer-actions-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn-apply-one {
+    background: linear-gradient(135deg, #00e676, #00b4d8);
+    color: #030810;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 14px rgba(0, 230, 118, 0.4);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-apply-all {
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    color: #ffffff;
+    font-weight: 900;
+    border: none;
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.45);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+  }
+  .btn-download-cutout {
+    background: #151e2e;
+    border: 1px solid #2b3e59;
+    color: #cbd5e1;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .btn-reset-original {
+    background: #1c1117;
+    border: 1px solid #3d1a25;
+    color: #ff8899;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .slot.filled:hover .slot-magic-btn {
+    display: grid;
+  }
+  .slot-magic-btn {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    color: #fff;
+    border: 1px solid #c084fc;
+    font-size: 11px;
+    display: none;
+    place-items: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.6);
+    line-height: 1;
+    padding: 0;
+    transition: transform 0.15s;
+  }
+  .slot-magic-btn:hover {
+    background: #a855f7;
+    transform: scale(1.15);
+  }
+  .tray-card .tray-card-magic {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    color: #fff;
+    border: 1px solid #c084fc;
+    font-size: 10px;
+    display: none;
+    place-items: center;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    line-height: 1;
+    padding: 0;
+  }
+  .tray-card:hover .tray-card-magic {
+    display: grid;
+  }
+  .tray-card .tray-card-magic:hover {
+    background: #a855f7;
+    transform: scale(1.15);
+  }
+
+  /* Subheader instructions */
+  .subbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+  .subbar-info h2 {
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin: 0;
+    color: #8fa0ba;
+    font-weight: 800;
+  }
+  .subbar-info p {
+    font-size: 11px;
+    color: #5c6c82;
+    margin: 3px 0 0;
+  }
+  .subbar-tip {
+    font-size: 11px;
+    color: #00ff99;
+    background: rgba(0, 255, 153, 0.08);
+    border: 1px solid rgba(0, 255, 153, 0.2);
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+  .card-size-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #090f19;
+    border: 1px solid #1f2e42;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #9cb1cb;
+  }
+  .card-size-picker label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.5px;
+    color: #00d2ff;
+  }
+  .card-size-picker select {
+    background: #121c2d;
+    border: 1px solid #283a54;
+    color: #00ffaa;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.16s ease;
+  }
+  .card-size-picker select:hover,
+  .card-size-picker select:focus {
+    border-color: #00d2ff;
+  }
+
+  /* TIER BOARD (Horizontal 4-row layout matching the picture!) */
+  .tierboard {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: #020304;
+    padding: 6px;
+    border: 2px solid #141c28;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tier-row {
+    display: grid;
+    grid-template-columns: var(--tier-label-w, 155px) 1fr;
+    min-height: var(--tier-min-h, 188px);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Tier Specific Styling & Backgrounds */
+  .tier-row.super {
+    border-color: rgba(0, 255, 85, 0.5);
+    box-shadow: inset 0 0 16px rgba(0, 255, 85, 0.15), 0 0 14px rgba(0, 255, 85, 0.1);
+  }
+  .tier-row.super .tier-label {
+    background: url('label_super.jpg') center / 100% 100% no-repeat;
+  }
+  .tier-row.super .tier-dropzone {
+    background: linear-gradient(90deg, rgba(2, 20, 5, 0.75) 0%, rgba(3, 10, 5, 0.88) 100%), url('bg_super.jpg') center/cover no-repeat;
+  }
+
+  .tier-row.good {
+    border-color: rgba(0, 210, 255, 0.5);
+    box-shadow: inset 0 0 16px rgba(0, 210, 255, 0.15), 0 0 14px rgba(0, 210, 255, 0.1);
+  }
+  .tier-row.good .tier-label {
+    background: url('label_good.jpg') center / 100% 100% no-repeat;
+  }
+  .tier-row.good .tier-dropzone {
+    background: linear-gradient(90deg, rgba(1, 15, 30, 0.75) 0%, rgba(2, 8, 18, 0.88) 100%), url('bg_good.jpg') center/cover no-repeat;
+  }
+
+  .tier-row.average {
+    border-color: rgba(255, 170, 0, 0.5);
+    box-shadow: inset 0 0 16px rgba(255, 170, 0, 0.15), 0 0 14px rgba(255, 170, 0, 0.1);
+  }
+  .tier-row.average .tier-label {
+    background: url('label_average.jpg') center / 100% 100% no-repeat;
+  }
+  .tier-row.average .tier-dropzone {
+    background: linear-gradient(90deg, rgba(30, 16, 0, 0.75) 0%, rgba(18, 9, 1, 0.88) 100%), url('bg_average.jpg') center/cover no-repeat;
+  }
+
+  .tier-row.bad {
+    border-color: rgba(255, 34, 51, 0.5);
+    box-shadow: inset 0 0 16px rgba(255, 34, 51, 0.15), 0 0 14px rgba(255, 34, 51, 0.1);
+  }
+  .tier-row.bad .tier-label {
+    background: url('label_bad.jpg') center / 100% 100% no-repeat;
+  }
+  .tier-row.bad .tier-dropzone {
+    background: linear-gradient(90deg, rgba(30, 3, 6, 0.75) 0%, rgba(18, 2, 4, 0.88) 100%), url('bg_bad.jpg') center/cover no-repeat;
+  }
+
+  .tier-label {
+    min-height: var(--tier-min-h, 188px);
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    padding: 0;
+    transition: all 0.2s ease;
+  }
+
+  .tier-dropzone {
+    min-height: var(--tier-min-h, 188px);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    position: relative;
+    transition: background-color 0.15s, outline 0.15s;
+  }
+  .tier-dropzone.drag-active {
+    outline: 2px dashed #00ffaa;
+    outline-offset: -4px;
+    background-color: rgba(0, 255, 170, 0.12) !important;
+  }
+
+  /* Slot Styles */
+  .slot {
+    width: var(--card-w, 124px);
+    height: var(--card-h, 170px);
+    border-radius: 8px;
+    border: 1.5px dashed rgba(255, 255, 255, 0.25);
+    background: rgba(4, 7, 12, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
+    flex-shrink: 0;
+  }
+  .slot:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(12, 20, 32, 0.8);
+    transform: scale(1.02);
+  }
+  .slot.dragover {
+    border-color: #00ffff !important;
+    border-style: solid !important;
+    background: rgba(0, 255, 255, 0.25) !important;
+    box-shadow: 0 0 16px rgba(0, 255, 255, 0.6);
+    transform: scale(1.05);
+  }
+  .slot.target-selected {
+    border-color: #00ff88 !important;
+    border-style: solid !important;
+    background: rgba(0, 255, 136, 0.2) !important;
+    box-shadow: 0 0 18px rgba(0, 255, 136, 0.7);
+    animation: pulseBorder 1.2s infinite alternate;
+  }
+  @keyframes pulseBorder {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+  }
+
+  .slot.empty .slot-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 6px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .slot.empty .slot-placeholder .plus {
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1;
+  }
+
+  /* Filled Slot Card */
+  .slot.filled {
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.35);
+    background: transparent;
+    padding: 0;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+  }
+  .slot.filled .slot-placeholder {
+    display: none;
+  }
+  .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 7px;
+    pointer-events: auto;
+    cursor: grab;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .card-img:active {
+    cursor: grabbing;
+  }
+  .slot.filled:hover .card-img {
+    filter: brightness(1.1);
+  }
+
+  /* Remove Card Button */
+  .remove-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ff2233;
+    color: #fff;
+    border: 1px solid #ffffff;
+    font-size: 13px;
+    font-weight: bold;
+    display: none;
+    place-items: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    line-height: 1;
+    padding: 0;
+  }
+  .slot.filled:hover .remove-btn {
+    display: grid;
+  }
+  .remove-btn:hover {
+    background: #ff4d5e;
+    transform: scale(1.15);
+  }
+
+  /* Add slot button in tier */
+  .btn-add-slot {
+    width: 44px;
+    height: var(--card-h, 170px);
+    border-radius: 8px;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    background: rgba(10, 15, 24, 0.4);
+    color: rgba(255, 255, 255, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .btn-add-slot:hover {
+    border-color: #00d2ff;
+    color: #00d2ff;
+    background: rgba(0, 210, 255, 0.12);
+  }
+
+  /* PLAYER CARDS TRAY / BENCH */
+  .cards-tray-section {
+    margin-top: 14px;
+    background: #080c14;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .tray-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #182333;
+  }
+  .tray-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tray-title h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #00ffaa;
+    text-transform: uppercase;
+  }
+  .tray-badge {
+    background: #141f30;
+    color: #9eb2d0;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid #28374d;
+  }
+  .tray-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Bench Pool container */
+  .bench-pool {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    min-height: var(--tier-min-h, 188px);
+    padding: 12px;
+    background: rgba(3, 5, 8, 0.7);
+    border: 1.5px dashed #202b3c;
+    border-radius: 8px;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  .bench-pool.drag-active {
+    border-color: #00ffaa;
+    background: rgba(0, 255, 170, 0.08);
+  }
+
+  .bench-empty-hint {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #55677d;
+    padding: 20px;
+    text-align: center;
+    user-select: none;
+  }
+  .bench-empty-hint svg {
+    width: 42px;
+    height: 42px;
+    stroke: #36465d;
+  }
+  .bench-empty-hint span {
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .bench-empty-hint small {
+    font-size: 10px;
+    color: #415065;
+  }
+
+  /* Card Item inside Tray */
+  .tray-card {
+    width: var(--card-w, 124px);
+    height: var(--card-h, 170px);
+    border-radius: 8px;
+    border: 1px solid #33445c;
+    background: #090e16;
+    padding: 2px;
+    position: relative;
+    cursor: grab;
+    transition: all 0.16s ease;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tray-card:hover {
+    border-color: #00d2ff;
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 6px 16px rgba(0, 210, 255, 0.35);
+  }
+  .tray-card:active {
+    cursor: grabbing;
+  }
+  .tray-card.selected {
+    border-color: #00ff88;
+    box-shadow: 0 0 16px rgba(0, 255, 136, 0.7);
+    transform: translateY(-4px) scale(1.05);
+    outline: 2px solid #00ff88;
+  }
+  .tray-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .tray-card .tray-card-remove {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ff2233;
+    color: #fff;
+    border: 1px solid #fff;
+    font-size: 10px;
+    font-weight: bold;
+    display: none;
+    place-items: center;
+    cursor: pointer;
+    line-height: 1;
+    z-index: 5;
+  }
+  .tray-card:hover .tray-card-remove {
+    display: grid;
+  }
+  .tray-card .tray-card-remove:hover {
+    background: #ff4757;
+  }
+
+  /* Dragging ghost */
+  .is-dragging {
+    opacity: 0.35;
+    transform: scale(0.95);
+  }
+
+  /* Hidden file input */
+  .hidden { display: none !important; }
+
+  /* Toast Notification */
+  #toast {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #00ff88;
+    color: #021206;
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
+    animation: toastPop 0.2s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  @keyframes toastPop {
+    from { opacity: 0; transform: translate(-50%, 15px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    padding: 6px 4px;
+    font-size: 11px;
+    color: #4d5c70;
+    font-weight: 600;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 900px) {
+    body { padding: 8px; }
+    :root {
+      --tier-label-w: 160px;
+      --card-w: 104px;
+      --card-h: 142px;
+      --tier-min-h: 160px;
+    }
+  }
+  @media (max-width: 600px) {
+    :root {
+      --tier-label-w: 120px;
+      --card-w: 82px;
+      --card-h: 112px;
+      --tier-min-h: 130px;
+    }
+    .slot.empty .slot-placeholder { font-size: 8px; }
+  }
+
+  /* Clean view class on board */
+  .tierboard.clean-view .slot.empty,
+  .tierboard.clean-view .slot-placeholder,
+  .tierboard.clean-view .btn-add-slot,
+  .tierboard.clean-view .remove-btn {
+    display: none !important;
+  }
+
+  .print-only-header {
+    display: none;
+  }
+
+  /* Print / Export Styles */
+  @media print {
+    body {
+      background: #020304 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .toolbar, .subbar, .cards-tray-section, .footer,
+    .btn-add-slot, .remove-btn, .slot.empty, .slot-placeholder {
+      display: none !important;
+    }
+    .print-only-header {
+      display: flex !important;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      background: #0b0f16;
+      border: 1px solid #1f2b3e;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      letter-spacing: 1.5px;
+    }
+    .print-only-header .print-week {
+      color: #00ff88;
+      font-size: 14px;
+    }
+    .tierboard {
+      border: none !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      max-width: 100% !important;
+      gap: 6px !important;
+    }
+    .tier-row {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    .tier-dropzone {
+      min-height: var(--tier-min-h, 188px);
+    }
+  }
+</style>
+<script src="html2canvas.min.js"></script>
+<link rel="stylesheet" href="site.css">
+<script defer src="site.js"></script>
+</head>
+<body data-tool="tierlist" data-page-title="Tier List">
+<div id="siteShell"></div>
+<div class="fc-page-heading"><a href="index.html">Home</a><span> / Tier List</span><h1>Tier List</h1><p>Rank your players. Upload cards, arrange your tiers, and export.</p></div>
+
+<div class="app-container">
+
+  <!-- TOP TOOLBAR -->
+  <header class="toolbar">
+    <div class="brand">
+      <div class="brandmark">V</div>
+      <div>
+        <h1>FC_VOLT</h1>
+        <small>FC MOBILE • PLAYER TIER LIST</small>
+      </div>
+    </div>
+
+    <!-- TEMPLATE SWITCHER TABS -->
+
+
+    <label class="week-selector">
+      WEEK:
+      <input type="text" id="weekInput" value="Week 1" maxlength="30" title="Change week title">
+    </label>
+
+    <div class="actions">
+      <button id="bgRemoverBtn" class="btn-bg-remover" title="Open Background & Outliers Remover Studio">🪄 REMOVE BACKGROUND</button>
+      <button id="cleanViewBtn" title="Toggle Clean View (Hides empty slots and '+' buttons on screen)">👁️ CLEAN VIEW</button>
+      <button id="saveBtn" title="Save current board in browser">💾 SAVE WEEK</button>
+      <button id="exportBtn" class="btn-export" title="Download High-Resolution PNG Picture">📸 EXPORT IMAGE</button>
+      <button id="printBtn" title="Print or save as PDF">🖨️ PRINT</button>
+      <button id="clearBtn" title="Return cards from the board back to the bench">🔄 RESET BOARD</button>
+      <button id="removeAllBtn" class="btn-remove-all" title="Remove all cards completely from tier list and bench">🗑️ REMOVE ALL</button>
+    </div>
+  </header>
+
+  <!-- SUBBAR -->
+  <div class="subbar">
+    <div class="subbar-info">
+      <h2>WEEKLY PLAYER PERFORMANCE RANKINGS</h2>
+      <p>Upload player cards below &rarr; Drag or click to place them into their performance tier.</p>
+    </div>
+    <div class="card-size-picker">
+      <label for="cardSizeSelect">🎴 CARD SIZE:</label>
+      <select id="cardSizeSelect" title="Adjust player card size">
+        <option value="compact">Compact (98px)</option>
+        <option value="normal">Normal (112px)</option>
+        <option value="large" selected>Large (124px)</option>
+        <option value="xlarge">Extra Large (138px)</option>
+      </select>
+    </div>
+    <div class="subbar-tip">
+      💡 Tip: Drag images from desktop directly onto any slot!
+    </div>
+  </div>
+
+  <!-- PRINT ONLY HEADER (Visible only on print/PDF) -->
+  <div class="print-only-header">
+    <span>FC_VOLT • FC MOBILE PLAYER TIER LIST</span>
+    <span class="print-week" id="printWeekLabel">Week 1</span>
+  </div>
+
+  <!-- TIER BOARD (Exact 4 horizontal rows matching user graphic) -->
+  <main class="tierboard" id="board">
+
+    <!-- SUPER TIER -->
+    <div class="tier-row super" data-tier="super">
+      <div class="tier-label" title="SUPER Tier"></div>
+      <div class="tier-dropzone" data-tier="super">
+        <!-- Slots will be rendered here -->
+      </div>
+    </div>
+
+    <!-- GOOD TIER -->
+    <div class="tier-row good" data-tier="good">
+      <div class="tier-label" title="GOOD Tier"></div>
+      <div class="tier-dropzone" data-tier="good">
+        <!-- Slots will be rendered here -->
+      </div>
+    </div>
+
+    <!-- AVERAGE TIER -->
+    <div class="tier-row average" data-tier="average">
+      <div class="tier-label" title="AVERAGE Tier"></div>
+      <div class="tier-dropzone" data-tier="average">
+        <!-- Slots will be rendered here -->
+      </div>
+    </div>
+
+    <!-- BAD TIER -->
+    <div class="tier-row bad" data-tier="bad">
+      <div class="tier-label" title="BAD Tier"></div>
+      <div class="tier-dropzone" data-tier="bad">
+        <!-- Slots will be rendered here -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- PLAYER CARDS TRAY / BENCH -->
+  <section class="cards-tray-section" id="traySection">
+    <div class="tray-header">
+      <div class="tray-title">
+        <h3>Player Cards Bench</h3>
+        <span class="tray-badge" id="cardCountBadge">0 Cards</span>
+      </div>
+
+      <div class="tray-controls">
+        <label for="fileUploadInput" class="btn btn-primary" title="Upload player cards from your computer or phone">
+          ＋ UPLOAD PLAYER PICTURES
+        </label>
+        <input type="file" id="fileUploadInput" class="hidden" accept="image/*" multiple>
+
+        <button id="demoBtn" title="Add realistic FC Mobile demo cards to test immediately">
+          ⚡ PREVIEW DEMO
+        </button>
+
+        <button id="clearBenchBtn" title="Clear all unplaced cards from bench">
+          Clear Bench
+        </button>
+      </div>
+    </div>
+
+    <!-- POOL CONTAINER -->
+    <div class="bench-pool" id="benchPool">
+      <div class="bench-empty-hint" id="benchEmptyHint">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        <span>No player cards on bench yet</span>
+        <small>Click <b>＋ UPLOAD PLAYER PICTURES</b> or drag image files anywhere into this box</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>FC_VOLT · FC Mobile Weekly Player Rankings</span>
+    <span>Saves automatically in browser · High quality PNG Export supported</span>
+  </footer>
+
+</div>
+
+<!-- TOAST MESSAGE -->
+<div id="toast"></div>
+
+<!-- CONFIRM REMOVE ALL CUSTOM MODAL -->
+<div class="custom-modal-backdrop hidden" id="removeAllModal">
+  <div class="custom-modal">
+    <div class="modal-icon">⚠️</div>
+    <h3>REMOVE ALL CARDS?</h3>
+    <p>Are you sure you want to completely remove all cards from both the tier board and bench? This gives you an empty tier list.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn modal-btn-cancel" id="cancelRemoveAllBtn">CANCEL</button>
+      <button type="button" class="btn modal-btn-confirm" id="confirmRemoveAllBtn">YES, REMOVE ALL</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMOVE BACKGROUND & OUTLIERS STUDIO MODAL -->
+<div class="custom-modal-backdrop bg-studio-backdrop hidden" id="bgStudioModal">
+  <div class="bg-studio-modal">
+    <div class="bg-studio-header">
+      <div class="bg-studio-title">
+        <span style="font-size: 26px;">🪄</span>
+        <div>
+          <h3>REMOVE BACKGROUND & OUTLIERS STUDIO</h3>
+          <small>Clean rectangular margins, black/white borders & isolate cards like FC Mobile transparent cutouts</small>
+        </div>
+      </div>
+      <button type="button" class="bg-studio-close" id="closeBgStudioBtn" title="Close Studio">&times;</button>
+    </div>
+
+    <div class="bg-studio-body">
+      <!-- Left: Interactive Canvas Preview Stage -->
+      <div class="bg-preview-stage">
+        <div class="canvas-stage-bar">
+          <div class="stage-theme-toggles">
+            <span style="font-size: 10px; color: #8fa5c5; font-weight: 800; margin-right: 4px;">BACKDROP:</span>
+            <button type="button" class="theme-btn active" data-stage="checker" id="stageBtnChecker" title="Checkered transparency pattern">🏁 Grid</button>
+            <button type="button" class="theme-btn" data-stage="stadium" id="stageBtnStadium" title="Live Stadium Grass">🏟️ Pitch</button>
+            <button type="button" class="theme-btn" data-stage="black" id="stageBtnBlack" title="Solid Dark">⬛ Black</button>
+            <button type="button" class="theme-btn" data-stage="white" id="stageBtnWhite" title="Solid Light">⬜ White</button>
+          </div>
+          <div class="zoom-toggles">
+            <button type="button" class="zoom-btn" id="zoomOutBtn" title="Zoom Out">−</button>
+            <span id="zoomLevelDisplay">100%</span>
+            <button type="button" class="zoom-btn" id="zoomInBtn" title="Zoom In">＋</button>
+            <button type="button" class="zoom-btn" id="zoomResetBtn" title="Reset Zoom">↺</button>
+          </div>
+        </div>
+
+        <div class="bg-canvas-container" id="bgCanvasContainer">
+          <canvas id="bgStudioCanvas"></canvas>
+        </div>
+
+        <div class="touchup-bar">
+          <span style="font-size: 11px; font-weight: 800; color: #c084fc;">TOOLS:</span>
+          <button type="button" class="touchup-btn active" id="toolPanBtn">🖐️ Inspect</button>
+          <button type="button" class="touchup-btn" id="toolEyedropperBtn">🎨 Eyedropper</button>
+          <button type="button" class="touchup-btn" id="toolEraserBtn">🧹 Eraser</button>
+          <div id="eraserSizeWrap" style="display: none; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; color: #8fa5c5;">Size:</span>
+            <input type="range" id="eraserSizeRange" min="4" max="60" value="18" style="width: 75px;">
+            <span id="eraserSizeVal" style="font-size: 10px; color: #c084fc; font-weight: 800;">18px</span>
+          </div>
+          <div style="margin-left: auto; font-size: 11px; color: #8fa5c5; font-weight: 700;" id="canvasInfoBadge">256 × 256 px</div>
+        </div>
+      </div>
+
+      <!-- Right: Controls Panel -->
+      <div class="bg-controls-panel">
+        <div>
+          <div class="bg-section-title"><span>🎴</span> 1. Select Card To Clean</div>
+          <div class="card-picker-row">
+            <select id="bgCardSelect" class="card-picker-select">
+              <!-- Dynamically populated with Tier & Bench cards -->
+            </select>
+            <button type="button" id="loadRonaldoSampleBtn" class="btn-sample-card" title="Load Ronaldo 124 ST reference card">
+              ⭐ Sample R9
+            </button>
+          </div>
+          <div style="margin-top: 8px;">
+            <label for="bgUploadInput" class="btn" style="padding: 6px 12px; font-size: 11px; background: #151e2e; border: 1px dashed #304460; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+              📁 Upload New Image To Studio
+            </label>
+            <input type="file" id="bgUploadInput" class="hidden" accept="image/*">
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>⚙️</span> 2. Background & Outliers Removal Mode</div>
+          <div class="mode-grid">
+            <div class="mode-card active" data-mode="auto" id="modeAuto">
+              <div class="mode-header">🪄 Auto Detect</div>
+              <div class="mode-desc">Flood fills from borders inward. Protects white/dark kits and details inside.</div>
+            </div>
+            <div class="mode-card" data-mode="white" id="modeWhite">
+              <div class="mode-header">⚪ Remove White</div>
+              <div class="mode-desc">Removes bright/white screenshot backgrounds and rectangular margins.</div>
+            </div>
+            <div class="mode-card" data-mode="black" id="modeBlack">
+              <div class="mode-header">⚫ Remove Black</div>
+              <div class="mode-desc">Cleans black screenshot bars, letterboxing & dark margins.</div>
+            </div>
+            <div class="mode-card" data-mode="color" id="modeColor">
+              <div class="mode-header">🎨 Picked Color</div>
+              <div class="mode-desc">Click eyedropper or sample canvas to key out an exact outlier color.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>🎚️</span> 3. Edge & Tolerance Tuning</div>
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Color Tolerance:</span>
+              <span class="slider-val" id="tolValDisplay">28%</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgTolRange" min="5" max="80" value="28">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Fringe Choke / Halo Trim:</span>
+              <span class="slider-val" id="chokeValDisplay">1 px</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgChokeRange" min="0" max="4" value="1">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Edge Feather / Soften:</span>
+              <span class="slider-val" id="featherValDisplay">1 px</span>
+            </div>
+            <input type="range" class="bg-slider" id="bgFeatherRange" min="0" max="5" value="1">
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding: 6px 10px; background: #121927; border-radius: 6px; border: 1px solid #1f2b3e;">
+            <span style="font-size: 11px; font-weight: 700; color: #cbd5e1;">✂️ Auto-Crop Outer Padding:</span>
+            <input type="checkbox" id="bgAutoCropCheck" checked style="accent-color: #a855f7; cursor: pointer;">
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-section-title"><span>⚡</span> 4. Instant Clean Presets</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn" id="presetCleanWhite" style="font-size: 10.5px; padding: 6px 10px;">⚪ Clean White</button>
+            <button type="button" class="btn" id="presetCleanBlack" style="font-size: 10.5px; padding: 6px 10px;">⚫ Clean Black</button>
+            <button type="button" class="btn" id="presetRevert" style="font-size: 10.5px; padding: 6px 10px; color: #ff99aa;">↩️ Revert Original</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-studio-footer">
+      <div class="footer-actions-left">
+        <button type="button" class="btn-download-cutout" id="bgDownloadCutoutBtn" title="Download transparent PNG image">
+          💾 DOWNLOAD PNG
+        </button>
+        <button type="button" class="btn-reset-original" id="bgCloseCancelBtn">
+          ✕ CANCEL
+        </button>
+      </div>
+
+      <div class="footer-actions-right">
+        <button type="button" class="btn-apply-all" id="bgApplyAllPitchBtn" title="Clean and update all cards on the tier list board">
+          ✨ APPLY TO ALL TIER CARDS
+        </button>
+        <button type="button" class="btn-apply-one" id="bgApplyCurrentBtn" title="Apply clean cutout to the selected card">
+          ✅ APPLY TO SELECTED CARD
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DIRECT SLOT UPLOAD HIDDEN INPUT -->
+<input type="file" id="slotUploadInput" class="hidden" accept="image/*">
+
+<script>
+/**
+ * FC_VOLT Player Tier List Engine
+ * Supports:
+ * - Direct image file upload (multi-file) with client-side canvas compression to avoid localStorage quota issues
+ * - Desktop direct file drag-and-drop onto slots, tier rows, and the bench
+ * - Drag-and-drop between slots, bench, and tier rows
+ * - Tap-to-place / Click-to-place (click card, then click slot to place or swap)
+ * - Save & Load via localStorage
+ * - High-resolution PNG export via html2canvas
+ */
+
+const TIERS = ['super', 'good', 'average', 'bad'];
+const DEFAULT_SLOTS_PER_TIER = 5;
+
+// State
+let slots = []; // array of { id, tier, src }
+let pool = [];  // array of { id, src }
+let dragPayload = null; // { type: 'pool'|'slot', id: string }
+let selectedCard = null; // { type: 'pool'|'slot', id: string }
+let targetSlotForDirectUpload = null;
+let toastTimer = null;
+
+const weekInput = document.getElementById('weekInput');
+const benchPool = document.getElementById('benchPool');
+const benchEmptyHint = document.getElementById('benchEmptyHint');
+const cardCountBadge = document.getElementById('cardCountBadge');
+const fileUploadInput = document.getElementById('fileUploadInput');
+const slotUploadInput = document.getElementById('slotUploadInput');
+
+// Utility: Unique ID generator
+function uid() {
+  return 'c_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+}
+
+// Utility: Toast notification
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    t.style.display = 'none';
+  }, 2400);
+}
+
+// Storage Key
+function getStorageKey() {
+  return 'fcvolt_v2_' + weekInput.value.trim().toLowerCase();
+}
+
+// Initialize default slots (5 per tier)
+function initDefaultSlots() {
+  slots = [];
+  TIERS.forEach(tier => {
+    for (let i = 0; i < DEFAULT_SLOTS_PER_TIER; i++) {
+      slots.push({ id: uid(), tier, src: '' });
+    }
+  });
+}
+
+/**
+ * Client-Side Image Resizer & Compressor
+ * Keeps player cards crisp (max 360px height) while dropping size from 5MB to ~30KB
+ */
+function compressImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ev => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const maxDim = 480;
+        let w = img.width;
+        let h = img.height;
+        if (w > h) {
+          if (w > maxDim) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          }
+        } else {
+          if (h > maxDim) {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/webp', 0.88);
+        resolve(dataUrl);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Handle Multiple Uploaded Files
+ */
+async function handleFilesUpload(fileList, targetSlot = null) {
+  const files = [...fileList].filter(f => {
+    return f.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|gif|svg|bmp|jfif)$/i.test(f.name);
+  });
+
+  if (!files.length) {
+    showToast('Please select valid image files.');
+    return;
+  }
+
+  showToast(`Processing ${files.length} picture(s)...`);
+
+  let loadedCount = 0;
+  for (let i = 0; i < files.length; i++) {
+    try {
+      const compressedDataUrl = await compressImageFile(files[i]);
+      if (i === 0 && targetSlot) {
+        // Direct place into specific slot
+        targetSlot.src = compressedDataUrl;
+      } else {
+        // Add to bench pool
+        pool.push({ id: uid(), src: compressedDataUrl });
+      }
+      loadedCount++;
+    } catch (err) {
+      console.error('Error processing file:', err);
+    }
+  }
+
+  renderBoard();
+  renderBench();
+  showToast(`${loadedCount} card(s) ready! Drag or click to place.`);
+}
+
+/**
+ * Render Board and Slots
+ */
+function renderBoard() {
+  TIERS.forEach(tier => {
+    const container = document.querySelector(`.tier-dropzone[data-tier="${tier}"]`);
+    if (!container) return;
+    container.innerHTML = '';
+
+    const tierSlots = slots.filter(s => s.tier === tier);
+
+    tierSlots.forEach(slotData => {
+      const slotEl = document.createElement('div');
+      slotEl.className = 'slot ' + (slotData.src ? 'filled' : 'empty');
+      slotEl.dataset.id = slotData.id;
+      slotEl.dataset.tier = slotData.tier;
+
+      // Check if this slot is selected
+      if (selectedCard && selectedCard.type === 'slot' && selectedCard.id === slotData.id) {
+        slotEl.classList.add('target-selected');
+      }
+
+      if (slotData.src) {
+        // Card Image
+        const img = document.createElement('img');
+        img.className = 'card-img';
+        img.src = slotData.src;
+        img.alt = 'Player card';
+        img.draggable = true;
+
+        // Drag start from filled slot
+        img.addEventListener('dragstart', e => {
+          dragPayload = { type: 'slot', id: slotData.id };
+          img.classList.add('is-dragging');
+          e.dataTransfer.setData('text/plain', JSON.stringify(dragPayload));
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        img.addEventListener('dragend', () => {
+          img.classList.remove('is-dragging');
+          dragPayload = null;
+        });
+
+        // Remove button (returns card to bench)
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.title = 'Return card to bench';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          pool.push({ id: uid(), src: slotData.src });
+          slotData.src = '';
+          if (selectedCard && selectedCard.id === slotData.id) selectedCard = null;
+          renderBoard();
+          renderBench();
+          showToast('Card returned to bench.');
+        });
+
+        // Magic Wand Studio Button (Remove Background & Outliers)
+        const magicBtn = document.createElement('button');
+        magicBtn.className = 'slot-magic-btn';
+        magicBtn.innerHTML = '🪄';
+        magicBtn.title = 'Remove background & outliers for this card';
+        magicBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          openBgStudioWithCard('slot', slotData.id);
+        });
+
+        slotEl.appendChild(img);
+        slotEl.appendChild(magicBtn);
+        slotEl.appendChild(removeBtn);
+      } else {
+        // Empty slot placeholder
+        slotEl.innerHTML = `
+          <div class="slot-placeholder">
+            <span class="plus">＋</span>
+            <span>DROP CARD</span>
+          </div>
+        `;
+      }
+
+      // Slot Click Handler (Click-to-place / tap-to-place)
+      slotEl.addEventListener('click', e => {
+        // If user has a card selected in bench or another slot:
+        if (selectedCard) {
+          if (selectedCard.type === 'pool') {
+            const cardInPool = pool.find(c => c.id === selectedCard.id);
+            if (cardInPool) {
+              const oldSlotSrc = slotData.src;
+              slotData.src = cardInPool.src;
+              if (oldSlotSrc) {
+                // If target slot had a card, return old card to pool
+                cardInPool.src = oldSlotSrc;
+              } else {
+                // Remove placed card from pool
+                pool = pool.filter(c => c.id !== selectedCard.id);
+              }
+              selectedCard = null;
+              renderBoard();
+              renderBench();
+              return;
+            }
+          } else if (selectedCard.type === 'slot') {
+            const otherSlot = slots.find(s => s.id === selectedCard.id);
+            if (otherSlot && otherSlot.id !== slotData.id) {
+              // Swap cards
+              const temp = slotData.src;
+              slotData.src = otherSlot.src;
+              otherSlot.src = temp;
+              selectedCard = null;
+              renderBoard();
+              return;
+            } else if (otherSlot && otherSlot.id === slotData.id) {
+              // Deselect
+              selectedCard = null;
+              renderBoard();
+              return;
+            }
+          }
+        }
+
+        // If slot is filled and nothing was selected, select this card for moving
+        if (slotData.src) {
+          selectedCard = { type: 'slot', id: slotData.id };
+          renderBoard();
+          renderBench();
+          showToast('Card selected! Click another slot to move or swap.');
+        } else {
+          // Empty slot clicked with nothing selected -> prompt to upload picture for this slot!
+          targetSlotForDirectUpload = slotData;
+          slotUploadInput.click();
+        }
+      });
+
+      // Drag and Drop handlers on Slot
+      setupSlotDropTarget(slotEl, slotData);
+
+      container.appendChild(slotEl);
+    });
+
+    // Add Slot Button (+)
+    const addSlotBtn = document.createElement('div');
+    addSlotBtn.className = 'btn-add-slot';
+    addSlotBtn.title = `Add another slot to ${tier.toUpperCase()}`;
+    addSlotBtn.textContent = '＋';
+    addSlotBtn.addEventListener('click', () => {
+      slots.push({ id: uid(), tier, src: '' });
+      renderBoard();
+    });
+    container.appendChild(addSlotBtn);
+
+    // Setup drop target on whole tier dropzone (for dropped files from computer)
+    setupTierZoneDropTarget(container, tier);
+  });
+}
+
+/**
+ * Drag and Drop on individual slot
+ */
+function setupSlotDropTarget(el, targetSlot) {
+  el.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    el.classList.add('dragover');
+    e.dataTransfer.dropEffect = 'move';
+  });
+
+  el.addEventListener('dragleave', e => {
+    e.preventDefault();
+    el.classList.remove('dragover');
+  });
+
+  el.addEventListener('drop', async e => {
+    e.preventDefault();
+    e.stopPropagation();
+    el.classList.remove('dragover');
+
+    // Case 1: Files dragged directly from computer
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleFilesUpload(e.dataTransfer.files, targetSlot);
+      return;
+    }
+
+    // Case 2: Internal drag payload
+    let data = dragPayload;
+    if (!data) {
+      try {
+        data = JSON.parse(e.dataTransfer.getData('text/plain'));
+      } catch (err) {}
+    }
+    if (!data) return;
+
+    if (data.type === 'pool') {
+      const poolItem = pool.find(c => c.id === data.id);
+      if (!poolItem) return;
+      const oldSrc = targetSlot.src;
+      targetSlot.src = poolItem.src;
+      if (oldSrc) {
+        poolItem.src = oldSrc;
+      } else {
+        pool = pool.filter(c => c.id !== data.id);
+      }
+      dragPayload = null;
+      renderBoard();
+      renderBench();
+    } else if (data.type === 'slot') {
+      const srcSlot = slots.find(s => s.id === data.id);
+      if (!srcSlot || srcSlot.id === targetSlot.id) return;
+      // Swap contents
+      const temp = targetSlot.src;
+      targetSlot.src = srcSlot.src;
+      srcSlot.src = temp;
+      dragPayload = null;
+      renderBoard();
+    }
+  });
+}
+
+/**
+ * Drag and Drop on Tier Row Dropzone (general area)
+ */
+function setupTierZoneDropTarget(zoneEl, tier) {
+  zoneEl.addEventListener('dragover', e => {
+    e.preventDefault();
+    zoneEl.classList.add('drag-active');
+  });
+  zoneEl.addEventListener('dragleave', e => {
+    if (e.target === zoneEl) {
+      zoneEl.classList.remove('drag-active');
+    }
+  });
+  zoneEl.addEventListener('drop', async e => {
+    zoneEl.classList.remove('drag-active');
+    // If files dropped onto empty space of tier row, place into first available empty slot
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      e.preventDefault();
+      const firstEmptySlot = slots.find(s => s.tier === tier && !s.src);
+      await handleFilesUpload(e.dataTransfer.files, firstEmptySlot || null);
+    }
+  });
+}
+
+/**
+ * Render Cards Bench (Pool)
+ */
+function renderBench() {
+  const cardsWithSrc = pool.filter(c => c.src);
+  cardCountBadge.textContent = `${cardsWithSrc.length} Card${cardsWithSrc.length === 1 ? '' : 's'}`;
+
+  // Clear pool container (preserving empty hint if no cards)
+  benchPool.innerHTML = '';
+
+  if (cardsWithSrc.length === 0) {
+    benchPool.appendChild(benchEmptyHint);
+    return;
+  }
+
+  cardsWithSrc.forEach(cardData => {
+    const cardEl = document.createElement('div');
+    cardEl.className = 'tray-card';
+    cardEl.dataset.id = cardData.id;
+    cardEl.draggable = true;
+
+    if (selectedCard && selectedCard.type === 'pool' && selectedCard.id === cardData.id) {
+      cardEl.classList.add('selected');
+    }
+
+    const img = document.createElement('img');
+    img.src = cardData.src;
+    img.alt = 'Uploaded player';
+    cardEl.appendChild(img);
+
+    // Remove from bench button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'tray-card-remove';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.title = 'Delete card';
+    removeBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      pool = pool.filter(c => c.id !== cardData.id);
+      if (selectedCard && selectedCard.id === cardData.id) selectedCard = null;
+      renderBench();
+    });
+    cardEl.appendChild(removeBtn);
+
+    // Magic Wand Studio Button
+    const magicBtn = document.createElement('button');
+    magicBtn.className = 'tray-card-magic';
+    magicBtn.innerHTML = '🪄';
+    magicBtn.title = 'Remove background & outliers for this card';
+    magicBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openBgStudioWithCard('bench', cardData.id);
+    });
+    cardEl.appendChild(magicBtn);
+
+    // Drag start from bench
+    cardEl.addEventListener('dragstart', e => {
+      dragPayload = { type: 'pool', id: cardData.id };
+      cardEl.classList.add('is-dragging');
+      e.dataTransfer.setData('text/plain', JSON.stringify(dragPayload));
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    cardEl.addEventListener('dragend', () => {
+      cardEl.classList.remove('is-dragging');
+      dragPayload = null;
+    });
+
+    // Click on bench card (Select for click-to-place)
+    cardEl.addEventListener('click', () => {
+      if (selectedCard && selectedCard.id === cardData.id) {
+        selectedCard = null;
+      } else {
+        selectedCard = { type: 'pool', id: cardData.id };
+        showToast('Card selected! Click any slot on the board to place it.');
+      }
+      renderBoard();
+      renderBench();
+    });
+
+    benchPool.appendChild(cardEl);
+  });
+}
+
+/**
+ * Setup Bench Drop Zone (Drop slot card back to bench, or drop files from desktop)
+ */
+function setupBenchDropZone() {
+  benchPool.addEventListener('dragover', e => {
+    e.preventDefault();
+    benchPool.classList.add('drag-active');
+    e.dataTransfer.dropEffect = 'move';
+  });
+
+  benchPool.addEventListener('dragleave', e => {
+    if (e.target === benchPool) {
+      benchPool.classList.remove('drag-active');
+    }
+  });
+
+  benchPool.addEventListener('drop', async e => {
+    e.preventDefault();
+    benchPool.classList.remove('drag-active');
+
+    // Case 1: Files dropped from computer
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleFilesUpload(e.dataTransfer.files);
+      return;
+    }
+
+    // Case 2: Dragged from slot back to bench
+    let data = dragPayload;
+    if (!data) {
+      try {
+        data = JSON.parse(e.dataTransfer.getData('text/plain'));
+      } catch (err) {}
+    }
+    if (!data) return;
+
+    if (data.type === 'slot') {
+      const srcSlot = slots.find(s => s.id === data.id);
+      if (srcSlot && srcSlot.src) {
+        pool.push({ id: uid(), src: srcSlot.src });
+        srcSlot.src = '';
+        dragPayload = null;
+        renderBoard();
+        renderBench();
+        showToast('Card moved back to bench.');
+      }
+    }
+  });
+}
+
+/**
+ * Event Listeners
+ */
+
+// 1. File Upload Button
+fileUploadInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files.length > 0) {
+    await handleFilesUpload(e.target.files);
+    e.target.value = '';
+  }
+});
+
+// 2. Direct Slot Upload (when an empty slot is clicked)
+slotUploadInput.addEventListener('change', async e => {
+  if (e.target.files && e.target.files.length > 0) {
+    await handleFilesUpload(e.target.files, targetSlotForDirectUpload);
+    targetSlotForDirectUpload = null;
+    e.target.value = '';
+  }
+});
+
+// 3. Clear Bench Button
+document.getElementById('clearBenchBtn').addEventListener('click', () => {
+  if (!pool.length) return;
+  if (confirm('Clear all unplaced cards from the bench?')) {
+    pool = [];
+    selectedCard = null;
+    renderBench();
+    showToast('Bench cleared.');
+  }
+});
+
+// 4. Save Week Button
+function saveWeek() {
+  try {
+    const saveData = {
+      slots,
+      pool,
+      week: weekInput.value.trim()
+    };
+    localStorage.setItem(getStorageKey(), JSON.stringify(saveData));
+    localStorage.setItem('fcvolt_last_week', weekInput.value.trim());
+    showToast(`Saved "${weekInput.value.trim()}" successfully!`);
+  } catch (err) {
+    console.error('Storage save error:', err);
+    showToast('Storage full! Clear old weeks or compress images.');
+  }
+}
+document.getElementById('saveBtn').addEventListener('click', saveWeek);
+
+// 5. Load Week
+function loadWeek() {
+  const lastWeek = localStorage.getItem('fcvolt_last_week');
+  if (lastWeek) weekInput.value = lastWeek;
+
+  let loaded = false;
+  try {
+    const raw = localStorage.getItem(getStorageKey());
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (data && Array.isArray(data.slots) && data.slots.length > 0) {
+        slots = data.slots;
+        pool = data.pool || [];
+        loaded = true;
+      }
+    }
+  } catch (err) {
+    console.error('Error loading data:', err);
+  }
+
+  if (!loaded) {
+    initDefaultSlots();
+    pool = [];
+  }
+
+  renderBoard();
+  renderBench();
+}
+
+weekInput.addEventListener('change', () => {
+  loadWeek();
+  showToast(`Loaded ${weekInput.value.trim()}`);
+});
+
+// 6. Reset Board Button (Returns cards to bench)
+document.getElementById('clearBtn').addEventListener('click', () => {
+  const occupied = slots.filter(s => s.src).length;
+  if (!occupied) {
+    showToast('Tier board is already empty.');
+    return;
+  }
+  if (confirm('Return all cards from the tier board back to the bench?')) {
+    slots.forEach(s => {
+      if (s.src) {
+        pool.push({ id: uid(), src: s.src });
+        s.src = '';
+      }
+    });
+    selectedCard = null;
+    renderBoard();
+    renderBench();
+    showToast('Board reset. Cards returned to bench.');
+  }
+});
+
+// 6a. Remove All Custom In-App Modal Dialog
+const removeAllBtn = document.getElementById('removeAllBtn');
+const removeAllModal = document.getElementById('removeAllModal');
+const cancelRemoveAllBtn = document.getElementById('cancelRemoveAllBtn');
+const confirmRemoveAllBtn = document.getElementById('confirmRemoveAllBtn');
+
+if (removeAllBtn && removeAllModal) {
+  removeAllBtn.addEventListener('click', () => {
+    const boardOccupied = slots.filter(s => s.src).length;
+    const total = boardOccupied + pool.length;
+    if (!total) {
+      showToast('Tier board and bench are already empty.');
+      return;
+    }
+    removeAllModal.classList.remove('hidden');
+  });
+
+  cancelRemoveAllBtn.addEventListener('click', () => {
+    removeAllModal.classList.add('hidden');
+  });
+
+  removeAllModal.addEventListener('click', e => {
+    if (e.target === removeAllModal) {
+      removeAllModal.classList.add('hidden');
+    }
+  });
+
+  confirmRemoveAllBtn.addEventListener('click', () => {
+    removeAllModal.classList.add('hidden');
+    slots.forEach(s => s.src = '');
+    pool = [];
+    selectedCard = null;
+    renderBoard();
+    renderBench();
+    showToast('Removed all cards! Tier board is now empty.');
+  });
+}
+
+// 6b. Clean View Toggle Button
+let isCleanView = false;
+const cleanViewBtn = document.getElementById('cleanViewBtn');
+if (cleanViewBtn) {
+  cleanViewBtn.addEventListener('click', () => {
+    isCleanView = !isCleanView;
+    const boardEl = document.getElementById('board');
+    if (isCleanView) {
+      boardEl.classList.add('clean-view');
+      cleanViewBtn.textContent = '✏️ EDIT MODE';
+      cleanViewBtn.style.borderColor = '#00ff88';
+      cleanViewBtn.style.color = '#00ff88';
+      showToast('Clean View: Empty slots & + hidden');
+    } else {
+      boardEl.classList.remove('clean-view');
+      cleanViewBtn.textContent = '👁️ CLEAN VIEW';
+      cleanViewBtn.style.borderColor = '';
+      cleanViewBtn.style.color = '';
+      showToast('Edit Mode: Slots & + visible');
+    }
+  });
+}
+
+// Dynamic Card Size Controller
+const cardSizeMap = {
+  compact: { w: '98px', h: '134px', minH: '152px', labelW: '180px' },
+  normal: { w: '112px', h: '154px', minH: '172px', labelW: '195px' },
+  large: { w: '124px', h: '170px', minH: '188px', labelW: '210px' },
+  xlarge: { w: '138px', h: '190px', minH: '208px', labelW: '225px' }
+};
+
+const cardSizeSelect = document.getElementById('cardSizeSelect');
+
+function applyCardSize(sizeKey) {
+  const size = cardSizeMap[sizeKey] || cardSizeMap.large;
+  document.documentElement.style.setProperty('--card-w', size.w);
+  document.documentElement.style.setProperty('--card-h', size.h);
+  document.documentElement.style.setProperty('--tier-min-h', size.minH);
+  document.documentElement.style.setProperty('--tier-label-w', size.labelW);
+}
+
+if (cardSizeSelect) {
+  const savedSize = localStorage.getItem('fc_volt_tier_card_size') || 'large';
+  cardSizeSelect.value = savedSize;
+  applyCardSize(savedSize);
+
+  cardSizeSelect.addEventListener('change', e => {
+    applyCardSize(e.target.value);
+    try {
+      localStorage.setItem('fc_volt_tier_card_size', e.target.value);
+    } catch(err) {}
+    showToast(`Card size set to ${e.target.options[e.target.selectedIndex].text}!`);
+  });
+}
+
+function updatePrintWeek() {
+  const lbl = document.getElementById('printWeekLabel');
+  if (lbl) lbl.textContent = weekInput.value.trim() || 'Week 1';
+}
+weekInput.addEventListener('input', updatePrintWeek);
+weekInput.addEventListener('change', updatePrintWeek);
+
+// 7. Print Button
+document.getElementById('printBtn').addEventListener('click', () => {
+  updatePrintWeek();
+  window.print();
+});
+
+// 8. High-Resolution PNG Export (html2canvas)
+document.getElementById('exportBtn').addEventListener('click', async () => {
+  const boardEl = document.getElementById('board');
+  if (!boardEl) return;
+
+  showToast('Generating high-resolution PNG image...');
+
+  // Temporarily hide add-slot buttons, empty slots (+ DROP CARD), and remove buttons during capture
+  const tempHidden = boardEl.querySelectorAll('.btn-add-slot, .remove-btn, .slot.empty, .slot-placeholder');
+  tempHidden.forEach(b => b.style.display = 'none');
+
+  try {
+    const canvas = await html2canvas(boardEl, {
+      scale: 2, // 2x Retina resolution
+      backgroundColor: '#020304',
+      useCORS: true,
+      logging: false
+    });
+
+    const link = document.createElement('a');
+    const safeTitle = (weekInput.value.trim() || 'TierList').replace(/[^a-z0-9_-]/gi, '_');
+    link.download = `FC_VOLT_${safeTitle}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    showToast('Downloaded PNG Tier List Image!');
+  } catch (err) {
+    console.error('Export error:', err);
+    showToast('Export failed. You can use Print / PDF instead.');
+  } finally {
+    tempHidden.forEach(b => b.style.display = '');
+  }
+});
+
+/**
+ * Realistic FC Mobile Demo Cards Generator
+ */
+document.getElementById('demoBtn').addEventListener('click', () => {
+  const demoPlayers = [
+    { name: 'R. NAZÁRIO', ovr: '101', pos: 'ST', col1: '#00ff77', col2: '#005522', flag: '🇧🇷' },
+    { name: 'L. MESSI', ovr: '100', pos: 'RW', col1: '#00d2ff', col2: '#003366', flag: '🇦🇷' },
+    { name: 'R. GULLIT', ovr: '99', pos: 'CM', col1: '#ff9900', col2: '#663300', flag: '🇳🇱' },
+    { name: 'K. MBAPPÉ', ovr: '99', pos: 'ST', col1: '#0088ff', col2: '#002244', flag: '🇫🇷' },
+    { name: 'P. MALDINI', ovr: '98', pos: 'CB', col1: '#ff4444', col2: '#550000', flag: '🇮🇹' },
+    { name: 'Z. ZIDANE', ovr: '98', pos: 'CAM', col1: '#e0c068', col2: '#4a3b10', flag: '🇫🇷' },
+    { name: 'HAALAND', ovr: '97', pos: 'ST', col1: '#00ffff', col2: '#004455', flag: '🇳🇴' },
+    { name: 'MODRIĆ', ovr: '96', pos: 'CM', col1: '#ff0055', col2: '#440011', flag: '🇭🇷' }
+  ];
+
+  demoPlayers.forEach(p => {
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="220" viewBox="0 0 160 220">
+        <defs>
+          <linearGradient id="g_${p.ovr}_${p.pos}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${p.col1}" />
+            <stop offset="100%" stop-color="${p.col2}" />
+          </linearGradient>
+          <radialGradient id="shine" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0.6"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Card Shield Shape -->
+        <path d="M 12 12 L 148 12 Q 152 12 152 16 L 152 165 Q 152 188 80 214 Q 8 188 8 165 L 8 16 Q 8 12 12 12 Z"
+              fill="url(#g_${p.ovr}_${p.pos})" stroke="#ffffff" stroke-width="2.5" />
+        <path d="M 12 12 L 148 12 Q 152 12 152 16 L 152 165 Q 152 188 80 214 Q 8 188 8 165 L 8 16 Q 8 12 12 12 Z"
+              fill="url(#shine)" />
+
+        <!-- Rating & Position -->
+        <text x="24" y="44" font-family="'Inter', sans-serif" font-size="28" font-weight="900" fill="#ffffff" letter-spacing="-1">${p.ovr}</text>
+        <text x="24" y="62" font-family="'Inter', sans-serif" font-size="14" font-weight="800" fill="#ffffff" opacity="0.9">${p.pos}</text>
+        <text x="24" y="80" font-size="14">${p.flag}</text>
+
+        <!-- Player Silhouette Avatar -->
+        <circle cx="95" cy="88" r="32" fill="#ffffff" opacity="0.18" />
+        <path d="M 75 142 C 75 110, 115 110, 115 142 Z" fill="#ffffff" opacity="0.22" />
+
+        <!-- Inner divider -->
+        <line x1="20" y1="150" x2="140" y2="150" stroke="#ffffff" stroke-width="1.5" opacity="0.4" />
+
+        <!-- Player Name Banner -->
+        <rect x="18" y="156" width="124" height="24" rx="4" fill="#04070bcc" />
+        <text x="80" y="173" font-family="'Inter', sans-serif" font-size="12" font-weight="900" text-anchor="middle" fill="#ffffff" letter-spacing="1.2">${p.name}</text>
+
+        <!-- FC VOLT badge -->
+        <text x="80" y="198" font-family="'Inter', sans-serif" font-size="8" font-weight="800" text-anchor="middle" fill="#00ff88" letter-spacing="1.5">FC VOLT • SPECIAL</text>
+      </svg>
+    `;
+
+    const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.trim());
+    pool.push({ id: uid(), src: dataUrl });
+  });
+
+  renderBench();
+  showToast('8 Demo FC Mobile cards added to bench! Drag them to any tier slot.');
+});
+
+/* ========================================================
+   🪄 REMOVE BACKGROUND & OUTLIERS STUDIO
+   ======================================================== */
+const bgRemoverBtn = document.getElementById('bgRemoverBtn');
+const bgStudioModal = document.getElementById('bgStudioModal');
+const closeBgStudioBtn = document.getElementById('closeBgStudioBtn');
+const bgCloseCancelBtn = document.getElementById('bgCloseCancelBtn');
+const bgCardSelect = document.getElementById('bgCardSelect');
+const loadRonaldoSampleBtn = document.getElementById('loadRonaldoSampleBtn');
+const bgUploadInput = document.getElementById('bgUploadInput');
+const bgTolRange = document.getElementById('bgTolRange');
+const tolValDisplay = document.getElementById('tolValDisplay');
+const bgChokeRange = document.getElementById('bgChokeRange');
+const chokeValDisplay = document.getElementById('chokeValDisplay');
+const bgFeatherRange = document.getElementById('bgFeatherRange');
+const featherValDisplay = document.getElementById('featherValDisplay');
+const bgAutoCropCheck = document.getElementById('bgAutoCropCheck');
+const bgApplyCurrentBtn = document.getElementById('bgApplyCurrentBtn');
+const bgApplyAllPitchBtn = document.getElementById('bgApplyAllPitchBtn');
+const bgDownloadCutoutBtn = document.getElementById('bgDownloadCutoutBtn');
+const bgCanvasContainer = document.getElementById('bgCanvasContainer');
+const bgStudioCanvas = document.getElementById('bgStudioCanvas');
+const canvasInfoBadge = document.getElementById('canvasInfoBadge');
+
+// Mode buttons
+const modeAuto = document.getElementById('modeAuto');
+const modeWhite = document.getElementById('modeWhite');
+const modeBlack = document.getElementById('modeBlack');
+const modeColor = document.getElementById('modeColor');
+
+let studioState = {
+  activeCardType: null, // 'slot' | 'bench' | 'sample' | 'custom'
+  activeCardKey: null,
+  originalImageSrc: null,
+  currentWorkingDataUrl: null,
+  mode: 'auto',
+  tolerance: 0.28,
+  choke: 1,
+  feather: 1,
+  autoCrop: true,
+  pickedColor: { r: 255, g: 255, b: 255 },
+  activeTool: 'pan',
+  eraserSize: 18,
+  zoom: 1,
+  isDrawing: false
+};
+
+function openBgStudioWithCard(type = null, key = null) {
+  populateStudioCardSelect(type, key);
+  bgStudioModal.classList.remove('hidden');
+
+  if (type && key) {
+    loadCardIntoStudio(type, key);
+  } else {
+    const filledSlots = slots.filter(s => s.src);
+    if (filledSlots.length > 0) {
+      loadCardIntoStudio('slot', filledSlots[0].id);
+    } else if (pool.length > 0) {
+      loadCardIntoStudio('bench', pool[0].id);
+    } else {
+      loadSampleRonaldo();
+    }
+  }
+}
+
+function populateStudioCardSelect(selectedType = null, selectedKey = null) {
+  bgCardSelect.innerHTML = '';
+
+  const filledSlots = slots.filter(s => s.src);
+  if (filledSlots.length > 0) {
+    const tierGroup = document.createElement('optgroup');
+    tierGroup.label = '📊 Tier List Cards';
+    filledSlots.forEach((s, idx) => {
+      const opt = document.createElement('option');
+      opt.value = `slot_${s.id}`;
+      opt.textContent = `${s.tier.toUpperCase()} Tier (Card #${idx + 1})`;
+      if (selectedType === 'slot' && selectedKey === s.id) opt.selected = true;
+      tierGroup.appendChild(opt);
+    });
+    bgCardSelect.appendChild(tierGroup);
+  }
+
+  if (pool.length > 0) {
+    const benchGroup = document.createElement('optgroup');
+    benchGroup.label = '🎴 Bench Tray Cards';
+    pool.forEach((c, idx) => {
+      const opt = document.createElement('option');
+      opt.value = `bench_${c.id}`;
+      opt.textContent = `Bench #${idx + 1}`;
+      if (selectedType === 'bench' && selectedKey === c.id) opt.selected = true;
+      benchGroup.appendChild(opt);
+    });
+    bgCardSelect.appendChild(benchGroup);
+  }
+}
+
+function loadCardIntoStudio(type, key) {
+  studioState.activeCardType = type;
+  studioState.activeCardKey = key;
+
+  if (type === 'slot') {
+    const s = slots.find(slot => slot.id === key);
+    if (s && s.src) {
+      studioState.originalImageSrc = s.src;
+      bgCardSelect.value = `slot_${key}`;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO ${s.tier.toUpperCase()} TIER`;
+      runStudioUpdate();
+    }
+  } else if (type === 'bench') {
+    const card = pool.find(c => c.id === key);
+    if (card) {
+      studioState.originalImageSrc = card.src;
+      bgCardSelect.value = `bench_${key}`;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = `✅ APPLY TO BENCH CARD`;
+      runStudioUpdate();
+    }
+  }
+}
+
+async function runStudioUpdate() {
+  if (!studioState.originalImageSrc) return;
+
+  canvasInfoBadge.textContent = 'Processing clean cutout...';
+
+  try {
+    const cleaned = await processImageBackgroundRemoval(studioState.originalImageSrc, {
+      mode: studioState.mode,
+      tolerance: studioState.tolerance,
+      choke: studioState.choke,
+      feather: studioState.feather,
+      crop: studioState.autoCrop,
+      targetColor: studioState.pickedColor
+    });
+
+    studioState.currentWorkingDataUrl = cleaned;
+
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+
+      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Transparent Cutout Ready`;
+    };
+    img.src = cleaned;
+  } catch (err) {
+    console.error('Studio update error:', err);
+    canvasInfoBadge.textContent = 'Error processing image';
+  }
+}
+
+// Background removal engine: Edge-connected flood fill & choke
+function processImageBackgroundRemoval(imgSource, options = {}) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onerror = reject;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const w = canvas.width;
+      const h = canvas.height;
+      if (w === 0 || h === 0) return resolve(imgSource);
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      const mode = options.mode || 'auto';
+      const tolerance = options.tolerance !== undefined ? options.tolerance : 0.28;
+      const choke = options.choke !== undefined ? options.choke : 1;
+      const crop = options.crop !== undefined ? options.crop : true;
+
+      // 1. Target color calculation
+      let tr = 255, tg = 255, tb = 255;
+      if (mode === 'white') {
+        tr = 255; tg = 255; tb = 255;
+      } else if (mode === 'black') {
+        tr = 0; tg = 0; tb = 0;
+      } else if (mode === 'color' && options.targetColor) {
+        tr = options.targetColor.r;
+        tg = options.targetColor.g;
+        tb = options.targetColor.b;
+      } else {
+        // Auto-detect corner/border dominant color
+        const cornerCoords = [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]];
+        let sumR = 0, sumG = 0, sumB = 0, validSamples = 0;
+        cornerCoords.forEach(([cx, cy]) => {
+          const idx = (cy * w + cx) * 4;
+          if (data[idx + 3] > 20) {
+            sumR += data[idx];
+            sumG += data[idx + 1];
+            sumB += data[idx + 2];
+            validSamples++;
+          }
+        });
+        if (validSamples > 0) {
+          tr = Math.round(sumR / validSamples);
+          tg = Math.round(sumG / validSamples);
+          tb = Math.round(sumB / validSamples);
+        }
+      }
+
+      function colorDist(idx) {
+        const dr = data[idx] - tr;
+        const dg = data[idx + 1] - tg;
+        const db = data[idx + 2] - tb;
+        return Math.sqrt(dr * dr + dg * dg + db * db) / 441.673;
+      }
+
+      // 2. Perimeter BFS Flood Fill (Inward only, keeping inside safe!)
+      const visited = new Uint8Array(w * h);
+      const queue = new Int32Array(w * h);
+      let head = 0, tail = 0;
+
+      for (let x = 0; x < w; x++) {
+        [0, h - 1].forEach(y => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+      for (let y = 0; y < h; y++) {
+        [0, w - 1].forEach(x => {
+          const idx = y * w + x;
+          const pIdx = idx * 4;
+          if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+            visited[idx] = 1;
+            queue[tail++] = idx;
+          }
+        });
+      }
+
+      while (head < tail) {
+        const curr = queue[head++];
+        const cx = curr % w;
+        const cy = Math.floor(curr / w);
+
+        const n1 = cx > 0 ? curr - 1 : -1;
+        const n2 = cx < w - 1 ? curr + 1 : -1;
+        const n3 = cy > 0 ? curr - w : -1;
+        const n4 = cy < h - 1 ? curr + w : -1;
+
+        const neighbors = [n1, n2, n3, n4];
+        for (let i = 0; i < 4; i++) {
+          const nIdx = neighbors[i];
+          if (nIdx !== -1 && !visited[nIdx]) {
+            const pIdx = nIdx * 4;
+            if (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance) {
+              visited[nIdx] = 1;
+              queue[tail++] = nIdx;
+            }
+          }
+        }
+      }
+
+      // 3. Clear flood-filled background
+      for (let i = 0; i < w * h; i++) {
+        if (visited[i]) {
+          data[i * 4 + 3] = 0;
+        }
+      }
+
+      // 4. Fringe Choke / Halo Trim
+      if (choke > 0) {
+        for (let pass = 0; pass < choke; pass++) {
+          const toErase = [];
+          for (let y = 1; y < h - 1; y++) {
+            for (let x = 1; x < w - 1; x++) {
+              const idx = y * w + x;
+              const pIdx = idx * 4;
+              if (data[pIdx + 3] > 0) {
+                const hasTrans =
+                  data[(idx - 1) * 4 + 3] === 0 ||
+                  data[(idx + 1) * 4 + 3] === 0 ||
+                  data[(idx - w) * 4 + 3] === 0 ||
+                  data[(idx + w) * 4 + 3] === 0;
+
+                if (hasTrans && colorDist(pIdx) <= tolerance * 1.45) {
+                  toErase.push(pIdx);
+                }
+              }
+            }
+          }
+          toErase.forEach(p => { data[p + 3] = 0; });
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      // 5. Auto-Crop Margins
+      let outCanvas = canvas;
+      if (crop) {
+        let minX = w, minY = h, maxX = 0, maxY = 0;
+        let hasVisible = false;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const a = data[(y * w + x) * 4 + 3];
+            if (a > 15) {
+              hasVisible = true;
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+        if (hasVisible && (minX > 1 || minY > 1 || maxX < w - 2 || maxY < h - 2)) {
+          const cropW = Math.max(1, maxX - minX + 1);
+          const cropH = Math.max(1, maxY - minY + 1);
+          const croppedCanvas = document.createElement('canvas');
+          croppedCanvas.width = cropW;
+          croppedCanvas.height = cropH;
+          const croppedCtx = croppedCanvas.getContext('2d');
+          croppedCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+          outCanvas = croppedCanvas;
+        }
+      }
+
+      resolve(outCanvas.toDataURL('image/png'));
+    };
+    img.src = imgSource;
+  });
+}
+
+// Studio Event Listeners
+if (bgRemoverBtn) {
+  bgRemoverBtn.addEventListener('click', () => openBgStudioWithCard());
+}
+if (closeBgStudioBtn) {
+  closeBgStudioBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+}
+if (bgCloseCancelBtn) {
+  bgCloseCancelBtn.addEventListener('click', () => bgStudioModal.classList.add('hidden'));
+}
+if (bgStudioModal) {
+  bgStudioModal.addEventListener('click', e => {
+    if (e.target === bgStudioModal) bgStudioModal.classList.add('hidden');
+  });
+}
+
+// Card select change
+if (bgCardSelect) {
+  bgCardSelect.addEventListener('change', e => {
+    const val = e.target.value;
+    if (val.startsWith('slot_')) {
+      const id = val.replace('slot_', '');
+      loadCardIntoStudio('slot', id);
+    } else if (val.startsWith('bench_')) {
+      const id = val.replace('bench_', '');
+      loadCardIntoStudio('bench', id);
+    } else if (val === 'sample_ronaldo') {
+      loadSampleRonaldo();
+    }
+  });
+}
+
+// Mode Selection Buttons
+function setStudioMode(newMode) {
+  studioState.mode = newMode;
+  [modeAuto, modeWhite, modeBlack, modeColor].forEach(el => {
+    if (el) el.classList.toggle('active', el.dataset.mode === newMode);
+  });
+  runStudioUpdate();
+}
+
+if (modeAuto) modeAuto.addEventListener('click', () => setStudioMode('auto'));
+if (modeWhite) modeWhite.addEventListener('click', () => setStudioMode('white'));
+if (modeBlack) modeBlack.addEventListener('click', () => setStudioMode('black'));
+if (modeColor) modeColor.addEventListener('click', () => setStudioMode('color'));
+
+// Sliders
+if (bgTolRange) {
+  bgTolRange.addEventListener('input', e => {
+    studioState.tolerance = parseFloat(e.target.value) / 100;
+    tolValDisplay.textContent = `${e.target.value}%`;
+    runStudioUpdate();
+  });
+}
+if (bgChokeRange) {
+  bgChokeRange.addEventListener('input', e => {
+    studioState.choke = parseInt(e.target.value, 10);
+    chokeValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgFeatherRange) {
+  bgFeatherRange.addEventListener('input', e => {
+    studioState.feather = parseInt(e.target.value, 10);
+    featherValDisplay.textContent = `${e.target.value} px`;
+    runStudioUpdate();
+  });
+}
+if (bgAutoCropCheck) {
+  bgAutoCropCheck.addEventListener('change', e => {
+    studioState.autoCrop = e.target.checked;
+    runStudioUpdate();
+  });
+}
+
+// Sample Card Button
+if (loadRonaldoSampleBtn) {
+  loadRonaldoSampleBtn.addEventListener('click', () => {
+    loadSampleRonaldo();
+    showToast('Loaded Ronaldo 124 ST reference card!');
+  });
+}
+
+// Upload direct to Studio
+if (bgUploadInput) {
+  bgUploadInput.addEventListener('change', async e => {
+    if (e.target.files && e.target.files.length > 0) {
+      const dataUrl = await compressImageFile(e.target.files[0]);
+      studioState.activeCardType = 'custom';
+      studioState.activeCardKey = 'uploaded_' + Date.now();
+      studioState.originalImageSrc = dataUrl;
+      if (bgApplyCurrentBtn) bgApplyCurrentBtn.innerHTML = '✅ APPLY TO TIER LIST';
+      runStudioUpdate();
+      e.target.value = '';
+      showToast('Uploaded image into studio!');
+    }
+  });
+}
+
+// Presets
+const presetCleanWhite = document.getElementById('presetCleanWhite');
+const presetCleanBlack = document.getElementById('presetCleanBlack');
+const presetRevert = document.getElementById('presetRevert');
+
+if (presetCleanWhite) {
+  presetCleanWhite.addEventListener('click', () => {
+    bgTolRange.value = 28;
+    tolValDisplay.textContent = '28%';
+    bgChokeRange.value = 1;
+    chokeValDisplay.textContent = '1 px';
+    setStudioMode('white');
+  });
+}
+if (presetCleanBlack) {
+  presetCleanBlack.addEventListener('click', () => {
+    bgTolRange.value = 28;
+    tolValDisplay.textContent = '28%';
+    bgChokeRange.value = 1;
+    chokeValDisplay.textContent = '1 px';
+    setStudioMode('black');
+  });
+}
+if (presetRevert) {
+  presetRevert.addEventListener('click', () => {
+    if (!studioState.originalImageSrc) return;
+    const img = new Image();
+    img.onload = () => {
+      bgStudioCanvas.width = img.width;
+      bgStudioCanvas.height = img.height;
+      const ctx = bgStudioCanvas.getContext('2d');
+      ctx.clearRect(0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0);
+      studioState.currentWorkingDataUrl = studioState.originalImageSrc;
+      canvasInfoBadge.textContent = `${img.width} × ${img.height} px | Reverted Original`;
+      showToast('Reverted to original image.');
+    };
+    img.src = studioState.originalImageSrc;
+  });
+}
+
+// Backdrop Theme Toggles
+['checker', 'stadium', 'black', 'white'].forEach(theme => {
+  const btn = document.querySelector(`.theme-btn[data-stage="${theme}"]`);
+  if (btn) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.theme-btn[data-stage]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      bgCanvasContainer.className = `bg-canvas-container ${theme === 'checker' ? '' : 'theme-' + theme}`;
+    });
+  }
+});
+
+// Zoom Controls
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomOutBtn = document.getElementById('zoomOutBtn');
+const zoomResetBtn = document.getElementById('zoomResetBtn');
+const zoomLevelDisplay = document.getElementById('zoomLevelDisplay');
+
+function setStudioZoom(z) {
+  studioState.zoom = Math.max(0.4, Math.min(2.5, z));
+  bgStudioCanvas.style.transform = `scale(${studioState.zoom})`;
+  zoomLevelDisplay.textContent = `${Math.round(studioState.zoom * 100)}%`;
+}
+if (zoomInBtn) zoomInBtn.addEventListener('click', () => setStudioZoom(studioState.zoom + 0.2));
+if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => setStudioZoom(studioState.zoom - 0.2));
+if (zoomResetBtn) zoomResetBtn.addEventListener('click', () => setStudioZoom(1));
+
+// Interactive Tools (Inspect, Eyedropper, Eraser)
+const toolPanBtn = document.getElementById('toolPanBtn');
+const toolEyedropperBtn = document.getElementById('toolEyedropperBtn');
+const toolEraserBtn = document.getElementById('toolEraserBtn');
+const eraserSizeWrap = document.getElementById('eraserSizeWrap');
+const eraserSizeRange = document.getElementById('eraserSizeRange');
+const eraserSizeVal = document.getElementById('eraserSizeVal');
+
+function setActiveTool(tool) {
+  studioState.activeTool = tool;
+  toolPanBtn.classList.toggle('active', tool === 'pan');
+  toolEyedropperBtn.classList.toggle('active', tool === 'eyedropper');
+  toolEraserBtn.classList.toggle('active', tool === 'eraser');
+  eraserSizeWrap.style.display = tool === 'eraser' ? 'inline-flex' : 'none';
+
+  if (tool === 'eyedropper') {
+    bgStudioCanvas.style.cursor = 'crosshair';
+  } else if (tool === 'eraser') {
+    bgStudioCanvas.style.cursor = 'cell';
+  } else {
+    bgStudioCanvas.style.cursor = 'default';
+  }
+}
+
+if (toolPanBtn) toolPanBtn.addEventListener('click', () => setActiveTool('pan'));
+if (toolEyedropperBtn) toolEyedropperBtn.addEventListener('click', () => setActiveTool('eyedropper'));
+if (toolEraserBtn) toolEraserBtn.addEventListener('click', () => setActiveTool('eraser'));
+if (eraserSizeRange) {
+  eraserSizeRange.addEventListener('input', e => {
+    studioState.eraserSize = parseInt(e.target.value, 10);
+    eraserSizeVal.textContent = `${e.target.value}px`;
+  });
+}
+
+// Canvas Click & Touch Handlers
+function getCanvasPos(e) {
+  const rect = bgStudioCanvas.getBoundingClientRect();
+  const scaleX = bgStudioCanvas.width / rect.width;
+  const scaleY = bgStudioCanvas.height / rect.height;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: Math.round((clientX - rect.left) * scaleX),
+    y: Math.round((clientY - rect.top) * scaleY)
+  };
+}
+
+bgStudioCanvas.addEventListener('mousedown', e => {
+  if (studioState.activeTool === 'eyedropper') {
+    const pos = getCanvasPos(e);
+    const ctx = bgStudioCanvas.getContext('2d');
+    const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+    studioState.pickedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
+    setStudioMode('color');
+    showToast(`Sampled color: rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`);
+    setActiveTool('pan');
+  } else if (studioState.activeTool === 'eraser') {
+    studioState.isDrawing = true;
+    eraseAt(e);
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  if (studioState.isDrawing) {
+    studioState.isDrawing = false;
+    studioState.currentWorkingDataUrl = bgStudioCanvas.toDataURL('image/png');
+  }
+});
+
+bgStudioCanvas.addEventListener('mousemove', e => {
+  if (studioState.isDrawing && studioState.activeTool === 'eraser') {
+    eraseAt(e);
+  }
+});
+
+function eraseAt(e) {
+  const pos = getCanvasPos(e);
+  const ctx = bgStudioCanvas.getContext('2d');
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, studioState.eraserSize, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+// Apply to Selected Card
+if (bgApplyCurrentBtn) {
+  bgApplyCurrentBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) return;
+
+    if (studioState.activeCardType === 'slot' && studioState.activeCardKey) {
+      const slot = slots.find(s => s.id === studioState.activeCardKey);
+      if (slot) {
+        slot.src = studioState.currentWorkingDataUrl;
+        renderBoard();
+        showToast(`Applied clean transparent card to ${slot.tier.toUpperCase()} tier!`);
+      }
+    } else if (studioState.activeCardType === 'bench' && studioState.activeCardKey) {
+      const card = pool.find(c => c.id === studioState.activeCardKey);
+      if (card) {
+        card.src = studioState.currentWorkingDataUrl;
+        renderBench();
+        showToast('Applied clean transparent card to bench!');
+      }
+    } else {
+      // Sample or Custom upload:
+      // Place into selected slot or first available empty slot
+      let targetSlot = null;
+      if (selectedCard && selectedCard.type === 'slot') {
+        targetSlot = slots.find(s => s.id === selectedCard.id);
+      }
+      if (!targetSlot) {
+        // Prefer first empty slot in 'super' or first empty overall
+        targetSlot = slots.find(s => s.tier === 'super' && !s.src) || slots.find(s => !s.src);
+      }
+
+      if (targetSlot) {
+        targetSlot.src = studioState.currentWorkingDataUrl;
+        renderBoard();
+        showToast(`Placed clean transparent card in ${targetSlot.tier.toUpperCase()} tier!`);
+      } else {
+        pool.push({ id: uid(), src: studioState.currentWorkingDataUrl });
+        renderBench();
+        showToast('Added clean cutout to bench! Click or drag onto the tier list.');
+      }
+    }
+
+    bgStudioModal.classList.add('hidden');
+  });
+}
+
+// Apply to ALL Tier Cards
+if (bgApplyAllPitchBtn) {
+  bgApplyAllPitchBtn.addEventListener('click', async () => {
+    const filled = slots.filter(s => s.src);
+    if (filled.length === 0) {
+      showToast('No cards on the tier board to clean! Place cards first.');
+      return;
+    }
+
+    showToast(`Cleaning background & outliers for ${filled.length} cards...`);
+
+    for (let i = 0; i < filled.length; i++) {
+      const s = filled[i];
+      try {
+        const cleaned = await processImageBackgroundRemoval(s.src, {
+          mode: studioState.mode,
+          tolerance: studioState.tolerance,
+          choke: studioState.choke,
+          feather: studioState.feather,
+          crop: studioState.autoCrop,
+          targetColor: studioState.pickedColor
+        });
+        s.src = cleaned;
+      } catch (err) {
+        console.warn('Batch clean error on slot:', err);
+      }
+    }
+
+    renderBoard();
+    showToast(`Cleaned all ${filled.length} tier cards!`);
+    bgStudioModal.classList.add('hidden');
+  });
+}
+
+// Download Cutout PNG
+if (bgDownloadCutoutBtn) {
+  bgDownloadCutoutBtn.addEventListener('click', () => {
+    if (!studioState.currentWorkingDataUrl) return;
+    const link = document.createElement('a');
+    link.download = `FC_VOLT_Card_Cutout_${Date.now()}.png`;
+    link.href = studioState.currentWorkingDataUrl;
+    link.click();
+    showToast('Downloaded transparent card PNG!');
+  });
+}
+
+// Initialize on page load
+setupBenchDropZone();
+loadWeek();
+</script>
+</body>
+</html>

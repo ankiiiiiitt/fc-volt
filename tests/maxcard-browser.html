@@ -5,7 +5,7 @@ const wait=async fn=>{for(let i=0;i<300;i++){if(fn())return;await new Promise(r=
 const assert=(v,m)=>{if(!v)throw Error(m);};
 function fileInput(w,id,file){const transfer=new w.DataTransfer();transfer.items.add(file);const el=w.document.getElementById(id);el.files=transfer.files;el.dispatchEvent(new w.Event('change',{bubbles:true}));}
 document.getElementById('run').onclick=async()=>{
- result.textContent='Running…';
+ result.textContent='Running…';const started=performance.now();
  try{
   await wait(()=>frame.contentWindow.MaxCardCore);
   const w=frame.contentWindow,d=w.document,$=id=>d.getElementById(id);
@@ -14,15 +14,17 @@ document.getElementById('run').onclick=async()=>{
    const pixels=g.createImageData(width,height);for(let p=0;p<pixels.data.length;p+=4){pixels.data[p]=(p/4)%251;pixels.data[p+1]=Math.floor(p/width)%199;pixels.data[p+2]=33;pixels.data[p+3]=255;}g.putImageData(pixels,0,0);
    const blob=await new Promise(r=>fixture.toBlob(r));fileInput(w,'baseFile',new w.File([blob],'synthetic.png',{type:'image/png'}));
    await wait(()=>$('baseInfo').textContent.startsWith(width+' ×'));
-   $('example').click();
+   $('example').click();$('continueReview').click();assert(!$('reviewStep').hidden,'Review step did not open');assert($('uploadStep').hidden,'Upload step did not hide');
    // Skills are included only after the example allocations are loaded.
    const ids=[...$('regionSelect').options].map(o=>o.value).filter(id=>!id.startsWith('icon'));
    const regions={};ids.forEach((id,i)=>regions[id]={x:.03+(i%5)*.19,y:.05+Math.floor(i/5)*.18,w:.13,h:.1,fg:'#ffffff',bg:'#16202b',fontSize:78,font:'Arial'});
-   fileInput(w,'layoutFile',new w.File([JSON.stringify({version:1,aspect:width/height,regions})],'layout.json',{type:'application/json'}));
-   await wait(()=>$('status').textContent.startsWith('Layout loaded'));
+   if(width===960){
+    fileInput(w,'layoutFile',new w.File([JSON.stringify({version:1,aspect:width/height,regions})],'layout.json',{type:'application/json'}));
+    await wait(()=>$('status').textContent.startsWith('Layout loaded'));
+   }else{assert($('regionStatus').textContent.startsWith('18 regions marked'),'saved layout was not automatically restored');assert(!$('masksConfirmed').checked,'saved masks were silently confirmed');}
    $('confirmed').checked=true;$('masksConfirmed').checked=true;$('generate').click();
    await wait(()=>!$('generate').disabled);
-   assert(!$('download').disabled,$('status').textContent);
+   assert(!$('download').disabled,$('status').textContent);assert(!$('resultStep').hidden,'Result step did not open');assert(w.localStorage.getItem('fcvolt_maxcard_layout_v2'),'layout was not remembered');
    assert($('verification').textContent.includes('0 changed pixels outside masks'),'pixel guard did not pass');
    const image=await w.createImageBitmap(await (await fetch($('after').src)).blob());assert(image.width===width&&image.height===height,'resolution mismatch');
    const out=document.createElement('canvas');out.width=width;out.height=height;const og=out.getContext('2d');og.drawImage(image,0,0);image.close();
@@ -39,11 +41,20 @@ document.getElementById('run').onclick=async()=>{
   // Actual OCR engine smoke check: clean, labeled synthetic RenderZ-like text.
   const ocr=document.createElement('canvas');ocr.width=1000;ocr.height=1100;const t=ocr.getContext('2d');t.fillStyle='white';t.fillRect(0,0,1000,1100);t.fillStyle='black';t.font='32px Arial';
   ['Player: Gabriel','OVR 127','CB','Pacing 179','Shooting 137','Passing 138','Dribbling 158','Defending 231','Physical 222','Defender +2','Scoring +1','Defending +1','Physical +1'].forEach((s,i)=>t.fillText(s,40,60+i*75));
-  fileInput(w,'renderFile',new w.File([await new Promise(r=>ocr.toBlob(r))],'renderz-synthetic.png',{type:'image/png'}));await wait(()=>!$('extract').disabled);$('extract').click();
-  await wait(()=>!$('extract').disabled);
+  fileInput(w,'renderFile',new w.File([await new Promise(r=>ocr.toBlob(r))],'renderz-synthetic.png',{type:'image/png'}));
+  await wait(()=>$('status').textContent.startsWith('OCR suggestions loaded') || $('status').textContent.startsWith('OCR failed'));
   assert($('status').textContent.startsWith('OCR suggestions loaded'),$('status').textContent);
   for(const [key,value] of Object.entries({ovr:127,pacing:179,shooting:137,passing:138,dribbling:158,defending:231,physical:222}))assert(+$(key).value===value,'OCR mismatch: '+key+' '+$(key).value);
   assert(!$('confirmed').checked,'OCR was automatically confirmed');
+  assert(d.querySelectorAll('.fc-sidebar nav a').length===8,'shared tool navigation missing');
+  const home=new DOMParser().parseFromString(await(await fetch('../index.html')).text(),'text/html');
+  assert(home.querySelectorAll('.tool-card').length===6,'home tool cards missing');
+  assert(home.querySelector('.featured-tool').getAttribute('href')==='maxcard.html','featured tool broken');
+  for(const file of ['tierlist.html','team11.html','top10.html','shards.html','players.html','claim.html']){
+    const response=await fetch('../'+file);assert(response.ok,'broken tool route: '+file);const html=await response.text();assert(html.includes('site.js')&&html.includes('site.css'),'missing shared chrome: '+file);
+  }
+  const elapsed=((performance.now()-started)/1000).toFixed(1);
+  result.textContent+='\nPASS three-step UI, remembered layout, auto OCR, Home and all tool routes ('+elapsed+' seconds).';
   result.textContent+='\nPASS real OCR engine on a synthetic labeled image.\nALL CHECKS PASSED';
  }catch(e){result.textContent+='\nFAIL: '+e.message;}
 };

@@ -1,4 +1,8 @@
-# FC_VOLT — FC Mobile Player Tier List
+# FC VOLT — Creator Studio
+
+Start at [Home](index.html). All tools share a consistent sidebar on desktop and a compact Tools menu on mobile. The Tier List has moved to [tierlist.html](tierlist.html); existing tool pages retain their editing and export features. Secondary actions and visual settings are grouped under More options and appearance sections.
+
+The Max Card creator uses three steps: Upload → Review → Download. RenderZ scanning starts automatically; a guided screenshot setup is remembered locally after a successful export. First-time calibration and manual OCR corrections can still take longer than two minutes.
 
 A high-performance, dark esports tier list creator designed specifically for FC Mobile weekly player rankings.
 
@@ -55,7 +59,7 @@ A high-performance, dark esports tier list creator designed specifically for FC 
    - **Flexible Background Themes**: Neon Magenta/Purple, Deep Violet, Electric Blue, Dark Esports, Fiery Flame, or Custom color pickers.
    - **Export**: One-click **📸 EXPORT IMAGE** for crystal-clear 2.5x retina PNG image download.
 
-3. **[4-Tier Ranking Template (index.html)](file:///Users/ankitkumar/Downloads/Fc_Volt%202/index.html)**:
+3. **[4-Tier Ranking Template (tierlist.html)](file:///Users/ankitkumar/Downloads/Fc_Volt%202/tierlist.html)**:
    - ♛ **SUPER** (Electric Green Nebula)
    - 👍 **GOOD** (Electric Blue Nebula)
    - ☻ **AVERAGE** (Fiery Gold Nebula)
@@ -88,7 +92,7 @@ Then open your browser and navigate to:
 - 💎 **Football Shard Comparison**: [http://localhost:8088/shards.html](http://localhost:8088/shards.html)
 - ⚽ **Best Team 11 Squad Builder**: [http://localhost:8088/team11.html](http://localhost:8088/team11.html)
 - 🔟 **Top 10 Best Players Template**: [http://localhost:8088/top10.html](http://localhost:8088/top10.html)
-- 📊 **4-Tier Performance List**: [http://localhost:8088/index.html](http://localhost:8088/index.html)
+- 📊 **4-Tier Performance List**: [http://localhost:8088/tierlist.html](http://localhost:8088/tierlist.html)
 
 ---
 

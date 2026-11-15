@@ -8,7 +8,40 @@
   const regions = {}, icons = {};
   let base = null, render = null, asset = null, mode = 'region', start = null, activeDrag = false;
   let outputURL = null, baseURL = null, busy = false, ocrBusy = false;
-  let definitions = [], cropSelection = null, revision = 0;
+  let definitions = [], cropSelection = null, revision = 0, activeStep = 1;
+  const cacheKey='fcvolt_maxcard_layout_v2';
+  function showStep(step) {
+    activeStep=step;
+    for(let i=1;i<=3;i++){ $('step'+i).removeAttribute('aria-current'); $('step'+i).disabled=i===3&&$('download').disabled; }
+    $('step'+step).setAttribute('aria-current','step');
+    $('uploadStep').hidden=step!==1; $('reviewStep').hidden=step!==2; $('resultStep').hidden=step!==3;
+  }
+  function nextMissing() {return definitions.find(d=>d.required&&!regions[d.id]);}
+  function guide() {
+    const required=definitions.filter(d=>d.required),done=required.filter(d=>regions[d.id]).length;
+    $('guideCount').textContent=`${done} / ${required.length}`;
+    $('guideLabel').textContent=nextMissing()?.label||'All boxes ready. Review the green outlines below.';
+    $('setupBadge').textContent=done===required.length?'Ready · layout remembered after generation':'One-time setup';
+  }
+  function advanceRegion() {const next=nextMissing();if(next)$('regionSelect').value=next.id;sync();}
+  function restoreSavedLayout() {
+    if(!base||Object.keys(regions).length)return;
+    try {
+      const saved=JSON.parse(localStorage.getItem(cacheKey)||'null');
+      if(!saved||saved.version!==2||Math.abs(saved.aspect/(source.width/source.height)-1)>.01)return;
+      const valid={};
+      for(const [id,r] of Object.entries(saved.regions||{})){
+        if(!fixed.some(d=>d[0]===id)&&!/^skill[0-9]+$/.test(id))continue;
+        C.rect(r,source.width,source.height);if(r.patch)C.rect(r.patch,source.width,source.height);
+        if(!/^#[0-9a-f]{6}$/i.test(r.fg)||!/^#[0-9a-f]{6}$/i.test(r.bg)||!['Arial','Teko','Inter','sans-serif'].includes(r.font)||!Number.isFinite(r.fontSize)||r.fontSize<10||r.fontSize>100)return;
+        valid[id]={x:r.x,y:r.y,w:r.w,h:r.h,fg:r.fg,bg:r.bg,font:r.font,fontSize:r.fontSize,patch:r.patch?{x:r.patch.x,y:r.patch.y,w:r.patch.w,h:r.patch.h}:null};
+      }
+      Object.assign(regions,valid);$('calibration').open=true;$('setupBadge').textContent='Saved layout · check boxes';
+    }catch{}
+  }
+  function saveLayout() {
+    try{const saved={};for(const d of definitions)if(regions[d.id]&&d.type!=='icon'&&d.id!=='position')saved[d.id]=regions[d.id];localStorage.setItem(cacheKey,JSON.stringify({version:2,aspect:source.width/source.height,regions:saved}));}catch{}
+  }
   const labels = {ovr:'Target OVR', pacing:'Pacing', shooting:'Shooting', passing:'Passing', dribbling:'Dribbling', defending:'Defending', physical:'Physical'};
   const fixed = [ ['cardOVR','Card OVR','text','ovr'], ['panelOVR','Stats-panel OVR','text','ovr'], ...C.stats.map(s=>[s,labels[s],'text',s]), ['training','Training 30/30','text','training'], ['bar','Training progress bar','bar'], ['badge','Orange level 30 badge','badge'], ['rank','Five orange rank diamonds','rank'], ['trainingControl','Active training control','control','TRAINING'], ['rankControl','Active rank-up control','control','RANK UP'] ];
   function status(message, error=false) { $('status').textContent = message; $('status').classList.toggle('error', error); }
@@ -16,6 +49,7 @@
     revision++;
     $('download').disabled = true;
     $('comparison').hidden = true;
+    $('step3').disabled=true;
     $('verification').textContent = 'Settings changed. Generate again to verify and export.';
     if(outputURL) { URL.revokeObjectURL(outputURL); outputURL=null; }
   }
@@ -37,14 +71,14 @@
     });
     $('regionSelect').replaceChildren(...definitions.map(d=>new Option(d.label,d.id)));
     if(definitions.some(d=>d.id===selected)) $('regionSelect').value=selected;
-    sync();
+    restoreSavedLayout();sync();
   }
   function current() { return $('regionSelect').value; }
   function sync() {
     const r=regions[current()];
     for(const [id,k] of [['rx','x'],['ry','y'],['rw','w'],['rh','h']]) $(id).value = r ? +(r[k]*100).toFixed(3) : '';
     $('fg').value=r?.fg||'#ffffff'; $('bg').value=r?.bg||'#16202b'; $('fontSize').value=r?.fontSize||78; $('font').value=r?.font||'Arial';
-    mode='region'; drawOverlay();
+    mode='region'; drawOverlay();guide();
     const count=definitions.filter(d=>regions[d.id]).length;
     $('regionStatus').textContent=`${count} regions marked. ${r ? 'Selected: '+(r.patch?'clean patch background':'solid background')+'.' : 'Drag on the source to mark this region.'} Orange outlines show the selected region.`;
   }
@@ -69,7 +103,7 @@
     return image;
   }
   async function upload(kind,file) {
-    if(busy || ocrBusy) return status('Wait for the current operation to finish.',true);
+    if(busy || (ocrBusy&&kind==='render')) return status('Wait for the current scan to finish.',true);
     try {
       const image=await decode(file);
       if(kind==='base') {
@@ -77,7 +111,7 @@
         Object.keys(regions).forEach(k=>delete regions[k]);Object.keys(icons).forEach(k=>delete icons[k]);
         if(baseURL) URL.revokeObjectURL(baseURL);baseURL=URL.createObjectURL(file);
         $('baseThumb').src=baseURL;$('baseThumb').hidden=false;$('baseInfo').textContent=`${image.width} × ${image.height} · Original resolution`;
-        $('empty').hidden=true;dirty();sync();
+        $('empty').hidden=true;dirty();restoreSavedLayout();sync();showStep(1);
       } else if(kind==='render') {
         render?.close();render=image;
         const old=$('renderThumb').dataset.url;if(old) URL.revokeObjectURL(old);
@@ -87,7 +121,8 @@
         // Crops are frozen ImageData; clear them when the supporting screenshot changes.
         Object.keys(icons).forEach(k=>delete icons[k]);dirty();
       } else { asset?.close();asset=image; }
-      status(kind==='base'?'Base loaded. Enter target values and mark the edit regions.':kind==='render'?'RenderZ loaded. Scan it, then review every value.':'Approved icon sheet loaded.');
+      status(kind==='base'?'Base added. Upload RenderZ or continue with manual stats.':kind==='render'?'RenderZ added. Reading your stats…':'Icon sheet added.');
+      if(kind==='render')$('extract').click();
     } catch(e) {status(e.message,true);}
   }
   for(const kind of ['base','render']) {
@@ -128,7 +163,14 @@
         if(Math.abs((p.w/p.h)/(t.w/t.h)-1)>.05)throw Error('Use a patch with the same aspect ratio as the target (within 5%).');
         target.patch=r;
       } else regions[current()]={...regions[current()],...r,fg:$('fg').value,bg:$('bg').value,fontSize:+$('fontSize').value,font:$('font').value,patch:null};
-      dirty();sync();
+      dirty();
+      if(mode==='region') {
+        const rr=regions[current()],p=C.rect(rr,source.width,source.height);
+        // Sample just outside the box as a sensible flat-background default.
+        const pixel=ctx.getImageData(Math.max(0,p.x-2),Math.max(0,p.y-2),1,1).data;
+        rr.bg='#'+[...pixel].slice(0,3).map(v=>v.toString(16).padStart(2,'0')).join('');
+        advanceRegion();
+      }else sync();
     }catch(e){status(e.message,true);drawOverlay();}
   };
   overlay.onpointercancel=()=>{activeDrag=false;drawOverlay();};
@@ -238,8 +280,8 @@
       const v=C.validate(values());
       if(!$('confirmed').checked)throw Error('Review and confirm the target values first.');
       if($('alternate').checked&&!v.position)throw Error('Select the explicitly confirmed alternate position.');
-      if(!$('masksConfirmed').checked)throw Error('Inspect and confirm the permitted edit masks first.');
-      const missing=definitions.filter(d=>d.required&&!regions[d.id]);if(missing.length)throw Error('Mark these regions: '+missing.map(d=>d.label).join(', '));
+      const missing=definitions.filter(d=>d.required&&!regions[d.id]);if(missing.length){showStep(2);$('calibration').open=true;advanceRegion();$('calibration').scrollIntoView({behavior:'smooth',block:'start'});throw Error('One-time setup: draw a box around '+missing[0].label+'. The next value appears automatically.');}
+      if(!$('masksConfirmed').checked){showStep(2);$('calibration').open=true;$('calibration').scrollIntoView({behavior:'smooth',block:'start'});throw Error('Check the boxes on your screenshot, then tick the confirmation below it.');}
       for(const d of definitions.filter(d=>d.type==='icon'&&regions[d.id]))if(!icons[d.id])throw Error('Choose an approved crop for '+d.label+', or clear its region to preserve the original icon.');
       busy=true;$('generate').disabled=true;status('Compositing and verifying pixels…');invalidate();
       const generationRevision=revision;
@@ -257,7 +299,7 @@
       if(revision!==generationRevision)throw Error('Settings changed during generation. Generate again.');
       outputURL=URL.createObjectURL(blob);$('after').src=outputURL;
       // Use the decoded source canvas for an exact visual comparison.
-      $('before').src=source.toDataURL('image/png');$('comparison').hidden=false;$('download').disabled=false;
+      $('before').src=source.toDataURL('image/png');$('comparison').hidden=false;$('download').disabled=false;saveLayout();showStep(3);$('resultStep').scrollIntoView({behavior:'smooth',block:'start'});
       $('verification').textContent=`Verified PNG: ${out.width} × ${out.height} · ${report.changed.toLocaleString()} changed pixels inside masks · 0 changed pixels outside masks. Review appearance before sharing.`;
       status('Max card preview ready. Compare it with the original, then download.');
     }catch(e){status(e.message,true);$('verification').textContent='No verified export available. '+e.message;}
@@ -267,5 +309,12 @@
   $('download').onclick=()=>{if(!outputURL)return;const a=document.createElement('a');a.href=outputURL;a.download=($('name').value||'player').replace(/[^\p{L}\p{N}_-]+/gu,'-')+'-max-fan-preview.png';a.click();};
   $('compare').oninput=()=>{$('before').style.clipPath=`inset(0 ${100-$('compare').value}% 0 0)`;};
   $('masksConfirmed').onchange=invalidate;
-  rebuild();
+  $('continueReview').onclick=()=>{if(!base)return status('Add your FC Mobile screenshot first.',true);showStep(2);};
+  $('manualEntry').onclick=()=>{if(!base)return status('Add your FC Mobile screenshot first.',true);showStep(2);};
+  $('backUpload').onclick=()=>showStep(1);$('backReview').onclick=()=>showStep(2);
+  $('step1').onclick=()=>showStep(1);
+  $('step2').onclick=()=>{if(base)showStep(2);else status('Add your FC Mobile screenshot first.',true);};
+  $('step3').onclick=()=>{if(!$('download').disabled)showStep(3);};
+  $('nextRegion').onclick=advanceRegion;
+  rebuild();showStep(1);
 })();

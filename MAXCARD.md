@@ -24,14 +24,14 @@ Visit `http://localhost:8088/maxcard.html`. Use a current browser with Canvas, c
 ## Workflow
 
 1. Upload a full FC Mobile screenshot (PNG recommended) and the RenderZ screenshot. Supported formats: PNG, JPEG, WebP. Each file is limited to 15 MB, 12 megapixels and a maximum edge of 8192 px. Decoded dimensions are checked before allocating working canvases; the browser still needs memory to decode the file first.
-2. Click **Scan RenderZ screenshot**. The OCR engine and English language data download on demand. Your screenshot is processed locally and is never uploaded. If downloads fail, use manual entry. Edit OCR text and reparse if helpful.
+2. RenderZ scanning starts automatically after upload. **Scan again** is available inside **Enter stats manually instead**. Click **Review stats** to open step 2. The OCR engine and English language data download on demand. Your screenshot is processed locally and is never uploaded. If downloads fail, use manual entry. Edit OCR text and reparse if helpful.
 3. Review OVR, all six attributes, position and skill allocations. Enter each skill as `Name +N`, one per line, totaling five points. Missing or conflicting values are blank. Overall OCR confidence is shown in the review notes; it is not a per-field guarantee. All OCR values require explicit review, regardless of confidence.
 4. Position is reference-only by default. To change the visible card position, select a valid position and explicitly check the alternate-position confirmation; a separate position mask becomes required. The app cannot verify whether a player is eligible for that alternate position.
-5. Choose a region and drag a tight box over the original value on the source canvas. Mark both OVRs, all six attributes, training text, progress bar, badge, rank diamonds, training control, rank control and one point region per skill. Do not include player artwork, names, stars or PlayStyles. Use numeric X/Y/W/H controls for precise adjustment. Coordinates are percentages of the source dimensions.
+5. On the Review step, open **Screenshot setup** (it also opens when generation needs missing boxes). Choose a region and drag a tight box over the original value on the source canvas. Mark both OVRs, all six attributes, training text, progress bar, badge, rank diamonds, training control, rank control and one point region per skill. Do not include player artwork, names, stars or PlayStyles. The next unmarked field is selected automatically after each box. Background color is sampled just outside the box as a starting point. Expand **Advanced adjustments** for numeric X/Y/W/H controls and precise styling. Coordinates are percentages of the source dimensions.
 6. Match text color, font and text height per region. For flat backgrounds, sample a clean source pixel. For textured backgrounds, select a clean patch with the same aspect ratio (within 5%). This patch is copied from the untouched source; it is not AI inpainting. For a seamless card-OVR replacement, the user must supply a suitable clean patch from that artwork. Solid color cannot reconstruct complex artwork.
 7. Skill icons are preserved unless an optional skill-icon destination is marked. For each marked icon region, select an approved source crop from RenderZ or a user-supplied licensed icon sheet. Original proportions are retained. Crops are copied, not regenerated. Only use assets you have rights to use. This interface is for skill-upgrade icons, never PlayStyles.
 8. Inspect all masks and confirm that protected content is outside them. Generate, review with the before/after slider, and download the PNG. Changes to settings invalidate the old export.
-9. Save a JSON layout to reuse calibration. Layouts accept matching aspect ratios within 1%, scale coordinates to the new resolution and must be rechecked. Icon pixels are not embedded; reselect crops after loading. Skill names/values are not stored in layouts, so enter them before loading the corresponding layout.
+9. After a successful export, the latest layout geometry and styles are saved in browser localStorage and restored automatically for screenshots whose aspect ratios match within 1%. Inspect and confirm every restored box; matching aspect ratios do not guarantee the same game layout. Optional icon masks and confirmed alternate-position masks are not restored automatically. You can also save a JSON layout to reuse calibration. Layouts accept matching aspect ratios within 1%, scale coordinates to the new resolution and must be rechecked. Icon pixels are not embedded; reselect crops after loading. Skill names/values are not stored in layouts, so enter them before loading the corresponding layout.
 
 The Gabriel example fills target OVR 127, attributes 179/137/138/158/231/222 and Defender +2, Scoring +1, Defending +1, Physical +1. It is an explicit sample-data action and does not pretend to extract those values from an uploaded screenshot. Position CB remains unchanged unless explicitly confirmed.
 
@@ -49,7 +49,7 @@ This proves pixel identity **outside user-approved masks**, not semantic recogni
 - Supplied fonts approximate the game UI. There are no bundled proprietary game fonts or icon assets. Rank diamonds, orange badge, progress bar and active controls are geometric approximations. A convincing real screenshot may require careful clean-patch selection and approved assets; this is not an automatic pixel-perfect reconstruction of EA's UI.
 - Calibration masks are visible on the source. Generated output is reviewed after generation; there is no live text-overlay preview or zoom control. Browser zoom and percentage inputs can help precise placement.
 - Large screenshots use several full-resolution pixel buffers during verification. Mobile browsers with limited memory may need smaller originals. OCR can be slow on phones.
-- No persistence of screenshots or stats is implemented. Reloading discards the session. User-downloaded layout files store region geometry and styles only.
+- Screenshots and stats are not persisted. The latest successful layout geometry and styling are retained in localStorage (`fcvolt_maxcard_layout_v2`); source images, OCR text and icon crops are not saved. User-downloaded layout files also store region geometry and styles only.
 
 ## Tests
 
@@ -75,8 +75,14 @@ Reference: [Tesseract.js official documentation](https://github.com/naptha/tesse
 
 ## Changed files
 
-New: `maxcard.html`, `maxcard.css`, `maxcard.js`, `maxcard-core.js`, `MAXCARD.md`, `tests/maxcard-core.test.cjs`, `tests/maxcard-browser.html`.
+New Max Card files: `maxcard.html`, `maxcard.css`, `maxcard.js`, `maxcard-core.js`, `MAXCARD.md`, `tests/maxcard-core.test.cjs`, `tests/maxcard-browser.html`.
 
-Updated: `README.md` (feature entry), `index.html`, `team11.html`, `top10.html`, `shards.html`, `players.html`, `claim.html` (one Max Card navigation link each).
+Site structure: `index.html` is now Home; the original tier-list tool is preserved in `tierlist.html`. `site.css` and `site.js` provide common navigation and editor controls, and `home.css` styles the Home page.
 
-No deployment, commit or push is performed by this change.
+Updated: `README.md` (feature entry), `index.html`, `team11.html`, `top10.html`, `shards.html`, `players.html`, `claim.html` (shared sidebar, page headings, grouped actions and appearance settings).
+
+The site uses the existing Vercel project. Publish the complete static directory, including `tierlist.html`, `site.css`, `site.js` and `home.css`, along with the existing assets.
+
+## Fast workflow expectations
+
+The UI presents one step at a time and starts OCR automatically. The calibration screen advances after each rectangle and reuses the most recent layout after a successful export. This reduces repeated setup, but does not guarantee a complete human workflow under two minutes. OCR download/processing time, manual corrections, first-time calibration, screenshot layout changes and device performance affect total time. Automated synthetic tests record their elapsed runtime separately; that is not a human usability timing claim.
