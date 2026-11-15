@@ -127,3 +127,9 @@ open team11.html
   - Dropdown in controls bar to switch between **Compact (132px)**, **Normal (144px)**, **Large (154px)**, and **Extra Large (168px)** with auto-save.
 - **🗑️ REMOVE ALL CONFIRMATION MODAL**:
   - Dedicated in-app safety modal to clear all pitch/tier cards and bench cards without getting dismissed prematurely.
+
+## Max Card Generator
+
+[Max Card Generator](maxcard.html) adds a browser-local, fan-made level-30 preview tool with RenderZ OCR suggestions, manual value confirmation, calibrated edit masks, approved skill-icon crops, before/after comparison and original-resolution PNG export. Every export verifies that pixels outside the selected masks remain identical. New screenshot layouts require manual calibration; real screenshot visual accuracy remains to be validated.
+
+See [setup, workflow, limitations, tests and deployment instructions](MAXCARD.md). Run core tests with `node --test tests/maxcard-core.test.cjs`; open `tests/maxcard-browser.html` through the local server for browser integration checks.

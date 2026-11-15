@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Max Card browser checks</title><style>body{background:#08111b;color:#d9ffe8;font:14px monospace}iframe{width:100%;height:700px;border:1px solid #234}pre{white-space:pre-wrap}</style><h1>Max Card browser integration</h1><p>Uses a synthetic screenshot, not a real FC Mobile reference. Tests actual file uploads, layout import, generation and PNG verification at two resolutions.</p><button id="run">Run integration checks</button><pre id="result">Ready</pre><iframe id="app" src="../maxcard.html"></iframe>
+<script>
+const frame=document.getElementById('app'),result=document.getElementById('result');
+const wait=async fn=>{for(let i=0;i<300;i++){if(fn())return;await new Promise(r=>setTimeout(r,100));}throw Error('Timed out');};
+const assert=(v,m)=>{if(!v)throw Error(m);};
+function fileInput(w,id,file){const transfer=new w.DataTransfer();transfer.items.add(file);const el=w.document.getElementById(id);el.files=transfer.files;el.dispatchEvent(new w.Event('change',{bubbles:true}));}
+document.getElementById('run').onclick=async()=>{
+ result.textContent='Running…';
+ try{
+  await wait(()=>frame.contentWindow.MaxCardCore);
+  const w=frame.contentWindow,d=w.document,$=id=>d.getElementById(id);
+  for(const [width,height] of [[960,540],[1440,810]]){
+   const fixture=document.createElement('canvas');fixture.width=width;fixture.height=height;const g=fixture.getContext('2d');
+   const pixels=g.createImageData(width,height);for(let p=0;p<pixels.data.length;p+=4){pixels.data[p]=(p/4)%251;pixels.data[p+1]=Math.floor(p/width)%199;pixels.data[p+2]=33;pixels.data[p+3]=255;}g.putImageData(pixels,0,0);
+   const blob=await new Promise(r=>fixture.toBlob(r));fileInput(w,'baseFile',new w.File([blob],'synthetic.png',{type:'image/png'}));
+   await wait(()=>$('baseInfo').textContent.startsWith(width+' ×'));
+   $('example').click();
+   // Skills are included only after the example allocations are loaded.
+   const ids=[...$('regionSelect').options].map(o=>o.value).filter(id=>!id.startsWith('icon'));
+   const regions={};ids.forEach((id,i)=>regions[id]={x:.03+(i%5)*.19,y:.05+Math.floor(i/5)*.18,w:.13,h:.1,fg:'#ffffff',bg:'#16202b',fontSize:78,font:'Arial'});
+   fileInput(w,'layoutFile',new w.File([JSON.stringify({version:1,aspect:width/height,regions})],'layout.json',{type:'application/json'}));
+   await wait(()=>$('status').textContent.startsWith('Layout loaded'));
+   $('confirmed').checked=true;$('masksConfirmed').checked=true;$('generate').click();
+   await wait(()=>!$('generate').disabled);
+   assert(!$('download').disabled,$('status').textContent);
+   assert($('verification').textContent.includes('0 changed pixels outside masks'),'pixel guard did not pass');
+   const image=await w.createImageBitmap(await (await fetch($('after').src)).blob());assert(image.width===width&&image.height===height,'resolution mismatch');
+   const out=document.createElement('canvas');out.width=width;out.height=height;const og=out.getContext('2d');og.drawImage(image,0,0);image.close();
+   const output=og.getImageData(0,0,width,height).data;
+   w.MaxCardCore.assertPreserved(pixels.data,output,width,height,Object.values(regions));
+   assert(output.some((v,i)=>v!==pixels.data[i]),'nothing changed');
+   // Bottom row is deliberately outside all masks (simulated PlayStyles/artwork).
+   for(let i=width*(height-1)*4;i<output.length;i++)assert(output[i]===pixels.data[i],'protected row changed');
+   $('compare').value='25';$('compare').dispatchEvent(new w.Event('input'));assert($('before').style.clipPath.includes('75%'),'slider failed');
+   $('pacing').value='';$('pacing').dispatchEvent(new w.Event('input',{bubbles:true}));assert($('download').disabled,'stale download remained enabled');
+   $('generate').click();await wait(()=>!$('generate').disabled);assert($('download').disabled,'invalid stats generated an image');
+   result.textContent+='\nPASS '+width+' × '+height+': upload, calibration, Gabriel composition, encoded PNG preservation, protected row, comparison, invalidation, invalid stats.';
+  }
+  // Actual OCR engine smoke check: clean, labeled synthetic RenderZ-like text.
+  const ocr=document.createElement('canvas');ocr.width=1000;ocr.height=1100;const t=ocr.getContext('2d');t.fillStyle='white';t.fillRect(0,0,1000,1100);t.fillStyle='black';t.font='32px Arial';
+  ['Player: Gabriel','OVR 127','CB','Pacing 179','Shooting 137','Passing 138','Dribbling 158','Defending 231','Physical 222','Defender +2','Scoring +1','Defending +1','Physical +1'].forEach((s,i)=>t.fillText(s,40,60+i*75));
+  fileInput(w,'renderFile',new w.File([await new Promise(r=>ocr.toBlob(r))],'renderz-synthetic.png',{type:'image/png'}));await wait(()=>!$('extract').disabled);$('extract').click();
+  await wait(()=>!$('extract').disabled);
+  assert($('status').textContent.startsWith('OCR suggestions loaded'),$('status').textContent);
+  for(const [key,value] of Object.entries({ovr:127,pacing:179,shooting:137,passing:138,dribbling:158,defending:231,physical:222}))assert(+$(key).value===value,'OCR mismatch: '+key+' '+$(key).value);
+  assert(!$('confirmed').checked,'OCR was automatically confirmed');
+  result.textContent+='\nPASS real OCR engine on a synthetic labeled image.\nALL CHECKS PASSED';
+ }catch(e){result.textContent+='\nFAIL: '+e.message;}
+};
+</script></html>
