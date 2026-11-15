@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FC_VOLT — Top 10 Player Cards Ranking</title>
+  <title>FC_VOLT — Top 10 Player Cards Ranking Template</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@500;600;700;800;900&family=Rajdhani:wght@600;700;800;900&display=swap" rel="stylesheet">
   <script src="html2canvas.min.js"></script>
   <script src="jspdf.umd.min.js"></script>
   <style>
-    /* CSS RESET & MODERN VARIABLES */
+    /* CSS RESET & VARIABLES */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -21,12 +21,10 @@
       --bg-dark: #03050a;
       --panel-bg: #090e18;
       --panel-border: #1a273c;
-      --gold-primary: #ffd700;
-      --gold-glow: rgba(255, 215, 0, 0.6);
-      --cyan-primary: #00e5ff;
-      --cyan-glow: rgba(0, 229, 255, 0.6);
-      --purple-primary: #a855f7;
-      --purple-glow: rgba(168, 85, 247, 0.6);
+      --accent-red: #ff1a24;
+      --accent-green: #00ff66;
+      --accent-gold: #ffd700;
+      --accent-cyan: #00e5ff;
       --font-headline: 'Anton', 'Impact', sans-serif;
       --font-body: 'Montserrat', sans-serif;
       --font-tech: 'Rajdhani', sans-serif;
@@ -60,127 +58,157 @@
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 10px;
-      user-select: none;
-    }
-    .brand-icon {
-      font-size: 24px;
-      color: #00e5ff;
-      filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.8));
-    }
-    .brand-title {
-      font-family: var(--font-headline);
-      font-size: 22px;
-      letter-spacing: 1.5px;
-      color: #fff;
-    }
-    .brand-badge {
-      background: linear-gradient(135deg, #ffd700, #ff8800);
-      color: #000;
-      font-size: 10px;
-      font-weight: 900;
-      padding: 2px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
+      gap: 12px;
+      text-decoration: none;
     }
 
-    /* NAVIGATION TABS */
-    .template-nav {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      overflow-x: auto;
-      max-width: 60%;
+    .brand-logo-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #ff1a24 0%, #ff8000 100%);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-headline);
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 0 16px rgba(255, 26, 36, 0.6);
     }
+
+    .brand-text-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-name {
+      font-family: var(--font-headline);
+      font-size: 20px;
+      letter-spacing: 1.5px;
+      background: linear-gradient(90deg, #ffffff, #ff4d55, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    .brand-tag {
+      font-family: var(--font-tech);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ff8080;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px;
+    }
+
     .nav-tab {
-      background: #0d1522;
-      border: 1px solid #1f2f45;
-      color: #9cb5d6;
-      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 7px;
+      font-size: 12px;
       font-weight: 700;
-      padding: 6px 12px;
-      border-radius: 6px;
+      color: #94a3b8;
       text-decoration: none;
+      border: 1px solid transparent;
+      transition: all 0.2s;
       white-space: nowrap;
-      transition: all 0.15s ease;
-      cursor: pointer;
     }
     .nav-tab:hover {
-      background: #152236;
       color: #fff;
-      border-color: #00e5ff;
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #2a3b52;
     }
     .nav-tab.active {
-      background: linear-gradient(135deg, #00e5ff, #0070f3);
-      color: #020813;
-      font-weight: 900;
-      border-color: #33f0ff;
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);
+      color: #fff;
+      background: linear-gradient(135deg, rgba(255, 26, 36, 0.25) 0%, rgba(255, 128, 0, 0.15) 100%);
+      border-color: #ff4d55;
+      box-shadow: 0 0 14px rgba(255, 26, 36, 0.35);
     }
 
-    /* TOP ACTION BUTTONS */
-    .top-actions {
+    /* ACTION BAR */
+    .header-actions {
       display: flex;
-      gap: 8px;
       align-items: center;
+      gap: 10px;
     }
+
     .btn {
-      background: #0f1929;
-      border: 1px solid #223755;
-      color: #cbd5e1;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 7px 14px;
-      border-radius: 6px;
-      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.18s ease;
+      text-decoration: none;
       white-space: nowrap;
     }
-    .btn:hover {
-      background: #182840;
-      color: #fff;
-      border-color: #00e5ff;
-    }
+
     .btn-primary {
-      background: linear-gradient(135deg, #ffd700, #ff9900);
-      color: #000;
-      border: none;
-      font-weight: 900;
-      box-shadow: 0 0 14px rgba(255, 215, 0, 0.4);
+      background: linear-gradient(135deg, #ff1a24 0%, #b80008 100%);
+      color: #ffffff;
+      border-color: #ff4d55;
+      box-shadow: 0 0 16px rgba(255, 26, 36, 0.4);
     }
     .btn-primary:hover {
-      background: linear-gradient(135deg, #ffe066, #ffaa00);
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
-    }
-    .btn-capcut {
-      background: linear-gradient(135deg, #00e5ff, #a855f7);
-      color: #fff;
-      border: none;
-      font-weight: 900;
-      box-shadow: 0 0 14px rgba(0, 229, 255, 0.4);
-    }
-    .btn-capcut:hover {
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.7);
+      background: linear-gradient(135deg, #ff333d 0%, #d4000b 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 0 22px rgba(255, 26, 36, 0.6);
     }
 
-    /* MAIN WORKSPACE */
-    .main-workspace {
+    .btn-secondary {
+      background: #0f172a;
+      color: #cbd5e1;
+      border-color: #27374d;
+    }
+    .btn-secondary:hover {
+      background: #1e293b;
+      color: #fff;
+      border-color: #475569;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #ffd700 0%, #d97706 100%);
+      color: #000;
+      border-color: #fef08a;
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.4);
+    }
+    .btn-gold:hover {
+      background: linear-gradient(135deg, #ffe033 0%, #b45309 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 0 22px rgba(255, 215, 0, 0.6);
+    }
+
+    .btn-mini {
+      padding: 5px 10px;
+      font-size: 11px;
+      border-radius: 6px;
+    }
+
+    /* MAIN APP WORKSPACE */
+    .app-workspace {
       flex: 1;
       display: flex;
       overflow: hidden;
-      height: calc(100vh - 54px);
+      height: calc(100vh - 58px);
     }
 
-    /* LEFT SIDEBAR (Controls) */
-    .editor-sidebar {
+    /* LEFT SIDEBAR CONTROLS */
+    .sidebar-panel {
       width: 380px;
       min-width: 380px;
-      background: var(--panel-bg);
-      border-right: 1px solid var(--panel-border);
+      background: #060b13;
+      border-right: 1px solid #141f30;
       overflow-y: auto;
       padding: 16px;
       display: flex;
@@ -188,173 +216,267 @@
       gap: 16px;
     }
 
+    .sidebar-panel::-webkit-scrollbar {
+      width: 6px;
+    }
+    .sidebar-panel::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 3px;
+    }
+
     .panel-box {
-      background: #050a12;
+      background: #0a111e;
       border: 1px solid #162438;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 14px;
-    }
-    .panel-box-title {
-      font-size: 12px;
-      font-weight: 900;
-      color: #00e5ff;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .form-group {
-      margin-bottom: 10px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      color: #8fa6c4;
-      margin-bottom: 5px;
-    }
-    .input-text {
-      width: 100%;
-      background: #091220;
-      border: 1px solid #1e334e;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 8px 10px;
-      outline: none;
-      transition: border-color 0.15s ease;
-    }
-    .input-text:focus {
-      border-color: #00e5ff;
-      box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
-    }
-
-    /* THEME SELECTOR BUTTONS */
-    .theme-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-    }
-    .btn-theme {
-      background: #0a1322;
-      border: 1.5px solid #1e3048;
-      color: #9cb1cb;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 8px 6px;
-      border-radius: 6px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
-    }
-    .btn-theme:hover {
-      border-color: #00e5ff;
-      color: #fff;
-    }
-    .btn-theme.active {
-      background: linear-gradient(135deg, #00e5ff, #0070f3);
-      color: #020813;
-      font-weight: 900;
-      border-color: #33f0ff;
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);
-    }
-
-    /* RIGHT STAGE VIEWPORT (Live 9:16 Canvas) */
-    .viewport-stage {
-      flex: 1;
-      background: #010307;
-      position: relative;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 16px 20px 40px;
+      gap: 12px;
     }
 
-    .viewport-toolbar {
+    .panel-box-title {
+      font-family: var(--font-tech);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #94a3b8;
+      text-transform: uppercase;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
-      max-width: 1080px;
-      margin-bottom: 10px;
-      z-index: 10;
     }
-    .zoom-pill {
-      background: #091220;
-      border: 1px solid #1e334e;
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    .input-text {
+      background: #040810;
+      border: 1px solid #1e2e46;
+      border-radius: 7px;
+      padding: 8px 12px;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 13px;
+      outline: none;
+      transition: border 0.15s;
+    }
+    .input-text:focus {
+      border-color: #ff1a24;
+      box-shadow: 0 0 10px rgba(255, 26, 36, 0.3);
+    }
+
+    .preset-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .preset-chip {
+      background: #0f1b2d;
+      border: 1px solid #1d3350;
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
       border-radius: 6px;
-      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .preset-chip:hover {
+      background: #1a2e4a;
+      color: #fff;
+      border-color: #ff4d55;
+    }
+
+    /* THEME BUTTONS */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .theme-btn {
+      height: 38px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      font-family: var(--font-tech);
       font-size: 11px;
       font-weight: 800;
-      color: #cbd5e1;
+      letter-spacing: 0.5px;
       display: flex;
       align-items: center;
+      justify-content: center;
+      color: #fff;
+      transition: all 0.18s;
+      position: relative;
+    }
+    .theme-btn.active {
+      border-color: #ffffff;
+      transform: scale(1.04);
+      box-shadow: 0 0 14px rgba(255,255,255,0.4);
+    }
+    .theme-btn.theme-red {
+      background: linear-gradient(135deg, #700008, #2a0003);
+    }
+    .theme-btn.theme-obsidian {
+      background: linear-gradient(135deg, #090e18, #010204);
+    }
+    .theme-btn.theme-gold {
+      background: linear-gradient(135deg, #3d2a00, #140d00);
+    }
+    .theme-btn.theme-purple {
+      background: linear-gradient(135deg, #2b084d, #0d011c);
+    }
+    .theme-btn.theme-blue {
+      background: linear-gradient(135deg, #082d4d, #010c1c);
+    }
+    .theme-btn.theme-transparent {
+      background: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 12px 12px;
+    }
+
+    /* FORMAT TOGGLE (9:16 Shorts vs 1:1 Square) */
+    .format-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
+    }
+    .format-btn {
+      padding: 8px;
+      background: #0f1a2c;
+      border: 1px solid #1a2e48;
+      border-radius: 8px;
+      color: #cbd5e1;
+      font-family: var(--font-tech);
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .format-btn.active {
+      background: #ff1a24;
+      color: #fff;
+      border-color: #ff4d55;
+      box-shadow: 0 0 14px rgba(255, 26, 36, 0.4);
+    }
+
+    /* RIGHT PREVIEW WORKSPACE */
+    .preview-workspace {
+      flex: 1;
+      background: #020408;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* TOOLBAR OVER CANVAS */
+    .canvas-toolbar {
+      background: rgba(6, 11, 20, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #141f30;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 20;
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-tech);
+      font-size: 12px;
+      color: #94a3b8;
     }
 
     .canvas-scroll-container {
       flex: 1;
-      width: 100%;
+      overflow: auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
+      padding: 40px 20px;
+      background: radial-gradient(circle at center, #09101d 0%, #020408 100%);
     }
 
     /* ========================================================
-       THE EXACT 1080 × 1920 SHORTS RANKING CANVAS
+       THE EXACT CANVAS: 3 - 3 - 4 TOP 10 RANKING GRID
        ======================================================== */
     #shortsCanvas {
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.95), 0 0 40px rgba(255, 26, 36, 0.15);
+      transition: width 0.2s, height 0.2s;
+    }
+
+    /* 9:16 Shorts Mode (1080 × 1920) */
+    #shortsCanvas.format-shorts {
       width: 1080px;
       height: 1920px;
       min-width: 1080px;
       min-height: 1920px;
-      position: relative;
-      overflow: hidden;
-      transform-origin: center center;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 229, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      padding: 55px 44px 45px;
-      user-select: none;
-      /* Default: Dark Obsidian with Royal Purple & Cyan volumetric light */
-      background: #020408;
+      padding: 60px 40px 50px;
     }
 
-    /* BACKGROUND THEMES */
+    /* 1:1 Square Mode (1080 × 1080) */
+    #shortsCanvas.format-square {
+      width: 1080px;
+      height: 1080px;
+      min-width: 1080px;
+      min-height: 1080px;
+      padding: 30px 25px 25px;
+    }
+
+    /* THEME BACKGROUNDS */
+    #shortsCanvas[data-theme="red"] {
+      background: 
+        radial-gradient(circle at 50% 25%, rgba(255, 40, 40, 0.42) 0%, transparent 60%),
+        radial-gradient(circle at 15% 75%, rgba(200, 15, 25, 0.35) 0%, transparent 55%),
+        radial-gradient(circle at 85% 75%, rgba(160, 0, 10, 0.35) 0%, transparent 55%),
+        linear-gradient(180deg, #78020a 0%, #400105 45%, #180002 100%);
+    }
+
     #shortsCanvas[data-theme="obsidian"] {
       background: 
-        radial-gradient(circle at 50% 12%, rgba(168, 85, 247, 0.28) 0%, transparent 60%),
-        radial-gradient(circle at 10% 45%, rgba(0, 229, 255, 0.2) 0%, transparent 55%),
-        radial-gradient(circle at 90% 75%, rgba(255, 215, 0, 0.18) 0%, transparent 55%),
-        linear-gradient(180deg, #05070f 0%, #020409 50%, #010205 100%);
-    }
-
-    #shortsCanvas[data-theme="stadium"] {
-      background: 
-        radial-gradient(circle at 50% 10%, rgba(0, 229, 255, 0.35) 0%, transparent 65%),
-        radial-gradient(circle at 50% 90%, rgba(0, 255, 102, 0.25) 0%, transparent 60%),
-        linear-gradient(180deg, #06101c 0%, #02070e 40%, #041409 100%);
+        radial-gradient(circle at 50% 20%, rgba(255, 26, 36, 0.25) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(0, 229, 255, 0.15) 0%, transparent 50%),
+        linear-gradient(180deg, #0a0f1c 0%, #04060b 50%, #010204 100%);
     }
 
     #shortsCanvas[data-theme="gold"] {
       background: 
-        radial-gradient(circle at 50% 15%, rgba(255, 215, 0, 0.35) 0%, transparent 65%),
-        radial-gradient(circle at 50% 85%, rgba(217, 119, 6, 0.25) 0%, transparent 60%),
-        linear-gradient(180deg, #100b02 0%, #060401 50%, #020100 100%);
+        radial-gradient(circle at 50% 20%, rgba(255, 215, 0, 0.35) 0%, transparent 60%),
+        radial-gradient(circle at 50% 80%, rgba(217, 119, 6, 0.25) 0%, transparent 60%),
+        linear-gradient(180deg, #2a1b02 0%, #0f0901 50%, #030200 100%);
     }
 
-    #shortsCanvas[data-theme="cyber"] {
+    #shortsCanvas[data-theme="purple"] {
       background: 
-        radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.3) 0%, transparent 60%),
-        radial-gradient(circle at 80% 80%, rgba(0, 229, 255, 0.3) 0%, transparent 60%),
-        linear-gradient(180deg, #0d0417 0%, #05020c 60%, #020106 100%);
+        radial-gradient(circle at 50% 20%, rgba(168, 85, 247, 0.35) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.25) 0%, transparent 60%),
+        linear-gradient(180deg, #2b084d 0%, #100220 50%, #05000a 100%);
+    }
+
+    #shortsCanvas[data-theme="blue"] {
+      background: 
+        radial-gradient(circle at 50% 20%, rgba(0, 229, 255, 0.35) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.25) 0%, transparent 60%),
+        linear-gradient(180deg, #092542 0%, #040f1c 50%, #01050a 100%);
     }
 
     #shortsCanvas[data-theme="transparent"] {
@@ -362,1224 +484,1150 @@
       box-shadow: none !important;
     }
 
-    /* Checkerboard backdrop behind canvas when transparent mode is on */
-    .canvas-scroll-container.is-transparent-mode {
-      background-image: 
-        linear-gradient(45deg, #0c121d 25%, transparent 25%),
-        linear-gradient(-45deg, #0c121d 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #0c121d 75%),
-        linear-gradient(-45deg, transparent 75%, #0c121d 75%);
-      background-size: 24px 24px;
-      background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
-    }
-
-    /* STADIUM LIGHT BEAMS & PARTICLES (Disabled automatically in transparent mode) */
-    .canvas-decor-layer {
+    /* GEOMETRIC FACETS & LIGHT RAYS (Matches reference image) */
+    .canvas-bg-decor {
       position: absolute;
       inset: 0;
       pointer-events: none;
       z-index: 1;
     }
-    #shortsCanvas[data-theme="transparent"] .canvas-decor-layer {
+    #shortsCanvas[data-theme="transparent"] .canvas-bg-decor {
       display: none !important;
     }
 
-    .light-cone-left {
-      position: absolute;
-      top: -100px;
-      left: -150px;
-      width: 450px;
-      height: 900px;
-      background: radial-gradient(ellipse at 20% 0%, rgba(0, 229, 255, 0.25) 0%, transparent 75%);
-      transform: rotate(-25deg);
-      filter: blur(20px);
-    }
-    .light-cone-right {
-      position: absolute;
-      top: -100px;
-      right: -150px;
-      width: 450px;
-      height: 900px;
-      background: radial-gradient(ellipse at 80% 0%, rgba(168, 85, 247, 0.25) 0%, transparent 75%);
-      transform: rotate(25deg);
-      filter: blur(20px);
-    }
-    .ambient-gold-glow {
-      position: absolute;
-      top: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 700px;
-      height: 350px;
-      background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.22) 0%, transparent 70%);
-      filter: blur(30px);
-    }
-
-    /* ========================================================
-       TOP HEADER AREA
-       ======================================================== */
-    .canvas-header-area {
+    /* TOP HEADER */
+    .canvas-header-wrap {
       position: relative;
+      z-index: 10;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      text-align: center;
       margin-bottom: 24px;
-      z-index: 10;
-      width: 100%;
     }
 
-    /* TOP-RIGHT CORNER CROSS SIGN (Proper Symmetrical X-shaped cross, not a slash/cut!) */
-    .top-right-cross-sign {
-      position: absolute;
-      top: 0px;
-      right: 6px;
-      width: 64px;
-      height: 64px;
-      display: grid;
-      place-items: center;
-      user-select: none;
-      z-index: 20;
-    }
-    .top-right-cross-sign svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.85)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.6));
-      transition: transform 0.2s ease;
-    }
-    .top-right-cross-sign:hover svg {
-      transform: scale(1.1) rotate(90deg);
+    #shortsCanvas.format-square .canvas-header-wrap {
+      margin-bottom: 12px;
     }
 
-    /* Golden Crown */
-    .header-crown-wrap {
-      margin-bottom: -6px;
-      width: 90px;
-      height: 52px;
-    }
-    .header-crown-wrap svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.85));
-    }
-
-    /* Big Title */
     .header-main-title {
       font-family: var(--font-headline);
-      font-size: 78px;
-      letter-spacing: 3px;
-      line-height: 1;
+      font-size: 62px;
+      font-weight: 900;
       text-transform: uppercase;
-      text-align: center;
       color: #ffffff;
-      text-shadow: 
-        -2.5px -2.5px 0 #000,
-         2.5px -2.5px 0 #000,
-        -2.5px  2.5px 0 #000,
-         2.5px  2.5px 0 #000,
-         0 4px 0 #1b2838,
-         0 8px 18px rgba(0,0,0,0.95),
-         0 0 24px rgba(255,255,255,0.7);
-      margin-bottom: 8px;
+      -webkit-text-stroke: 3px #000000;
+      text-shadow: 0 5px 12px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 0, 0, 0.8);
+      letter-spacing: 2px;
+      line-height: 1.08;
+      cursor: text;
     }
 
-    /* Subtitle Capsule */
-    .header-subtitle-capsule {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(3, 7, 15, 0.9);
-      border: 2px solid #ffd700;
-      border-radius: 40px;
-      padding: 6px 28px;
-      box-shadow: 0 0 22px rgba(255, 215, 0, 0.6), 0 6px 16px rgba(0,0,0,0.85);
+    #shortsCanvas.format-square .header-main-title {
+      font-size: 40px;
+      -webkit-text-stroke: 2.2px #000000;
     }
-    .subtitle-icon {
-      font-size: 18px;
-      color: #ffd700;
-    }
-    .subtitle-text {
-      font-family: var(--font-tech);
-      font-size: 26px;
+
+    .header-sub-title {
+      font-family: var(--font-headline);
+      font-size: 48px;
       font-weight: 900;
-      letter-spacing: 3.5px;
-      color: #ffd700;
       text-transform: uppercase;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+      color: #ffe600;
+      -webkit-text-stroke: 2.5px #000000;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.95), 0 0 25px rgba(255, 230, 0, 0.65);
+      letter-spacing: 2px;
+      line-height: 1.08;
+      margin-top: 6px;
+      cursor: text;
+    }
+
+    #shortsCanvas.format-square .header-sub-title {
+      font-size: 30px;
+      -webkit-text-stroke: 1.8px #000000;
+      margin-top: 4px;
+    }
+
+    /* TOP-RIGHT CORNER CROSS SIGN (Symmetrical 45deg X cross) */
+    .canvas-corner-cross {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      width: 58px;
+      height: 58px;
+      z-index: 20;
+      filter: drop-shadow(0 0 10px rgba(255, 26, 36, 0.9)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .canvas-corner-cross:hover {
+      transform: scale(1.15) rotate(90deg);
+    }
+    #shortsCanvas.format-square .canvas-corner-cross {
+      width: 44px;
+      height: 44px;
+      top: 6px;
+      right: 10px;
     }
 
     /* ========================================================
-       TOP 10 PLAYER LIST (10 Horizontal Slots)
+       10 CARDS GRID (3 + 3 + 4 FORMATION)
        ======================================================== */
-    .player-slots-list {
+    .cards-grid-layout {
+      position: relative;
+      z-index: 10;
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      justify-content: space-around;
+      gap: 20px;
       width: 100%;
-      z-index: 10;
     }
 
-    /* Single Horizontal Slot Bar */
-    .player-slot-row {
-      height: 140px;
-      min-height: 140px;
-      width: 100%;
-      background: linear-gradient(90deg, rgba(13, 20, 36, 0.88) 0%, rgba(6, 11, 20, 0.82) 100%);
-      backdrop-filter: blur(10px);
-      border: 1.5px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
+    #shortsCanvas.format-square .cards-grid-layout {
+      gap: 10px;
+    }
+
+    .grid-row {
       display: flex;
       align-items: center;
-      padding: 0 22px 0 16px;
-      gap: 20px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.75);
-      transition: all 0.18s ease;
-    }
-    .player-slot-row:hover {
-      border-color: rgba(0, 229, 255, 0.6);
-      transform: translateX(4px);
+      justify-content: center;
+      width: 100%;
     }
 
-    /* Special Styling for Rank 1, 2, 3 */
-    .player-slot-row.rank-1 {
-      border-color: rgba(255, 215, 0, 0.55);
-      background: linear-gradient(90deg, rgba(32, 24, 6, 0.92) 0%, rgba(12, 16, 28, 0.85) 100%);
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.25), 0 8px 24px rgba(0,0,0,0.85);
+    /* Row 1: 3 Cards */
+    .row-1 {
+      gap: 40px;
     }
-    .player-slot-row.rank-1::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; bottom: 0;
-      width: 6px;
-      background: linear-gradient(180deg, #ffe57f, #ffd700, #ffaa00);
-      box-shadow: 0 0 14px #ffd700;
+    /* Row 2: 3 Cards */
+    .row-2 {
+      gap: 40px;
+    }
+    /* Row 3: 4 Cards */
+    .row-3 {
+      gap: 24px;
     }
 
-    .player-slot-row.rank-2 {
-      border-color: rgba(226, 232, 240, 0.45);
-      background: linear-gradient(90deg, rgba(22, 28, 42, 0.9) 0%, rgba(10, 14, 24, 0.85) 100%);
-      box-shadow: 0 0 25px rgba(226, 232, 240, 0.18), 0 8px 22px rgba(0,0,0,0.85);
+    #shortsCanvas.format-square .row-1,
+    #shortsCanvas.format-square .row-2 {
+      gap: 22px;
     }
-    .player-slot-row.rank-2::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; bottom: 0;
-      width: 6px;
-      background: linear-gradient(180deg, #ffffff, #cbd5e1, #94a3b8);
-      box-shadow: 0 0 12px #ffffff;
+    #shortsCanvas.format-square .row-3 {
+      gap: 14px;
     }
 
-    .player-slot-row.rank-3 {
-      border-color: rgba(217, 119, 6, 0.45);
-      background: linear-gradient(90deg, rgba(28, 18, 10, 0.9) 0%, rgba(10, 14, 24, 0.85) 100%);
-      box-shadow: 0 0 25px rgba(217, 119, 6, 0.18), 0 8px 22px rgba(0,0,0,0.85);
-    }
-    .player-slot-row.rank-3::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; bottom: 0;
-      width: 6px;
-      background: linear-gradient(180deg, #fde68a, #cd7f32, #92400e);
-      box-shadow: 0 0 12px #cd7f32;
-    }
-
-    /* 1. RANK NUMBER BADGE */
-    .slot-rank-badge {
-      width: 76px;
-      height: 96px;
-      min-width: 76px;
+    /* SINGLE CARD ITEM WRAPPER */
+    .card-item-slot {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      border-radius: 10px;
       position: relative;
-      font-family: var(--font-headline);
-      font-size: 52px;
-      line-height: 1;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.85);
-    }
-
-    .slot-rank-badge.badge-gold {
-      background: linear-gradient(135deg, #fff3b0 0%, #ffd700 40%, #d97706 100%);
-      color: #1a0f00;
-      border: 2px solid #fff6c7;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
-    }
-    .slot-rank-badge.badge-gold .rank-sub-crown {
-      font-size: 16px;
-      margin-bottom: -2px;
-      color: #804d00;
-    }
-
-    .slot-rank-badge.badge-silver {
-      background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 45%, #94a3b8 100%);
-      color: #0f172a;
-      border: 2px solid #ffffff;
-      box-shadow: 0 0 16px rgba(226, 232, 240, 0.6);
-    }
-
-    .slot-rank-badge.badge-bronze {
-      background: linear-gradient(135deg, #fef3c7 0%, #cd7f32 50%, #78350f 100%);
-      color: #1a0a01;
-      border: 2px solid #fed7aa;
-      box-shadow: 0 0 16px rgba(205, 127, 50, 0.6);
-    }
-
-    .slot-rank-badge.badge-standard {
-      background: linear-gradient(135deg, #0f1a2e 0%, #060b14 100%);
-      color: #00e5ff;
-      border: 1.5px solid #1e334f;
-      text-shadow: 0 0 14px rgba(0, 229, 255, 0.8);
-      font-size: 46px;
-    }
-
-    /* 2. PLAYER CARD IMAGE PLACEHOLDER */
-    .slot-card-box {
-      width: 86px;
-      height: 118px;
-      min-width: 86px;
-      border-radius: 8px;
-      position: relative;
-      display: grid;
-      place-items: center;
       cursor: pointer;
     }
 
-    .slot-card-empty {
-      width: 100%;
-      height: 100%;
-      border: 2px dashed rgba(0, 229, 255, 0.45);
-      border-radius: 8px;
-      background: rgba(5, 10, 20, 0.75);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      color: #00e5ff;
-      transition: all 0.15s ease;
-    }
-    .slot-card-box:hover .slot-card-empty {
-      border-color: #00e5ff;
-      background: rgba(0, 229, 255, 0.12);
-      box-shadow: 0 0 14px rgba(0, 229, 255, 0.4);
-      transform: scale(1.03);
-    }
-    .slot-card-empty .plus-sym {
-      font-size: 26px;
+    /* TOP LABEL (DON'T CLAIM / MUST CLAIM) */
+    .card-top-label {
+      font-family: var(--font-headline);
+      font-size: 34px;
       font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: center;
       line-height: 1;
-    }
-    .slot-card-empty .card-lbl {
-      font-family: var(--font-tech);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #cbd5e1;
+      margin-bottom: 6px;
+      user-select: none;
+      cursor: pointer;
+      transition: transform 0.15s ease;
     }
 
-    .slot-card-img {
+    .card-top-label:hover {
+      transform: scale(1.08);
+    }
+
+    .card-top-label.label-red {
+      color: #ff1a24;
+      -webkit-text-stroke: 2.2px #000000;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.95), 0 0 16px rgba(255, 26, 36, 0.8);
+    }
+
+    .card-top-label.label-green {
+      color: #00ff66;
+      -webkit-text-stroke: 2.2px #000000;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.95), 0 0 16px rgba(0, 255, 102, 0.8);
+    }
+
+    .card-top-label.label-gold {
+      color: #ffd700;
+      -webkit-text-stroke: 2.2px #000000;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.95), 0 0 16px rgba(255, 215, 0, 0.8);
+    }
+
+    .card-top-label.label-cyan {
+      color: #00e5ff;
+      -webkit-text-stroke: 2.2px #000000;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.95), 0 0 16px rgba(0, 229, 255, 0.8);
+    }
+
+    .card-top-label.label-none {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #shortsCanvas.format-shorts .row-3 .card-top-label {
+      font-size: 28px;
+      -webkit-text-stroke: 1.8px #000000;
+    }
+
+    #shortsCanvas.format-square .row-1 .card-top-label,
+    #shortsCanvas.format-square .row-2 .card-top-label {
+      font-size: 20px;
+      -webkit-text-stroke: 1.4px #000000;
+      margin-bottom: 3px;
+    }
+    #shortsCanvas.format-square .row-3 .card-top-label {
+      font-size: 16px;
+      -webkit-text-stroke: 1.2px #000000;
+      margin-bottom: 2px;
+    }
+
+    /* CARD CONTAINER BOX */
+    .card-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.18s ease;
+    }
+
+    .card-box:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+
+    /* Sizing in 9:16 Shorts */
+    #shortsCanvas.format-shorts .row-1 .card-box,
+    #shortsCanvas.format-shorts .row-2 .card-box {
+      width: 290px;
+      height: 385px;
+    }
+    #shortsCanvas.format-shorts .row-3 .card-box {
+      width: 232px;
+      height: 310px;
+    }
+
+    /* Sizing in 1:1 Square */
+    #shortsCanvas.format-square .row-1 .card-box,
+    #shortsCanvas.format-square .row-2 .card-box {
+      width: 195px;
+      height: 255px;
+    }
+    #shortsCanvas.format-square .row-3 .card-box {
+      width: 155px;
+      height: 205px;
+    }
+
+    /* Card Image */
+    .card-img-element {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.9));
-      transition: transform 0.15s ease;
-    }
-    .slot-card-box:hover .slot-card-img {
-      transform: scale(1.05);
+      filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.9));
+      user-select: none;
+      pointer-events: none;
     }
 
-    .slot-card-hover-actions {
-      position: absolute;
-      inset: 0;
-      background: rgba(2, 6, 14, 0.88);
-      backdrop-filter: blur(4px);
-      border-radius: 8px;
+    /* Empty Card Placeholder */
+    .card-empty-box {
+      width: 100%;
+      height: 100%;
+      border: 2.5px dashed rgba(255, 255, 255, 0.35);
+      border-radius: 12px;
+      background: rgba(10, 16, 28, 0.75);
+      backdrop-filter: blur(6px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 6px;
+      color: #94a3b8;
+      transition: all 0.15s ease;
+    }
+    .card-box:hover .card-empty-box {
+      border-color: #ff1a24;
+      background: rgba(255, 26, 36, 0.12);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(255, 26, 36, 0.4);
+    }
+
+    .empty-icon {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1;
+      color: #ff4d55;
+    }
+    .empty-text {
+      font-family: var(--font-tech);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* BOTTOM INDICATOR BADGE (Circular ❌ Cross or ✔ Tick) */
+    .card-bottom-badge {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 25;
+      cursor: pointer;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 14px rgba(0, 0, 0, 0.7));
+      transition: transform 0.18s ease;
+      display: grid;
+      place-items: center;
+    }
+
+    .card-bottom-badge:hover {
+      transform: translateX(-50%) scale(1.2);
+    }
+
+    #shortsCanvas.format-shorts .row-1 .card-bottom-badge,
+    #shortsCanvas.format-shorts .row-2 .card-bottom-badge {
+      width: 58px;
+      height: 58px;
+      bottom: -20px;
+    }
+    #shortsCanvas.format-shorts .row-3 .card-bottom-badge {
+      width: 50px;
+      height: 50px;
+      bottom: -16px;
+    }
+
+    #shortsCanvas.format-square .row-1 .card-bottom-badge,
+    #shortsCanvas.format-square .row-2 .card-bottom-badge {
+      width: 42px;
+      height: 42px;
+      bottom: -14px;
+    }
+    #shortsCanvas.format-square .row-3 .card-bottom-badge {
+      width: 36px;
+      height: 36px;
+      bottom: -12px;
+    }
+
+    .card-bottom-badge svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* CARD HOVER OVERLAY ACTIONS */
+    .card-hover-actions {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.15s ease;
-      z-index: 10;
-      padding: 4px;
+      z-index: 30;
     }
-    .slot-card-box:hover .slot-card-hover-actions {
+    .card-box:hover .card-hover-actions {
       opacity: 1;
       pointer-events: auto;
     }
-    .btn-card-act {
-      background: #132035;
-      border: 1px solid #243d60;
-      color: #fff;
-      font-size: 9px;
-      font-weight: 800;
-      padding: 3px 6px;
-      border-radius: 4px;
-      cursor: pointer;
-      width: 100%;
-      text-align: center;
-    }
-    .btn-card-act:hover {
-      background: #00e5ff;
-      color: #020812;
-      border-color: #00e5ff;
-    }
 
-    /* 3. PLAYER NAME PLACEHOLDER */
-    .slot-player-name {
-      flex: 1;
-      font-family: var(--font-tech);
-      font-size: 34px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #ffffff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
-      cursor: text;
-    }
-    .slot-player-name.is-placeholder {
-      color: #64748b;
-      letter-spacing: 2.5px;
-    }
-    .slot-player-name:hover {
-      color: #00e5ff;
-    }
-
-    /* 4. SHARDS COST SECTION */
-    .slot-shards-pill {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(2, 6, 14, 0.9);
-      border: 2px solid #00e5ff;
-      border-radius: 40px;
-      padding: 6px 18px 6px 12px;
-      box-shadow: 0 0 18px rgba(0, 229, 255, 0.5), 0 4px 12px rgba(0,0,0,0.8);
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .slot-shards-pill:hover {
-      border-color: #ffd700;
-      box-shadow: 0 0 22px rgba(255, 215, 0, 0.6);
-      transform: scale(1.03);
-    }
-    .slot-shard-icon {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-      filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.8));
-    }
-    .slot-shard-val {
-      font-family: var(--font-tech);
-      font-size: 28px;
-      font-weight: 900;
-      color: #00e5ff;
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-    .slot-shards-pill:hover .slot-shard-val {
-      color: #ffd700;
-    }
-
-    /* SIDEBAR ITEM ROW */
-    .sb-item-row {
-      background: #091220;
-      border: 1px solid #1a2c44;
-      border-radius: 8px;
-      padding: 8px 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .sb-rank-num {
-      font-family: var(--font-headline);
-      font-size: 18px;
-      color: #00e5ff;
-      width: 24px;
-      text-align: center;
-    }
-    .sb-thumb {
-      width: 36px;
-      height: 48px;
-      object-fit: contain;
-      background: #040812;
-      border: 1px solid #1c2e46;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .sb-fields {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .sb-input {
-      background: #040810;
-      border: 1px solid #18283e;
-      border-radius: 4px;
+    .btn-card-action {
+      background: rgba(8, 14, 24, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       font-size: 11px;
-      font-weight: 700;
-      padding: 4px 6px;
-      outline: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
     }
-    .sb-input:focus {
-      border-color: #00e5ff;
+    .btn-card-action:hover {
+      background: #ff1a24;
+      border-color: #ff4d55;
     }
 
-    /* TOAST NOTIFICATION */
-    .toast {
+    /* MODAL POPUP FOR CARD EDIT */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #090e18;
+      border: 1px solid #1a273c;
+      border-radius: 14px;
+      width: 440px;
+      max-width: 95vw;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #162438;
+      padding-bottom: 10px;
+    }
+    .modal-title {
+      font-family: var(--font-tech);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .modal-close:hover { color: #fff; }
+
+    /* TOAST ALERT */
+    .toast-msg {
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #091220;
-      border: 1.5px solid #00e5ff;
-      border-radius: 8px;
-      padding: 10px 18px;
+      background: rgba(10, 16, 26, 0.95);
+      border: 1px solid #ff4d55;
       color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-      display: flex;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 16px rgba(255, 26, 36, 0.4);
+      z-index: 9999;
+      display: none;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 0 20px rgba(0, 229, 255, 0.5), 0 8px 24px rgba(0,0,0,0.9);
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.25s ease;
-      z-index: 99999;
-      pointer-events: none;
+      gap: 8px;
     }
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
+    .toast-msg.is-active {
+      display: flex;
+      animation: toastIn 0.25s ease;
     }
-
-    /* CLEAN VIEW MODE */
-    body.clean-view-mode .app-header,
-    body.clean-view-mode .editor-sidebar,
-    body.clean-view-mode .viewport-toolbar {
-      display: none !important;
-    }
-    body.clean-view-mode .main-workspace {
-      height: 100vh;
-    }
-    body.clean-view-mode .viewport-stage {
-      padding: 0;
-      background: #000;
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
   </style>
 </head>
 <body>
 
-  <!-- APP HEADER -->
+  <!-- 1. TOP GLOBAL NAVBAR -->
   <header class="app-header">
-    <div class="brand-group">
-      <span class="brand-icon">⚡</span>
-      <span class="brand-title">FC_VOLT</span>
-      <span class="brand-badge">TOP 10 SHORTS</span>
-    </div>
+    <a href="index.html" class="brand-group">
+      <div class="brand-logo-badge">⚡</div>
+      <div class="brand-text-col">
+        <span class="brand-name">FC_VOLT</span>
+        <span class="brand-tag">TOP 10 RANKING CREATOR</span>
+      </div>
+    </a>
 
-    <!-- TEMPLATE NAVIGATION -->
-    <nav class="template-nav">
-      <a href="index.html" class="nav-tab" title="Tier List Maker">📊 Tier List</a>
-      <button class="nav-tab active" title="Top 10 Player Cards Ranking">🔟 Top 10 Ranking</button>
-      <a href="team11.html" class="nav-tab" title="Best Team 11 Squad">⚽ Best Team 11</a>
-      <a href="shards.html" class="nav-tab" title="Player Comparison Battles">⚔️ Player Comparison</a>
-      <a href="claim.html" class="nav-tab" title="Top 10 Must Claim Cards">🔥 Top 10 Must Claim</a>
-      <a href="players.html" class="nav-tab" title="New Players Shards Showcase">✨ New Shards Players</a>
+    <nav class="nav-tabs">
+      <a href="index.html" class="nav-tab">🏠 Home</a>
+      <a href="top10.html" class="nav-tab active">🔟 Top 10 Ranking</a>
+      <a href="claim.html" class="nav-tab">🔥 Must Claim</a>
+      <a href="shards.html" class="nav-tab">⚔️ Player Comparison</a>
+      <a href="players.html" class="nav-tab">✨ New Players</a>
+      <a href="team11.html" class="nav-tab">⚽ Best XI</a>
     </nav>
 
-    <!-- ACTIONS -->
-    <div class="top-actions">
-      <button type="button" class="btn" id="cleanViewBtn" title="Toggle Clean Mode for Screen Recording">
-        👁️ Clean View
-      </button>
-      <button type="button" class="btn" id="resetCardsBtn" style="color:#ff6666; border-color:#552222;" title="Reset all card photos to empty">
-        🗑️ Clear Photos
-      </button>
-      <button type="button" class="btn btn-capcut" id="exportCapcutBtn" title="Export transparent overlay PNG without background for CapCut">
+    <div class="header-actions">
+      <button type="button" class="btn btn-secondary" onclick="exportCapCutOverlay()" title="Transparent PNG for CapCut overlays">
         🎬 CapCut Overlay PNG
       </button>
-      <button type="button" class="btn btn-primary" id="exportPngBtn" title="Export full 1080×1920 HD PNG with background">
-        📸 Export 1080×1920 PNG
-      </button>
-      <button type="button" class="btn" id="exportPdfBtn" title="Export as PDF">
-        📄 PDF
+      <button type="button" class="btn btn-primary" onclick="exportFullImage('png')" title="Download full Ultra HD PNG">
+        📥 Export HD PNG
       </button>
     </div>
   </header>
 
-  <!-- MAIN WORKSPACE -->
-  <main class="main-workspace">
+  <!-- 2. MAIN APP WORKSPACE -->
+  <main class="app-workspace">
 
-    <!-- LEFT SIDEBAR CONTROLS -->
-    <aside class="editor-sidebar" id="editorSidebar">
+    <!-- LEFT SIDEBAR: CONTROLS -->
+    <aside class="sidebar-panel">
 
-      <!-- 1. BATCH UPLOAD -->
+      <!-- QUICK PRESETS -->
       <section class="panel-box">
         <div class="panel-box-title">
-          <span>📁 Batch Upload Cards</span>
+          <span>⚡ Quick Presets</span>
         </div>
-        <p style="font-size:11px; color:#8fa6c4; margin-bottom:10px; line-height:1.4;">
-          Ek sath 10 player cards select karein — saare slots 1-by-1 automatically fill ho jayenge!
-        </p>
-        <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:10px;" onclick="document.getElementById('batchFileInput').click()">
-          📁 Select Multiple Card Photos
+        <div class="preset-chips">
+          <button type="button" class="preset-chip" onclick="applyPreset('dontclaim')">❌ DON'T CLAIM (Red)</button>
+          <button type="button" class="preset-chip" onclick="applyPreset('mustclaim')">✅ MUST CLAIM (Green)</button>
+          <button type="button" class="preset-chip" onclick="applyPreset('ballondor')">🏆 Ballon d'Or 10</button>
+          <button type="button" class="preset-chip" onclick="applyPreset('top10shards')">💎 Top 10 Shards</button>
+        </div>
+      </section>
+
+      <!-- HEADLINE & SUBTITLE -->
+      <section class="panel-box">
+        <div class="panel-box-title">
+          <span>✏️ Title & Subtitle</span>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="inputMainTitle">Main Title (White)</label>
+          <input type="text" id="inputMainTitle" class="input-text" value="BALLON'DOR 10 PLAYERS DON'T CLAIM" oninput="updateTitles()">
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="inputSubTitle">Subtitle (Yellow / Gold)</label>
+          <input type="text" id="inputSubTitle" class="input-text" value="AND DON'T WASTE YOUR SHARDS" oninput="updateTitles()">
+        </div>
+      </section>
+
+      <!-- BATCH ACTIONS -->
+      <section class="panel-box">
+        <div class="panel-box-title">
+          <span>📁 Batch Actions</span>
+        </div>
+        <button type="button" class="btn btn-gold" style="width:100%; justify-content:center;" onclick="document.getElementById('batchUploadInput').click()">
+          📂 Select 10 Card Photos (Auto-Fill)
         </button>
-        <input type="file" id="batchFileInput" accept="image/*" multiple style="display:none;">
-      </section>
-
-      <!-- 2. SHARDS QUICK LADDERS -->
-      <section class="panel-box">
-        <div class="panel-box-title">
-          <span>💎 Quick Shards Ladders</span>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-          <button type="button" class="btn" style="justify-content:center; font-size:10px;" onclick="applyShardLadder('desc')">
-            📉 50k → 5k (High to Low)
+        <input type="file" id="batchUploadInput" accept="image/*" multiple style="display:none;" onchange="handleBatchUpload(event)">
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:4px;">
+          <button type="button" class="btn btn-secondary btn-mini" style="justify-content:center;" onclick="setAllStatus('cross')">
+            Set All ❌
           </button>
-          <button type="button" class="btn" style="justify-content:center; font-size:10px;" onclick="applyShardLadder('asc')">
-            📈 5k → 50k (Low to High)
-          </button>
-          <button type="button" class="btn" style="justify-content:center; font-size:10px;" onclick="applyShardLadder('equal')">
-            🔹 All 25,000 SHARDS
-          </button>
-          <button type="button" class="btn" style="justify-content:center; font-size:10px;" onclick="applyShardLadder('clear')">
-            🚫 Reset to 0
+          <button type="button" class="btn btn-secondary btn-mini" style="justify-content:center;" onclick="setAllStatus('tick')">
+            Set All ✅
           </button>
         </div>
       </section>
 
-      <!-- 3. BACKGROUND THEMES -->
+      <!-- CANVAS FORMAT -->
       <section class="panel-box">
         <div class="panel-box-title">
-          <span>🎨 Design Style Theme</span>
+          <span>📐 Canvas Format</span>
+        </div>
+        <div class="format-toggle">
+          <button type="button" class="format-btn active" id="btnFmtShorts" onclick="setCanvasFormat('shorts')">
+            📱 9:16 Shorts<br><small style="font-size:10px; opacity:0.8;">1080 × 1920</small>
+          </button>
+          <button type="button" class="format-btn" id="btnFmtSquare" onclick="setCanvasFormat('square')">
+            ⬛ 1:1 Square<br><small style="font-size:10px; opacity:0.8;">1080 × 1080</small>
+          </button>
+        </div>
+      </section>
+
+      <!-- BACKGROUND THEMES -->
+      <section class="panel-box">
+        <div class="panel-box-title">
+          <span>🎨 Background Theme</span>
         </div>
         <div class="theme-grid">
-          <button type="button" class="btn-theme active" data-theme="obsidian" onclick="setTheme('obsidian')">
-            🌌 Dark Obsidian
-          </button>
-          <button type="button" class="btn-theme" data-theme="stadium" onclick="setTheme('stadium')">
-            🏟️ Stadium Pitch
-          </button>
-          <button type="button" class="btn-theme" data-theme="gold" onclick="setTheme('gold')">
-            🏆 Golden Trophy
-          </button>
-          <button type="button" class="btn-theme" data-theme="cyber" onclick="setTheme('cyber')">
-            🟣 Cyber Violet
-          </button>
-          <button type="button" class="btn-theme" data-theme="transparent" style="grid-column: span 2;" onclick="setTheme('transparent')">
-            🎬 Transparent Overlay (CapCut)
-          </button>
+          <button type="button" class="theme-btn theme-red active" data-theme="red" onclick="setTheme('red')">Ruby Red</button>
+          <button type="button" class="theme-btn theme-obsidian" data-theme="obsidian" onclick="setTheme('obsidian')">Obsidian</button>
+          <button type="button" class="theme-btn theme-gold" data-theme="gold" onclick="setTheme('gold')">Gold</button>
+          <button type="button" class="theme-btn theme-purple" data-theme="purple" onclick="setTheme('purple')">Purple</button>
+          <button type="button" class="theme-btn theme-blue" data-theme="blue" onclick="setTheme('blue')">Cyan Blue</button>
+          <button type="button" class="theme-btn theme-transparent" data-theme="transparent" onclick="setTheme('transparent')">Transparent</button>
         </div>
       </section>
 
-      <!-- 4. HEADINGS & LABELS -->
+      <!-- RESET & CLEAR -->
       <section class="panel-box">
-        <div class="panel-box-title">
-          <span>🏷️ Header Titles</span>
-        </div>
-        <div class="form-group">
-          <label>Large Title</label>
-          <input type="text" id="mainTitleInput" class="input-text" value="TOP 10 PLAYERS">
-        </div>
-        <div class="form-group">
-          <label>Subtitle Capsule</label>
-          <input type="text" id="subTitleInput" class="input-text" value="BEST VALUE FOR SHARDS">
-        </div>
-      </section>
-
-      <!-- 5. SLOTS MANAGER (RANKS 1-10) -->
-      <section class="panel-box">
-        <div class="panel-box-title">
-          <span>🔢 Player Slots (1–10)</span>
-        </div>
-        <div id="slotsManagerList">
-          <!-- Dynamically populated -->
-        </div>
+        <button type="button" class="btn btn-secondary" style="width:100%; justify-content:center; color:#ff4d55;" onclick="clearAllCards()">
+          🗑️ Clear All 10 Cards
+        </button>
       </section>
 
     </aside>
 
-    <!-- RIGHT STAGE VIEWPORT (1080 × 1920 CANVAS) -->
-    <section class="viewport-stage">
-      <div class="viewport-toolbar">
-        <div class="zoom-pill">
-          <span>RATIO: <strong>9:16 SHORTS</strong> (1080 × 1920)</span>
+    <!-- RIGHT PREVIEW CANVAS WORKSPACE -->
+    <section class="preview-workspace">
+
+      <!-- TOOLBAR -->
+      <div class="canvas-toolbar">
+        <div class="zoom-controls">
+          <span>Scale:</span>
+          <button type="button" class="btn btn-secondary btn-mini" onclick="changeZoom(-0.05)">-</button>
+          <span id="zoomPercent">50%</span>
+          <button type="button" class="btn btn-secondary btn-mini" onclick="changeZoom(0.05)">+</button>
+          <button type="button" class="btn btn-secondary btn-mini" onclick="resetZoom()">Auto Fit</button>
         </div>
-        <div style="display:flex; gap:6px;">
-          <button type="button" class="btn" style="padding:4px 8px; font-size:10px;" onclick="adjustScale()">Fit View</button>
-          <button type="button" class="btn" style="padding:4px 8px; font-size:10px;" onclick="resetZoom100()">100% Full Res</button>
+        <div style="font-size:11px; color:#94a3b8;">
+          💡 Click any card to upload image, change label (DON'T CLAIM / MUST CLAIM), or toggle ❌ / ✅
         </div>
       </div>
 
-      <div class="canvas-scroll-container" id="canvasContainer">
+      <!-- SCROLLABLE CANVAS WRAPPER -->
+      <div class="canvas-scroll-container" id="canvasScrollArea">
 
-        <!-- 1080 × 1920 SHORTS CANVAS -->
-        <div id="shortsCanvas" data-theme="obsidian">
+        <!-- THE RANKING CANVAS -->
+        <div id="shortsCanvas" class="format-shorts" data-theme="red">
 
-          <!-- STADIUM PARTICLES & LIGHT BEAMS LAYER -->
-          <div class="canvas-decor-layer">
-            <div class="light-cone-left"></div>
-            <div class="light-cone-right"></div>
-            <div class="ambient-gold-glow"></div>
+          <!-- GEOMETRIC FACETS & LIGHT RAYS BACKGROUND DECORATION -->
+          <svg class="canvas-bg-decor" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="facetGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff1a24" stop-opacity="0.25" />
+                <stop offset="100%" stop-color="#78020a" stop-opacity="0.02" />
+              </linearGradient>
+              <linearGradient id="facetGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ff4d55" stop-opacity="0.2" />
+                <stop offset="100%" stop-color="#400105" stop-opacity="0.02" />
+              </linearGradient>
+            </defs>
+            <polygon points="0,0 650,0 420,550 0,380" fill="url(#facetGrad1)" />
+            <polygon points="650,0 1080,0 1080,520 720,340" fill="url(#facetGrad2)" />
+            <polygon points="0,380 480,440 220,1050 0,920" fill="url(#facetGrad1)" />
+            <polygon points="1080,520 680,680 1080,1100" fill="url(#facetGrad2)" />
+            <polygon points="0,920 520,1100 150,1750 0,1650" fill="url(#facetGrad1)" />
+            <polygon points="1080,1100 600,1280 1080,1850" fill="url(#facetGrad2)" />
+            <!-- Light Ray Lines -->
+            <line x1="80" y1="150" x2="1020" y2="750" stroke="#ff8080" stroke-width="1.8" stroke-opacity="0.25" />
+            <line x1="980" y1="280" x2="120" y2="1350" stroke="#ff6666" stroke-width="1.5" stroke-opacity="0.2" />
+            <line x1="50" y1="850" x2="1050" y2="1600" stroke="#ff9999" stroke-width="1.5" stroke-opacity="0.18" />
+          </svg>
+
+          <!-- TOP-RIGHT CORNER CROSS SIGN (Symmetrical 45deg X cross) -->
+          <div class="canvas-corner-cross" title="FC Mobile Metallic Cross" onclick="toggleCornerCross()">
+            <svg viewBox="0 0 60 60" fill="none">
+              <defs>
+                <linearGradient id="cornerCrossGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ffffff" />
+                  <stop offset="35%" stop-color="#ff4d55" />
+                  <stop offset="70%" stop-color="#ffd700" />
+                  <stop offset="100%" stop-color="#ff1a24" />
+                </linearGradient>
+                <filter id="cornerCrossGlow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#ff1a24" flood-opacity="0.9" />
+                  <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#ffd700" flood-opacity="0.6" />
+                </filter>
+              </defs>
+              <g filter="url(#cornerCrossGlow)">
+                <line x1="12" y1="12" x2="48" y2="48" stroke="url(#cornerCrossGrad)" stroke-width="7" stroke-linecap="round" />
+                <line x1="48" y1="12" x2="12" y2="48" stroke="url(#cornerCrossGrad)" stroke-width="7" stroke-linecap="round" />
+                <circle cx="30" cy="30" r="4.5" fill="#ffffff" />
+              </g>
+            </svg>
           </div>
 
           <!-- TOP HEADER AREA -->
-          <div class="canvas-header-area">
-
-            <!-- TOP-RIGHT CORNER CROSS SIGN (Proper Symmetrical X-shaped cross!) -->
-            <div class="top-right-cross-sign" title="FC Mobile Symmetrical Cross">
-              <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="crossGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#00e5ff" />
-                    <stop offset="45%" stop-color="#c084fc" />
-                    <stop offset="100%" stop-color="#ffd700" />
-                  </linearGradient>
-                  <filter id="crossGlow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#00e5ff" flood-opacity="0.9" />
-                    <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#a855f7" flood-opacity="0.6" />
-                  </filter>
-                </defs>
-                <g filter="url(#crossGlow)">
-                  <line x1="12" y1="12" x2="48" y2="48" stroke="url(#crossGrad)" stroke-width="7" stroke-linecap="round" />
-                  <line x1="48" y1="12" x2="12" y2="48" stroke="url(#crossGrad)" stroke-width="7" stroke-linecap="round" />
-                  <circle cx="30" cy="30" r="4.5" fill="#ffffff" />
-                </g>
-              </svg>
-            </div>
-
-            <!-- Golden Crown Graphic -->
-            <div class="header-crown-wrap">
-              <svg viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 50 C30 54, 70 54, 88 50 L85 56 C67 60, 33 60, 15 56 Z" fill="#ffd700" />
-                <path d="M12 50 L10 24 L32 38 L50 12 L68 38 L90 24 L88 50 Z" fill="url(#crownGoldGradient)" stroke="#fff" stroke-width="1" />
-                <polygon points="50,12 42,40 50,50 58,40" fill="#fff" opacity="0.6" />
-                <circle cx="50" cy="11" r="4" fill="#fff" />
-                <circle cx="10" cy="23" r="3.5" fill="#ffd700" />
-                <circle cx="90" cy="23" r="3.5" fill="#ffd700" />
-                <defs>
-                  <linearGradient id="crownGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#fff8db" />
-                    <stop offset="30%" stop-color="#ffd700" />
-                    <stop offset="70%" stop-color="#ff9900" />
-                    <stop offset="100%" stop-color="#995500" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-
-            <!-- Large Title -->
-            <h1 class="header-main-title" id="gMainTitle">TOP 10 PLAYERS</h1>
-
-            <!-- Subtitle Capsule -->
-            <div class="header-subtitle-capsule">
-              <span class="subtitle-icon">💎</span>
-              <span class="subtitle-text" id="gSubTitle">BEST VALUE FOR SHARDS</span>
-            </div>
+          <div class="canvas-header-wrap">
+            <h1 class="header-main-title" id="dispMainTitle">BALLON'DOR 10 PLAYERS DON'T CLAIM</h1>
+            <h2 class="header-sub-title" id="dispSubTitle">AND DON'T WASTE YOUR SHARDS</h2>
           </div>
 
-          <!-- TOP 10 PLAYER SLOTS (Numbered 1-10) -->
-          <div class="player-slots-list" id="playerSlotsList">
-            <!-- Dynamically populated with 10 slots -->
+          <!-- 10 CARDS GRID (3 + 3 + 4 FORMATION) -->
+          <div class="cards-grid-layout" id="cardsGridLayout">
+            <!-- Row 1: Cards 1, 2, 3 -->
+            <div class="grid-row row-1" id="row1"></div>
+
+            <!-- Row 2: Cards 4, 5, 6 -->
+            <div class="grid-row row-2" id="row2"></div>
+
+            <!-- Row 3: Cards 7, 8, 9, 10 -->
+            <div class="grid-row row-3" id="row3"></div>
           </div>
 
         </div>
+
       </div>
+
     </section>
 
   </main>
 
-  <!-- Hidden Single Card File Input -->
-  <input type="file" id="singleCardFileInput" accept="image/*" style="display:none;">
+  <!-- CARD EDIT MODAL -->
+  <div class="modal-backdrop" id="editModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title" id="modalCardTitle">Edit Player Card</span>
+        <button type="button" class="modal-close" onclick="closeEditModal()">✕</button>
+      </div>
 
-  <!-- TOAST -->
-  <div id="toast" class="toast">
-    <span id="toastIcon">✨</span>
-    <span id="toastMessage">Action completed</span>
+      <div class="input-group">
+        <label class="input-label">Top Label Text</label>
+        <input type="text" id="modalLabelText" class="input-text" placeholder="e.g. DON'T CLAIM, MUST CLAIM">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Label Color Style</label>
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px;">
+          <button type="button" class="btn btn-secondary btn-mini" style="color:#ff1a24;" onclick="setModalLabelColor('label-red')">Red</button>
+          <button type="button" class="btn btn-secondary btn-mini" style="color:#00ff66;" onclick="setModalLabelColor('label-green')">Green</button>
+          <button type="button" class="btn btn-secondary btn-mini" style="color:#ffd700;" onclick="setModalLabelColor('label-gold')">Gold</button>
+          <button type="button" class="btn btn-secondary btn-mini" style="color:#00e5ff;" onclick="setModalLabelColor('label-cyan')">Cyan</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Bottom Status Mark</label>
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
+          <button type="button" class="btn btn-secondary btn-mini" style="color:#ff1a24;" onclick="setModalStatus('cross')">❌ Cross</button>
+          <button type="button" class="btn btn-secondary btn-mini" style="color:#00ff66;" onclick="setModalStatus('tick')">✅ Tick</button>
+          <button type="button" class="btn btn-secondary btn-mini" onclick="setModalStatus('none')">🚫 None</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Player Card Photo</label>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('modalFileInput').click()">
+          📁 Choose Card Photo (PNG/JPG)
+        </button>
+        <input type="file" id="modalFileInput" accept="image/*" style="display:none;" onchange="handleModalCardImage(event)">
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:8px;">
+        <button type="button" class="btn btn-secondary" style="color:#ff4d55;" onclick="removeCardImage()">Remove Photo</button>
+        <button type="button" class="btn btn-primary" onclick="saveModalChanges()">Done</button>
+      </div>
+    </div>
   </div>
 
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-msg" id="toastMsg">Notification message</div>
+
+  <!-- HIDDEN FILE INPUT FOR INDIVIDUAL CARD CLICKS -->
+  <input type="file" id="singleCardFileInput" accept="image/*" style="display:none;" onchange="handleSingleCardUpload(event)">
+
   <script>
-    /**
-     * FC_VOLT TOP 10 PLAYER CARDS RANKING ENGINE
-     * Designed for YouTube Shorts (1080×1920) & CapCut Overlays
-     */
-
-    function formatNumber(num) {
-      const n = parseInt(String(num).replace(/[^0-9]/g, ''), 10);
-      return isNaN(n) ? '0' : n.toLocaleString('en-US');
-    }
-
-    function parseFormattedNumber(str) {
-      const n = parseInt(String(str).replace(/[^0-9]/g, ''), 10);
-      return isNaN(n) ? 0 : n;
-    }
-
-    function showToast(msg, icon = '✨') {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMessage').textContent = msg;
-      document.getElementById('toastIcon').textContent = icon;
-      toast.classList.add('show');
-      clearTimeout(toast._timer);
-      toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
-    }
-
-    // Default 10 Player Slots (Clean, editable placeholders, NO real names/cards!)
-    const DEFAULT_SLOTS = [
-      { rank: 1, name: '', shards: 30000, image: '' },
-      { rank: 2, name: '', shards: 28000, image: '' },
-      { rank: 3, name: '', shards: 25000, image: '' },
-      { rank: 4, name: '', shards: 22000, image: '' },
-      { rank: 5, name: '', shards: 20000, image: '' },
-      { rank: 6, name: '', shards: 18000, image: '' },
-      { rank: 7, name: '', shards: 16000, image: '' },
-      { rank: 8, name: '', shards: 14000, image: '' },
-      { rank: 9, name: '', shards: 12000, image: '' },
-      { rank: 10, name: '', shards: 10000, image: '' }
+    /* ========================================================
+       STATE MANAGEMENT
+       ======================================================== */
+    const DEFAULT_CARDS = [
+      { id: 1, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
+      { id: 2, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
+      { id: 3, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
+      { id: 4, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
+      { id: 5, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
+      { id: 6, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
+      { id: 7, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
+      { id: 8, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
+      { id: 9, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
+      { id: 10, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" }
     ];
 
-    let state = {
-      mainTitle: 'TOP 10 PLAYERS',
-      subTitle: 'BEST VALUE FOR SHARDS',
-      theme: 'obsidian',
-      slots: JSON.parse(JSON.stringify(DEFAULT_SLOTS))
+    const state = {
+      mainTitle: "BALLON'DOR 10 PLAYERS DON'T CLAIM",
+      subTitle: "AND DON'T WASTE YOUR SHARDS",
+      theme: "red",
+      format: "shorts", // 'shorts' (9:16) or 'square' (1:1)
+      cards: JSON.parse(JSON.stringify(DEFAULT_CARDS)),
+      scale: 0.5,
+      currentEditingIndex: null,
+      tempModalData: {}
     };
 
-    let activeUploadRank = null;
-
-    // ========================================================
-    // RENDER FUNCTION
-    // ========================================================
+    /* ========================================================
+       RENDER FUNCTIONS
+       ======================================================== */
     function render() {
-      // 1. Titles
-      document.getElementById('gMainTitle').textContent = state.mainTitle;
-      document.getElementById('gSubTitle').textContent = state.subTitle;
-      document.getElementById('mainTitleInput').value = state.mainTitle;
-      document.getElementById('subTitleInput').value = state.subTitle;
+      // Titles
+      document.getElementById('dispMainTitle').textContent = state.mainTitle;
+      document.getElementById('dispSubTitle').textContent = state.subTitle;
+      document.getElementById('inputMainTitle').value = state.mainTitle;
+      document.getElementById('inputSubTitle').value = state.subTitle;
 
-      // 2. Canvas Theme
+      // Theme
       const canvas = document.getElementById('shortsCanvas');
       canvas.setAttribute('data-theme', state.theme);
-
-      const container = document.getElementById('canvasContainer');
-      container.classList.toggle('is-transparent-mode', state.theme === 'transparent');
-
-      document.querySelectorAll('.btn-theme').forEach(btn => {
+      document.querySelectorAll('.theme-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.theme === state.theme);
       });
 
-      // 3. Render 10 Player Slots on Canvas
-      renderCanvasSlots();
+      // Format
+      canvas.className = state.format === 'square' ? 'format-square' : 'format-shorts';
+      document.getElementById('btnFmtShorts').classList.toggle('active', state.format === 'shorts');
+      document.getElementById('btnFmtSquare').classList.toggle('active', state.format === 'square');
 
-      // 4. Render Slots in Sidebar
-      renderSidebarSlots();
+      // Cards Grid (Row 1: 0..2, Row 2: 3..5, Row 3: 6..9)
+      renderRow('row1', state.cards.slice(0, 3), 0);
+      renderRow('row2', state.cards.slice(3, 6), 3);
+      renderRow('row3', state.cards.slice(6, 10), 6);
 
-      // 5. Fit scale & save
-      adjustScale();
-      saveStorage();
+      adjustZoom();
     }
 
-    function renderCanvasSlots() {
-      const container = document.getElementById('playerSlotsList');
-      container.innerHTML = state.slots.map(s => {
-        let badgeClass = 'badge-standard';
-        let rowClass = '';
-        let crownMarkup = '';
+    function renderRow(containerId, cardList, startIndex) {
+      const rowElem = document.getElementById(containerId);
+      rowElem.innerHTML = cardList.map((card, idx) => {
+        const globalIdx = startIndex + idx;
 
-        if (s.rank === 1) {
-          badgeClass = 'badge-gold';
-          rowClass = 'rank-1';
-          crownMarkup = '<span class="rank-sub-crown">👑</span>';
-        } else if (s.rank === 2) {
-          badgeClass = 'badge-silver';
-          rowClass = 'rank-2';
-        } else if (s.rank === 3) {
-          badgeClass = 'badge-bronze';
-          rowClass = 'rank-3';
+        // Bottom badge SVG (❌ Cross or ✅ Tick)
+        let bottomBadgeHtml = '';
+        if (card.status === 'cross') {
+          bottomBadgeHtml = `
+            <div class="card-bottom-badge" onclick="event.stopPropagation(); toggleCardStatus(${globalIdx})" title="Click to toggle (Cross / Tick)">
+              <svg viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="19" fill="#dc2626" stroke="#ffffff" stroke-width="2.5" />
+                <line x1="14" y1="14" x2="30" y2="30" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" />
+                <line x1="30" y1="14" x2="14" y2="30" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" />
+              </svg>
+            </div>
+          `;
+        } else if (card.status === 'tick') {
+          bottomBadgeHtml = `
+            <div class="card-bottom-badge" onclick="event.stopPropagation(); toggleCardStatus(${globalIdx})" title="Click to toggle (Cross / Tick)">
+              <svg viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="19" fill="#10b981" stroke="#ffffff" stroke-width="2.5" />
+                <polyline points="13,22 19,28 31,16" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          `;
         }
 
-        const displayName = s.name && s.name.trim() ? s.name : `[ PLAYER NAME #${s.rank} ]`;
-        const isPlaceholder = !s.name || !s.name.trim();
-
         return `
-          <div class="player-slot-row ${rowClass}" data-rank="${s.rank}">
-            <!-- 1. Ranking Number Badge -->
-            <div class="slot-rank-badge ${badgeClass}">
-              ${crownMarkup}
-              <span>${s.rank}</span>
+          <div class="card-item-slot" onclick="triggerCardUpload(${globalIdx})">
+            <!-- Top Label -->
+            <div class="card-top-label ${card.labelColor}" onclick="event.stopPropagation(); openEditModal(${globalIdx})" title="Click to edit label">
+              ${card.label || '&nbsp;'}
             </div>
 
-            <!-- 2. Player Card Image Placeholder -->
-            <div class="slot-card-box" onclick="triggerCardUpload(${s.rank})" ondragover="handleCardDragOver(event)" ondrop="handleCardDrop(event, ${s.rank})" title="Click or drop card photo for Rank #${s.rank}">
-              ${s.image ? `
-                <img class="slot-card-img" src="${s.image}" alt="Rank ${s.rank}">
-                <div class="slot-card-hover-actions">
-                  <button type="button" class="btn-card-act" onclick="event.stopPropagation(); triggerCardUpload(${s.rank})">🔄 Replace</button>
-                  <button type="button" class="btn-card-act" style="background:#551111;" onclick="event.stopPropagation(); clearCardImage(${s.rank})">🗑️ Clear</button>
-                </div>
+            <!-- Card Box -->
+            <div class="card-box">
+              ${card.image ? `
+                <img class="card-img-element" src="${card.image}" alt="Card ${globalIdx + 1}">
               ` : `
-                <div class="slot-card-empty">
-                  <span class="plus-sym">＋</span>
-                  <span class="card-lbl">CARD</span>
+                <div class="card-empty-box">
+                  <span class="empty-icon">+</span>
+                  <span class="empty-text">Slot ${globalIdx + 1}</span>
                 </div>
               `}
-            </div>
 
-            <!-- 3. Player Name Placeholder -->
-            <div class="slot-player-name ${isPlaceholder ? 'is-placeholder' : ''}" onclick="quickEditName(${s.rank})" title="Click to edit player name">
-              ${displayName}
-            </div>
+              <!-- Bottom Indicator Mark -->
+              ${bottomBadgeHtml}
 
-            <!-- 4. Shards Cost Section -->
-            <div class="slot-shards-pill" onclick="quickEditShards(${s.rank})" title="Click to edit shards price">
-              <img class="slot-shard-icon" src="shard_icon_hq.png" alt="Shard">
-              <span class="slot-shard-val">${formatNumber(s.shards)} SHARDS</span>
+              <!-- Hover Action Buttons -->
+              <div class="card-hover-actions">
+                <button type="button" class="btn-card-action" onclick="event.stopPropagation(); openEditModal(${globalIdx})">✏️ Edit</button>
+              </div>
             </div>
           </div>
         `;
       }).join('');
     }
 
-    function renderSidebarSlots() {
-      const container = document.getElementById('slotsManagerList');
-      container.innerHTML = state.slots.map(s => `
-        <div class="sb-item-row">
-          <span class="sb-rank-num">#${s.rank}</span>
-          <img class="sb-thumb" src="${s.image || 'shard_icon_hq.png'}" alt="Thumb" onclick="triggerCardUpload(${s.rank})" title="Click to upload card photo">
-          <div class="sb-fields">
-            <input type="text" class="sb-input" value="${s.name || ''}" placeholder="Player Name #${s.rank}" onchange="updateSlotName(${s.rank}, this.value)">
-            <input type="text" class="sb-input" value="${formatNumber(s.shards)}" placeholder="e.g. 25,000" onchange="updateSlotShards(${s.rank}, this.value)">
-          </div>
-        </div>
-      `).join('');
+    /* ========================================================
+       USER INTERACTIONS
+       ======================================================== */
+    let uploadTargetIndex = null;
+
+    function triggerCardUpload(index) {
+      uploadTargetIndex = index;
+      document.getElementById('singleCardFileInput').click();
     }
 
-    // ========================================================
-    // INTERACTION & EDITING
-    // ========================================================
-    function updateSlotName(rank, val) {
-      const slot = state.slots.find(s => s.rank === rank);
-      if (slot) {
-        slot.name = val.trim().toUpperCase();
+    function handleSingleCardUpload(e) {
+      const file = e.target.files[0];
+      if (!file || uploadTargetIndex === null) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        state.cards[uploadTargetIndex].image = event.target.result;
         render();
-      }
+        showToast(`Slot ${uploadTargetIndex + 1} card uploaded!`);
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
     }
 
-    function updateSlotShards(rank, val) {
-      const slot = state.slots.find(s => s.rank === rank);
-      if (slot) {
-        slot.shards = parseFormattedNumber(val);
-        render();
+    function toggleCardStatus(index) {
+      const current = state.cards[index].status;
+      if (current === 'cross') {
+        state.cards[index].status = 'tick';
+        state.cards[index].label = 'MUST CLAIM';
+        state.cards[index].labelColor = 'label-green';
+      } else if (current === 'tick') {
+        state.cards[index].status = 'none';
+        state.cards[index].label = '';
+      } else {
+        state.cards[index].status = 'cross';
+        state.cards[index].label = "DON'T CLAIM";
+        state.cards[index].labelColor = 'label-red';
       }
+      render();
     }
 
-    function quickEditName(rank) {
-      const slot = state.slots.find(s => s.rank === rank);
-      if (!slot) return;
-      const res = prompt(`Enter Player Name for Rank #${rank}:`, slot.name || '');
-      if (res !== null) {
-        slot.name = res.trim().toUpperCase();
-        render();
-        showToast(`Updated Name for Rank #${rank}!`, '✏️');
-      }
+    function setAllStatus(status) {
+      state.cards.forEach(card => {
+        card.status = status;
+        if (status === 'cross') {
+          card.label = "DON'T CLAIM";
+          card.labelColor = "label-red";
+        } else if (status === 'tick') {
+          card.label = "MUST CLAIM";
+          card.labelColor = "label-green";
+        } else {
+          card.label = "";
+        }
+      });
+      render();
+      showToast(`All cards set to ${status === 'cross' ? '❌ DON\'T CLAIM' : '✅ MUST CLAIM'}`);
     }
 
-    function quickEditShards(rank) {
-      const slot = state.slots.find(s => s.rank === rank);
-      if (!slot) return;
-      const res = prompt(`Enter Shards Cost for Rank #${rank}:`, formatNumber(slot.shards));
-      if (res !== null && res.trim() !== '') {
-        slot.shards = parseFormattedNumber(res);
-        render();
-        showToast(`Updated Shards for Rank #${rank}!`, '💎');
-      }
+    function handleBatchUpload(e) {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      let loadedCount = 0;
+      const totalToLoad = Math.min(files.length, 10);
+
+      files.slice(0, 10).forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          state.cards[index].image = ev.target.result;
+          loadedCount++;
+          if (loadedCount === totalToLoad) {
+            render();
+            showToast(`${loadedCount} cards auto-filled successfully!`);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+      e.target.value = '';
     }
 
-    function triggerCardUpload(rank) {
-      activeUploadRank = rank;
-      const input = document.getElementById('singleCardFileInput');
-      input.value = '';
-      input.click();
+    function updateTitles() {
+      state.mainTitle = document.getElementById('inputMainTitle').value;
+      state.subTitle = document.getElementById('inputSubTitle').value;
+      document.getElementById('dispMainTitle').textContent = state.mainTitle;
+      document.getElementById('dispSubTitle').textContent = state.subTitle;
     }
 
-    function clearCardImage(rank) {
-      const slot = state.slots.find(s => s.rank === rank);
-      if (slot) {
-        slot.image = '';
-        render();
-        showToast(`Cleared Card Photo for Rank #${rank}!`, '🗑️');
+    function setTheme(theme) {
+      state.theme = theme;
+      render();
+    }
+
+    function setCanvasFormat(fmt) {
+      state.format = fmt;
+      render();
+      showToast(`Format changed to ${fmt === 'square' ? '1:1 Square' : '9:16 Shorts'}`);
+    }
+
+    function applyPreset(preset) {
+      if (preset === 'dontclaim') {
+        state.mainTitle = "BALLON'DOR 10 PLAYERS DON'T CLAIM";
+        state.subTitle = "AND DON'T WASTE YOUR SHARDS";
+        state.theme = "red";
+        setAllStatus('cross');
+      } else if (preset === 'mustclaim') {
+        state.mainTitle = "TOP 10 PLAYERS MUST CLAIM";
+        state.subTitle = "BEST VALUE FOR SHARDS";
+        state.theme = "purple";
+        setAllStatus('tick');
+      } else if (preset === 'ballondor') {
+        state.mainTitle = "BALLON'DOR BEST PICKS";
+        state.subTitle = "TOP 10 RANKING";
+        state.theme = "gold";
+      } else if (preset === 'top10shards') {
+        state.mainTitle = "TOP 10 PLAYERS";
+        state.subTitle = "BEST VALUE FOR SHARDS";
+        state.theme = "obsidian";
       }
+      render();
+      showToast(`Preset "${preset}" applied!`);
     }
 
     function clearAllCards() {
-      if (!confirm('Clear all player card photos?')) return;
-      state.slots.forEach(s => s.image = '');
+      if (!confirm("Are you sure you want to clear all 10 cards?")) return;
+      state.cards = JSON.parse(JSON.stringify(DEFAULT_CARDS));
       render();
-      showToast('All card photos cleared!', '🗑️');
-    }
-    document.getElementById('resetCardsBtn').addEventListener('click', clearAllCards);
-
-    // File Drop Handlers
-    function handleCardDragOver(e) {
-      e.preventDefault();
-      e.stopPropagation();
+      showToast("All cards cleared!");
     }
 
-    function handleCardDrop(e, rank) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
-        const file = e.dataTransfer.files[0];
-        readFileAsDataUrl(file).then(dataUrl => {
-          const slot = state.slots.find(s => s.rank === rank);
-          if (slot) {
-            slot.image = dataUrl;
-            render();
-            showToast(`Loaded photo for Rank #${rank}!`, '🎴');
-          }
-        });
-      }
+    /* ========================================================
+       MODAL EDIT
+       ======================================================== */
+    function openEditModal(index) {
+      state.currentEditingIndex = index;
+      const card = state.cards[index];
+      state.tempModalData = { ...card };
+
+      document.getElementById('modalCardTitle').textContent = `Edit Card Slot ${index + 1}`;
+      document.getElementById('modalLabelText').value = card.label || '';
+      document.getElementById('editModal').classList.add('is-open');
     }
 
-    // Prevent default browser drop navigation
-    window.addEventListener('dragover', e => e.preventDefault(), false);
-    window.addEventListener('drop', e => e.preventDefault(), false);
-
-    function readFileAsDataUrl(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+    function closeEditModal() {
+      document.getElementById('editModal').classList.remove('is-open');
+      state.currentEditingIndex = null;
     }
 
-    // Single File Input change
-    document.getElementById('singleCardFileInput').addEventListener('change', async e => {
-      if (e.target.files && e.target.files[0] && activeUploadRank) {
-        const dataUrl = await readFileAsDataUrl(e.target.files[0]);
-        const slot = state.slots.find(s => s.rank === activeUploadRank);
-        if (slot) {
-          slot.image = dataUrl;
-          render();
-          showToast(`Uploaded photo for Rank #${activeUploadRank}!`, '🎴');
-        }
-      }
-    });
+    function setModalLabelColor(col) {
+      state.tempModalData.labelColor = col;
+    }
 
-    // Batch File Input change (Loads multiple cards into slots 1-10)
-    document.getElementById('batchFileInput').addEventListener('change', async e => {
-      if (e.target.files && e.target.files.length > 0) {
-        const files = Array.from(e.target.files);
-        showToast(`Loading ${files.length} cards...`, '⏳');
-        for (let i = 0; i < files.length && i < 10; i++) {
-          const dataUrl = await readFileAsDataUrl(files[i]);
-          state.slots[i].image = dataUrl;
-        }
-        render();
-        showToast(`Loaded ${Math.min(files.length, 10)} cards into rankings!`, '✨');
-      }
-    });
+    function setModalStatus(st) {
+      state.tempModalData.status = st;
+    }
 
-    // Shard Ladders
-    function applyShardLadder(type) {
-      if (type === 'desc') {
-        const prices = [50000, 45000, 40000, 35000, 30000, 25000, 20000, 15000, 10000, 5000];
-        state.slots.forEach((s, idx) => s.shards = prices[idx]);
-        showToast('Applied Descending 50k → 5k ladder!', '📉');
-      } else if (type === 'asc') {
-        const prices = [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000];
-        state.slots.forEach((s, idx) => s.shards = prices[idx]);
-        showToast('Applied Ascending 5k → 50k ladder!', '📈');
-      } else if (type === 'equal') {
-        state.slots.forEach(s => s.shards = 25000);
-        showToast('Set all slots to 25,000 SHARDS!', '🔹');
-      } else if (type === 'clear') {
-        state.slots.forEach(s => s.shards = 0);
-        showToast('Reset all shards to 0!', '🚫');
-      }
+    function handleModalCardImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        state.tempModalData.image = ev.target.result;
+        showToast("Photo selected! Click Done to save.");
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    }
+
+    function removeCardImage() {
+      state.tempModalData.image = "";
+      showToast("Card image removed.");
+    }
+
+    function saveModalChanges() {
+      if (state.currentEditingIndex === null) return;
+      const idx = state.currentEditingIndex;
+      state.tempModalData.label = document.getElementById('modalLabelText').value;
+      state.cards[idx] = { ...state.tempModalData };
+      closeEditModal();
       render();
+      showToast(`Slot ${idx + 1} updated!`);
     }
 
-    // Theme Switcher
-    function setTheme(t) {
-      state.theme = t;
-      render();
-      showToast(`Switched theme to ${t.toUpperCase()}`, '🎨');
-    }
-
-    // Title Inputs
-    document.getElementById('mainTitleInput').addEventListener('input', e => {
-      state.mainTitle = e.target.value.trim().toUpperCase() || 'TOP 10 PLAYERS';
-      document.getElementById('gMainTitle').textContent = state.mainTitle;
-    });
-    document.getElementById('subTitleInput').addEventListener('input', e => {
-      state.subTitle = e.target.value.trim().toUpperCase() || 'BEST VALUE FOR SHARDS';
-      document.getElementById('gSubTitle').textContent = state.subTitle;
-    });
-
-    // Viewport Auto-Scale (9:16 Shorts 1080×1920)
-    function adjustScale() {
-      const container = document.getElementById('canvasContainer');
+    /* ========================================================
+       ZOOM & SCALING
+       ======================================================== */
+    function adjustZoom() {
       const canvas = document.getElementById('shortsCanvas');
-      if (!container || !canvas) return;
+      const container = document.getElementById('canvasScrollArea');
+      if (!canvas || !container) return;
 
-      const availW = container.clientWidth - 40;
-      const availH = container.clientHeight - 40;
+      const contWidth = container.clientWidth - 60;
+      const contHeight = container.clientHeight - 60;
+      const canvasWidth = state.format === 'square' ? 1080 : 1080;
+      const canvasHeight = state.format === 'square' ? 1080 : 1920;
 
-      const scale = Math.min(availW / 1080, availH / 1920);
-      canvas.style.transform = `scale(${scale.toFixed(4)})`;
+      const scaleW = contWidth / canvasWidth;
+      const scaleH = contHeight / canvasHeight;
+      const autoScale = Math.min(scaleW, scaleH, 0.95);
+
+      state.scale = autoScale;
+      applyScale();
     }
 
-    function resetZoom100() {
-      document.getElementById('shortsCanvas').style.transform = 'scale(1)';
+    function applyScale() {
+      const canvas = document.getElementById('shortsCanvas');
+      canvas.style.transform = `scale(${state.scale})`;
+      canvas.style.transformOrigin = 'center center';
+      document.getElementById('zoomPercent').textContent = `${Math.round(state.scale * 100)}%`;
     }
 
-    window.addEventListener('resize', adjustScale);
-
-    // Clean View
-    let isClean = false;
-    document.getElementById('cleanViewBtn').addEventListener('click', () => {
-      isClean = !isClean;
-      document.body.classList.toggle('clean-view-mode', isClean);
-      document.getElementById('cleanViewBtn').textContent = isClean ? '✕ Exit Clean' : '👁️ Clean View';
-      setTimeout(adjustScale, 50);
-    });
-
-    // ========================================================
-    // EXPORT FUNCTIONS (HD 1080×1920 & CapCut Transparent PNG)
-    // ========================================================
-    document.getElementById('exportPngBtn').addEventListener('click', async () => {
-      const canvasEl = document.getElementById('shortsCanvas');
-      showToast('Generating 1080×1920 HD PNG...', '📸');
-
-      const prevTransform = canvasEl.style.transform;
-      canvasEl.style.transform = 'none';
-
-      try {
-        const rendered = await html2canvas(canvasEl, {
-          scale: 1, // 1080×1920 exact resolution
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: state.theme === 'transparent' ? null : '#020408'
-        });
-        canvasEl.style.transform = prevTransform;
-
-        const a = document.createElement('a');
-        a.download = `FC_VOLT_Top10_Shorts_${Date.now()}.png`;
-        a.href = rendered.toDataURL('image/png');
-        a.click();
-        showToast('Exported 1080×1920 HD PNG!', '✅');
-      } catch (err) {
-        canvasEl.style.transform = prevTransform;
-        console.error(err);
-        showToast('Export failed!', '⚠️');
-      }
-    });
-
-    document.getElementById('exportCapcutBtn').addEventListener('click', async () => {
-      const canvasEl = document.getElementById('shortsCanvas');
-      showToast('Generating CapCut Transparent Overlay PNG...', '🎬');
-
-      const prevTheme = state.theme;
-      const prevTransform = canvasEl.style.transform;
-
-      // Force transparent background
-      canvasEl.setAttribute('data-theme', 'transparent');
-      canvasEl.style.transform = 'none';
-
-      try {
-        const rendered = await html2canvas(canvasEl, {
-          scale: 1,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: null
-        });
-
-        // Revert
-        canvasEl.setAttribute('data-theme', prevTheme);
-        canvasEl.style.transform = prevTransform;
-
-        const a = document.createElement('a');
-        a.download = `FC_VOLT_CapCut_Transparent_Overlay_${Date.now()}.png`;
-        a.href = rendered.toDataURL('image/png');
-        a.click();
-        showToast('Exported CapCut Transparent Overlay PNG!', '✅');
-      } catch (err) {
-        canvasEl.setAttribute('data-theme', prevTheme);
-        canvasEl.style.transform = prevTransform;
-        console.error(err);
-        showToast('Export failed!', '⚠️');
-      }
-    });
-
-    document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-      const canvasEl = document.getElementById('shortsCanvas');
-      showToast('Generating PDF...', '📄');
-
-      const prevTransform = canvasEl.style.transform;
-      canvasEl.style.transform = 'none';
-
-      try {
-        const rendered = await html2canvas(canvasEl, {
-          scale: 1,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: '#020408'
-        });
-        canvasEl.style.transform = prevTransform;
-
-        const imgData = rendered.toDataURL('image/jpeg', 0.95);
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p', 'pt', [rendered.width, rendered.height]);
-        pdf.addImage(imgData, 'JPEG', 0, 0, rendered.width, rendered.height);
-        pdf.save(`FC_VOLT_Top10_Shorts_${Date.now()}.pdf`);
-        showToast('Exported PDF!', '✅');
-      } catch (err) {
-        canvasEl.style.transform = prevTransform;
-        console.error(err);
-        showToast('PDF export failed!', '⚠️');
-      }
-    });
-
-    // Local Storage
-    function saveStorage() {
-      try {
-        localStorage.setItem('fcvolt_top10_shorts_v2', JSON.stringify(state));
-      } catch (e) {}
+    function changeZoom(delta) {
+      state.scale = Math.max(0.2, Math.min(1.5, state.scale + delta));
+      applyScale();
     }
 
-    function loadStorage() {
+    function resetZoom() {
+      adjustZoom();
+    }
+
+    window.addEventListener('resize', adjustZoom);
+
+    /* ========================================================
+       EXPORT FUNCTIONS
+       ======================================================== */
+    async function exportFullImage(fmt = 'png') {
+      const canvas = document.getElementById('shortsCanvas');
+      showToast("Generating Ultra HD image...");
+
+      const origTransform = canvas.style.transform;
+      canvas.style.transform = 'none';
+
       try {
-        const raw = localStorage.getItem('fcvolt_top10_shorts_v2');
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed.mainTitle) state.mainTitle = parsed.mainTitle;
-          if (parsed.subTitle) state.subTitle = parsed.subTitle;
-          if (parsed.theme) state.theme = parsed.theme;
-          if (Array.isArray(parsed.slots) && parsed.slots.length === 10) {
-            state.slots = parsed.slots;
-          }
-        }
-      } catch (e) {}
+        const rendered = await html2canvas(canvas, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: null,
+          logging: false
+        });
+
+        canvas.style.transform = origTransform;
+
+        const link = document.createElement('a');
+        const filename = state.mainTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_').slice(0, 30);
+        link.download = `${filename}_fc_volt.${fmt}`;
+        link.href = rendered.toDataURL(`image/${fmt}`, 0.98);
+        link.click();
+        showToast("Image exported successfully! 🎉");
+      } catch (err) {
+        canvas.style.transform = origTransform;
+        console.error(err);
+        showToast("Export failed: " + err.message);
+      }
+    }
+
+    async function exportCapCutOverlay() {
+      const canvas = document.getElementById('shortsCanvas');
+      showToast("Creating CapCut Transparent Overlay...");
+
+      const origTheme = canvas.getAttribute('data-theme');
+      const origTransform = canvas.style.transform;
+
+      // Temporarily set transparent
+      canvas.setAttribute('data-theme', 'transparent');
+      canvas.style.transform = 'none';
+
+      try {
+        const rendered = await html2canvas(canvas, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: null,
+          logging: false
+        });
+
+        canvas.setAttribute('data-theme', origTheme);
+        canvas.style.transform = origTransform;
+
+        const link = document.createElement('a');
+        link.download = `capcut_overlay_top10_${Date.now()}.png`;
+        link.href = rendered.toDataURL('image/png');
+        link.click();
+        showToast("🎬 CapCut Overlay PNG ready!");
+      } catch (err) {
+        canvas.setAttribute('data-theme', origTheme);
+        canvas.style.transform = origTransform;
+        console.error(err);
+        showToast("Overlay export failed: " + err.message);
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastMsg');
+      toast.textContent = msg;
+      toast.classList.add('is-active');
+      clearTimeout(window._toastTimeout);
+      window._toastTimeout = setTimeout(() => {
+        toast.classList.remove('is-active');
+      }, 3000);
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
       render();
-    }
-
-    loadStorage();
+    });
   </script>
-
 </body>
 </html>
