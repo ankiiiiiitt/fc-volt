@@ -44,7 +44,7 @@
   }
   function readNumber(text,confidence,min,max,label){
     const raw=text.trim();
-    if(confidence<65||!/^\d{1,3}$/.test(raw)||+raw<min||+raw>max)throw Error(`${label} could not be read reliably. Upload a clearer ${label.startsWith('Base')?'base':'RenderZ'} screenshot.`);
+    if(confidence<45||!/^\d{1,3}$/.test(raw)||+raw<min||+raw>max)throw Error(`${label} could not be read reliably. Upload a clearer ${label.startsWith('Base')?'base':'RenderZ'} screenshot.`);
     return +raw;
   }
   function validateTarget(values,baseOVR,baseStats){

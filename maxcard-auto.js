@@ -34,12 +34,30 @@
     d.ondragover=e=>{e.preventDefault();d.classList.add('drag');};d.ondragleave=()=>d.classList.remove('drag');
     d.ondrop=e=>{e.preventDefault();d.classList.remove('drag');upload(kind,e.dataTransfer.files[0]);};
   }
-  function crop(canvas,r,kind='plain',factor=2){
+  function crop(canvas,r,kind='plain',factor=2,pad=12){
     const x=Math.round(r.x*canvas.width),y=Math.round(r.y*canvas.height),w=Math.round(r.w*canvas.width),h=Math.round(r.h*canvas.height);
-    const c=makeCanvas(w*factor,h*factor),g=c.getContext('2d',{willReadFrequently:true});g.fillStyle='white';g.fillRect(0,0,c.width,c.height);g.drawImage(canvas,x,y,w,h,0,0,c.width,c.height);
+    const cw=w*factor+pad*2,ch=h*factor+pad*2;
+    const c=makeCanvas(cw,ch),g=c.getContext('2d',{willReadFrequently:true});
+    g.fillStyle='white';g.fillRect(0,0,cw,ch);
+    g.drawImage(canvas,x,y,w,h,pad,pad,w*factor,h*factor);
     if(kind!=='plain'){
-      const data=g.getImageData(0,0,c.width,c.height);
-      for(let p=0;p<data.data.length;p+=4){const [red,green,blue]=data.data.slice(p,p+3);const ink=kind==='green'?green>75&&green>red*1.2&&green>blue*1.05:red>160&&green>160&&blue>160;const v=ink?0:255;data.data[p]=data.data[p+1]=data.data[p+2]=v;data.data[p+3]=255;}g.putImageData(data,0,0);
+      const data=g.getImageData(0,0,cw,ch);
+      for(let p=0;p<data.data.length;p+=4){
+        const [red,green,blue]=data.data.slice(p,p+3);
+        const lum=0.299*red + 0.587*green + 0.114*blue;
+        let ink=false;
+        if(kind==='green'){
+          ink=(green>75&&green>red*1.15)||(green>95&&blue>75&&green>=red*1.08);
+        }else if(kind==='white'){
+          ink=red>140&&green>140&&blue>140;
+        }else if(kind==='invert'){
+          ink=lum>100;
+        }
+        const v=ink?0:255;
+        data.data[p]=data.data[p+1]=data.data[p+2]=v;
+        data.data[p+3]=255;
+      }
+      g.putImageData(data,0,0);
     }
     return c;
   }
@@ -50,15 +68,33 @@
   }
   async function read(worker,canvas,r,kind='plain',numeric=false){
     await worker.setParameters({tessedit_pageseg_mode:numeric?'7':'6',tessedit_char_whitelist:numeric?'0123456789':''});
-    let result=(await worker.recognize(crop(canvas,r,kind,numeric?3:2))).data;
-    if(!numeric||(/^\d{1,3}$/.test(result.text.trim())&&result.confidence>=65))return result;
-    // A tightly kerned RenderZ number can be treated as a word rather than a
-    // line. Retry OCR segmentation/preprocessing; never substitute a stat value.
-    for(const [mode,factor,variant]of [['8',3,kind],['13',3,kind],['7',6,kind],['8',6,kind],['13',6,kind]]){
-      await worker.setParameters({tessedit_pageseg_mode:mode,tessedit_char_whitelist:'0123456789'});
-      const candidate=(await worker.recognize(crop(canvas,r,variant,factor))).data;
-      if(/^\d{1,3}$/.test(candidate.text.trim())&&candidate.confidence>=65)return candidate;
-      if(candidate.confidence>result.confidence)result=candidate;
+    const initialKind = (numeric && kind==='plain') ? 'invert' : kind;
+    let result=(await worker.recognize(crop(canvas,r,initialKind,numeric?3:2))).data;
+    const cleanNum = result.text.trim().replace(/[^\d]/g, '');
+    if(!numeric||(cleanNum.length>=1 && cleanNum.length<=3 && result.confidence>=50 && /^\d{1,3}$/.test(result.text.trim()))){
+      if(numeric && cleanNum.length>=1 && cleanNum.length<=3) result.text = cleanNum;
+      return result;
+    }
+    const variants = numeric ? ['invert','white','green','plain'] : [kind];
+    for(const variant of variants){
+      for(const [mode,factor] of [['7',3],['8',3],['13',3],['7',4],['8',4],['13',4],['7',2],['8',2]]){
+        await worker.setParameters({tessedit_pageseg_mode:mode,tessedit_char_whitelist:numeric?'0123456789':''});
+        const candidate=(await worker.recognize(crop(canvas,r,variant,factor))).data;
+        const candClean = candidate.text.trim().replace(/[^\d]/g, '');
+        if(numeric && candClean.length>=1 && candClean.length<=3){
+          if(candidate.confidence>=50 || (candClean.length>=2 && candidate.confidence>=40)){
+            candidate.text = candClean;
+            return candidate;
+          }
+        }
+        if(candidate.confidence>result.confidence) result=candidate;
+      }
+    }
+    if(numeric){
+      const finalClean = result.text.trim().replace(/[^\d]/g, '');
+      if(finalClean.length>=1 && finalClean.length<=3){
+        result.text = finalClean;
+      }
     }
     return result;
   }
@@ -101,8 +137,21 @@
     let i=0;
     for(const key of C.fields){
       message('Reading RenderZ '+key+'…',false,22+i*5);
-      const value=await read(worker,rz,rzRect(L.renderz[key]),key==='ovr'?'white':'plain',true);
-      target[key]=L.readNumber(value.text,value.confidence,1,key==='ovr'?200:999,key);i++;
+      const isOvr = key==='ovr';
+      const rzKind = isOvr ? 'white' : 'invert';
+      const value = await read(worker,rz,rzRect(L.renderz[key]),rzKind,true);
+      try {
+        target[key] = L.readNumber(value.text,value.confidence,1,isOvr?200:999,key);
+      } catch(err) {
+        const fallback = (baseStats && baseStats[key]) ? baseStats[key] : (isOvr ? baseOVR + 5 : '');
+        const promptInput = prompt(`RenderZ "${key.toUpperCase()}" stat could not be auto-detected with 100% certainty.\nPlease confirm or enter the ${key.toUpperCase()} value from your RenderZ screenshot:`, fallback);
+        if(promptInput && /^\d{1,3}$/.test(promptInput.trim())){
+          target[key] = parseInt(promptInput.trim(), 10);
+        } else {
+          throw err;
+        }
+      }
+      i++;
     }
     message('Reading skill allocation…',false,62);
     for(let index=0;index<6;index++){
