@@ -44,3 +44,6 @@ Deploy `maxcard.html`, `maxcard-png.js`, `maxcard-auto.js`, `maxcard-auto.css`, 
 PNG and compression references: [W3C PNG specification](https://www.w3.org/TR/png/) and [WHATWG Compression Streams](https://compression.spec.whatwg.org/). These require a modern browser supporting CompressionStream/DecompressionStream. Full reference screenshots remain local test fixtures.
 
 Scaled and shifted landscape profile panels are located from the continuous neon stats border. All base OCR crops and output edit masks follow the detected transform, preserving padding and the bottom navigation. Yamal 2796×1290 and Gabriel references pass original, resized, and canvas privacy cases.
+
+## Editable OCR review
+After scanning, detected OVR, six stats and six skill allocations remain editable. Name mismatches and unreadable fields open review instead of blocking or inventing values. A failed OCR download can also fall back to manual entry once the profile geometry and RenderZ dimensions are validated. Correct fields and choose Generate preview; numeric ranges and a five-point allocation remain required. Editing invalidates the previous result and regenerates patches from the original pixels. The editable player name labels the result/download; the uploaded artwork name remains intact.

@@ -2,10 +2,10 @@
 (() => {
   'use strict';
   const $=id=>document.getElementById(id),L=MaxCardLayout,C=MaxCardCore;
-  const images={base:null,render:null},urls={},canvases={};let basePixels=null;let busy=false,outputURL=null,detected=null;
+  const images={base:null,render:null},urls={},canvases={};let basePixels=null;let busy=false,outputURL=null,detected=null,draft=null;
   const makeCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
   function message(text,error=false,progress){$('status').textContent=text;$('status').classList.toggle('error',error);if(progress!==undefined)$('progress').value=progress;}
-  function resetResult(){if(outputURL)URL.revokeObjectURL(outputURL);outputURL=null;detected=null;$('result').hidden=true;$('retry').hidden=true;}
+  function resetResult(){$('review').hidden=true;draft=null;if(outputURL)URL.revokeObjectURL(outputURL);outputURL=null;detected=null;$('result').hidden=true;$('retry').hidden=true;}
   async function upload(kind,file){
     if(busy||!file)return;
     resetResult();
@@ -121,48 +121,70 @@
     return best;
   }
   const rzRect=r=>L.normalize(r,2048,2048);
-  async function analyze(worker){
-    const base=canvases.base,rz=canvases.render;
-    const transform=L.detectProfile(basePixels.data,base.width,base.height),area=r=>L.map(r,transform);
-    if(rz.width<1600||rz.height<1600)throw Error('Use the full-resolution RenderZ export (at least 1600 × 1600). Small screenshots can lose a leading stat digit.');
-    if(Math.abs(rz.width/rz.height-1)>.025)throw Error('Use the full square RenderZ export with all six attributes and skill levels visible.');
+  function prepareDraft(){
+    const rz=canvases.render,transform=L.detectProfile(basePixels.data,canvases.base.width,canvases.base.height);
+    if(rz.width<1600||rz.height<1600)throw Error('Use a full-resolution RenderZ export (at least 1600 × 1600).');
+    if(Math.abs(rz.width/rz.height-1)>.025)throw Error('Use the full square RenderZ export.');
+    return {transform,name:'',allocation:Array(6).fill(null),skillNames:['Primary skill','Scoring','Passing','Dribbling','Defending','Physical'],warnings:[],...Object.fromEntries(C.fields.map(k=>[k,null]))};
+  }
+  async function analyze(worker,target){
+    const base=canvases.base,rz=canvases.render,area=r=>L.map(r,target.transform);
+    const safe=async(fn,fallback,label)=>{try{return await fn();}catch(e){target.warnings.push(label+' could not be read. Please check it below.');return fallback;}};
+    const number=async(canvas,r,kind,min,max,label)=>{const v=await read(worker,canvas,r,kind,true);return L.readNumber(v.text,v.confidence,min,max,label);};
     message('Recognizing your player profile…',false,12);
-    const stats=await read(worker,base,area([1180,569,1537,59]));
-    const lower=await read(worker,base,area([785,702,1949,265]));
-    const skillsHeading=await read(worker,base,area([1798,899,220,66]),'white');
-    L.checkAnchors(stats.text,lower.text+' '+skillsHeading.text);
-    const baseOVRData=await read(worker,base,area(L.areas.cardOVR),'white',true);
-    const baseOVR=L.readNumber(baseOVRData.text,baseOVRData.confidence,1,195,'Base OVR');
-    const baseStats={};
-    for(const key of C.stats){const value=await read(worker,base,area(L.areas[key]),'plain',true);baseStats[key]=L.readNumber(value.text,value.confidence,1,999,'Base '+key);}
-    const baseName=await read(worker,base,area([780,76,1350,118]));
-    const targetName=await read(worker,rz,rzRect(L.renderz.name));
-    if(!L.samePlayer(baseName.text,targetName.text))throw Error('The player names could not be matched. Upload the full base and RenderZ screenshots for the same player.');
-    const target={transform,name:baseName.text.trim().replace(/\s+/g,' '),allocation:[]};
+    const baseOVR=await safe(()=>number(base,area(L.areas.cardOVR),'white',1,195,'Base OVR'),null,'Base OVR');
+    const baseName=await safe(()=>read(worker,base,area([780,76,1350,118])),{text:''},'Base name');
+    const targetName=await safe(()=>read(worker,rz,rzRect(L.renderz.name)),{text:''},'RenderZ name');
+    target.name=(baseName.text||targetName.text).trim().replace(/\s+/g,' ');
+    target.baseName=baseName.text.trim();target.renderName=targetName.text.trim();
+    if(!L.samePlayer(baseName.text,targetName.text))target.warnings.push('Player names did not match automatically. Check that these screenshots belong to the same player before generating.');
     let i=0;
     for(const key of C.fields){
-      message('Reading RenderZ '+key+'…',false,22+i*5);
-      const isOvr = key==='ovr';
-      const rzKind = isOvr ? 'white' : 'plain';
-      const [rx,ry,rw,rh]=L.renderz[key];
-      const value = await read(worker,rz,rzRect(isOvr?L.renderz[key]:[rx-12,ry-14,rw+24,rh+24]),rzKind,true);
-      target[key]=L.readNumber(value.text,value.confidence,1,isOvr?200:999,key);
-      i++;
+      message('Reading RenderZ '+key+'…',false,22+i++*5);
+      const [x,y,w,h]=L.renderz[key],isOVR=key==='ovr';
+      target[key]=await safe(()=>number(rz,rzRect(isOVR?L.renderz[key]:[x-12,y-14,w+24,h+24]),isOVR?'white':'plain',1,isOVR?200:999,key),null,key.toUpperCase());
     }
+    if(baseOVR&&target.ovr&&target.ovr!==baseOVR+5)target.warnings.push('The detected OVR is not base OVR +5. Check the target OVR.');
     message('Reading skill allocation…',false,62);
     for(let index=0;index<6;index++){
       const r=rzRect([850+203.5*index,354,95,36]),c=crop(rz,r,'plain',1),data=c.getContext('2d').getImageData(0,0,c.width,c.height).data;
       let teal=0;for(let p=0;p<data.length;p+=4)if(data[p]<70&&data[p+1]>115&&data[p+2]>60&&data[p+1]>data[p]*1.8)teal++;
-      if(teal/(data.length/4)<.22){target.allocation.push(0);continue;}
-      const level=await readSkillDigit(worker,rz,r);
-      target.allocation.push(L.readNumber(level.text,level.confidence,1,3,'Skill level'));
+      if(teal/(data.length/4)<.22){target.allocation[index]=0;continue;}
+      target.allocation[index]=await safe(async()=>{const v=await readSkillDigit(worker,rz,r);return L.readNumber(v.text,v.confidence,1,3,'Skill level');},null,'Skill '+(index+1));
     }
-    const category=await read(worker,rz,rzRect([770,458,175,42]),'invert');
+    const category=await safe(()=>read(worker,rz,rzRect([770,458,175,42]),'invert'),{text:'',confidence:0},'Primary skill label');
     const categoryName=category.text.replace(/[^A-Za-z -]/g,'').trim();
-    if(category.confidence<65||categoryName.length<3)throw Error('The first skill category could not be read. Use the full, clear RenderZ export.');
-    target.skillNames=[categoryName,'Scoring','Passing','Dribbling','Defending','Physical'];
-    return L.validateTarget(target,baseOVR,baseStats);
+    if(category.confidence>=65&&categoryName.length>=3)target.skillNames[0]=categoryName;
+    if(target.allocation.some(n=>n===null)||target.allocation.reduce((a,b)=>a+(b||0),0)!==5)target.warnings.push('Check the skill allocation. The total must be five points.');
+    return target;
   }
+  function showReview(target){
+    draft=target;$('review').hidden=false;
+    $('reviewWarnings').replaceChildren();target.warnings.forEach(text=>{const p=document.createElement('p');p.textContent=text;$('reviewWarnings').append(p);});
+    $('reviewNames').textContent=target.baseName||target.renderName?`Base: ${target.baseName||'Not read'} · RenderZ: ${target.renderName||'Not read'}`:'';
+    $('reviewName').value=target.name;
+    $('reviewStats').replaceChildren();$('reviewSkills').replaceChildren();
+    for(const key of C.fields){const label=document.createElement('label');label.textContent=key.toUpperCase();const input=document.createElement('input');input.id='edit-'+key;input.type='number';input.min=1;input.max=key==='ovr'?200:999;input.step=1;input.required=true;input.value=target[key]??'';label.append(input);$('reviewStats').append(label);}
+    target.skillNames.forEach((name,i)=>{const label=document.createElement('label');label.textContent=name;const input=document.createElement('input');input.id='edit-skill-'+i;input.type='number';input.min=0;input.max=3;input.step=1;input.required=true;input.value=target.allocation[i]??'';label.append(input);$('reviewSkills').append(label);});
+    $('reviewError').textContent='';updateSkillTotal();
+  }
+  function updateSkillTotal(){const inputs=[...$('reviewSkills').querySelectorAll('input')],sum=inputs.reduce((a,b)=>a+(+b.value||0),0);$('skillTotal').textContent=`${sum} / 5 skill points`;$('skillTotal').classList.toggle('review-invalid',sum!==5||inputs.some(n=>n.value===''));}
+  function reviewedTarget(){
+    const target={...draft,name:$('reviewName').value.trim(),allocation:[]};
+    for(const key of C.fields)target[key]=Number($('edit-'+key).value);
+    for(let i=0;i<6;i++)target.allocation.push(Number($('edit-skill-'+i).value));
+    // Manual review replaces uncertain OCR comparisons; retain numeric and allocation validation.
+    return L.validateTarget(target,target.ovr-5);
+  }
+  $('reviewForm').oninput=()=>{
+    updateSkillTotal();if(outputURL)URL.revokeObjectURL(outputURL);outputURL=null;detected=null;$('result').hidden=true;$('reviewError').textContent='';message('Values changed. Click Generate preview to apply them.');
+  };
+  $('reviewForm').onsubmit=async e=>{
+    e.preventDefault();if(busy||!draft)return;
+    try{const target=reviewedTarget();busy=true;$('reviewFields').disabled=true;$('baseFile').disabled=$('renderFile').disabled=true;message('Applying your values…',false,82);await document.fonts.ready;await present(target,performance.now());}
+    catch(e){$('reviewError').textContent=e.message;}
+    finally{busy=false;$('reviewFields').disabled=false;$('baseFile').disabled=$('renderFile').disabled=false;}
+  };
   function clearArea(source,out,r){
     // The supported UI places clean background above and below each number.
     // Interpolate vertically so adjacent number strokes never smear across a row.
@@ -215,22 +237,27 @@
     C.assertPreserved(original.data,decoded.data,w,h,Object.values(regions));
     return {blob,regions};
   }
+  async function present(target,started){
+    const {blob}=await composite(target);outputURL=URL.createObjectURL(blob);detected=target;
+    $('before').src=urls.base;$('after').src=outputURL;$('compare').value=50;$('before').style.clipPath='inset(0 50% 0 0)';
+    $('summary').textContent=`${target.name} · ${target.ovr} OVR · Training 30/30 · Five ranks · Ready in ${((performance.now()-started)/1000).toFixed(1)}s`;
+    $('verification').textContent=`Verified ${images.base.width} × ${images.base.height} PNG · 0 changed pixels outside the detected upgrade regions.`;
+    $('detected').replaceChildren();const list=document.createElement('div');list.className='auto-readout';for(const k of C.fields){const item=document.createElement('div');item.textContent=k.toUpperCase();const n=document.createElement('strong');n.textContent=target[k];item.append(n);list.append(item);}$('detected').append(list);
+    const skills=document.createElement('p');skills.className='muted';skills.textContent=target.allocation.map((n,i)=>n?`${target.skillNames[i]} +${n}`:'').filter(Boolean).join(' · ');$('detected').append(skills);
+    $('result').hidden=false;message('Done. Your max card is ready to download.',false,100);$('result').scrollIntoView({behavior:'smooth',block:'start'});
+  }
   async function run(){
     if(busy||!images.base||!images.render)return;busy=true;resetResult();$('baseFile').disabled=$('renderFile').disabled=true;$('progress').hidden=false;const started=performance.now();let worker;
     try{
-      message('Loading automatic scanner…',false,3);await loadEngine();worker=await Tesseract.createWorker('eng');
-      const target=await analyze(worker);await worker.terminate();worker=null;message('Building your max card…',false,82);await document.fonts.ready;
-      const {blob}=await composite(target);outputURL=URL.createObjectURL(blob);detected=target;
-      $('before').src=urls.base;$('after').src=outputURL;$('compare').value=50;$('before').style.clipPath='inset(0 50% 0 0)';
-      $('summary').textContent=`${target.name} · ${target.ovr} OVR · Training 30/30 · Five ranks · Ready in ${((performance.now()-started)/1000).toFixed(1)}s`;
-      $('verification').textContent=`Verified ${images.base.width} × ${images.base.height} PNG · 0 changed pixels outside the detected upgrade regions.`;
-      $('detected').replaceChildren();const list=document.createElement('div');list.className='auto-readout';for(const k of C.fields){const item=document.createElement('div');item.textContent=k.toUpperCase();const n=document.createElement('strong');n.textContent=target[k];item.append(n);list.append(item);}$('detected').append(list);
-      const skills=document.createElement('p');skills.className='muted';skills.textContent=target.allocation.map((n,i)=>n?`${target.skillNames[i]} +${n}`:'').filter(Boolean).join(' · ');$('detected').append(skills);
-      $('result').hidden=false;message('Done. Your max card is ready to download.',false,100);$('result').scrollIntoView({behavior:'smooth',block:'start'});
-    }catch(e){message(e.message,true);$('retry').hidden=false;}
+      draft=prepareDraft();message('Loading automatic scanner…',false,3);await loadEngine();worker=await Tesseract.createWorker('eng');
+      const target=await analyze(worker,draft);await worker.terminate();worker=null;showReview(target);
+      if(target.warnings.length){message('Reading complete. Review the highlighted issues, then generate your preview.');$('review').scrollIntoView({behavior:'smooth',block:'start'});return;}
+      message('Building your max card…',false,82);await document.fonts.ready;await present(target,started);
+    }catch(e){if(draft){draft.warnings.push('Automatic reading stopped: '+e.message+' You can enter or correct values below.');showReview(draft);message('Review or enter the missing values below.');}else message(e.message,true);$('retry').hidden=false;}
     finally{if(worker)await worker.terminate();busy=false;$('baseFile').disabled=$('renderFile').disabled=false;$('progress').hidden=true;}
   }
   $('retry').onclick=run;
+  $('editValues').onclick=()=>$('review').scrollIntoView({behavior:'smooth',block:'start'});
   $('download').onclick=()=>{if(!outputURL)return;const a=document.createElement('a');a.href=outputURL;a.download=(detected.name||'player').replace(/[^\p{L}\p{N}_-]+/gu,'-')+'-max-fan-preview.png';a.click();};
   $('compare').oninput=()=>{$('before').style.clipPath=`inset(0 ${100-$('compare').value}% 0 0)`;};
 })();

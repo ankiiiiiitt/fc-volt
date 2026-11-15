@@ -1,0 +1,24 @@
+<!doctype html><html><meta charset="utf-8"><title>Max Card correction checks</title><style>body{font:14px Arial;background:#0b1119;color:white}pre{white-space:pre-wrap}iframe{width:100%;height:1300px}</style><button id="run">Test manual corrections</button><pre id="log">Ready</pre><iframe id="app" src="../maxcard.html?review1"></iframe><script>
+const frame=document.getElementById('app'),log=document.getElementById('log');
+const wait=async f=>{for(let i=0;i<900;i++){if(f())return;await new Promise(r=>setTimeout(r,100));}throw Error('Timed out');};
+const assert=(v,s)=>{if(!v)throw Error(s);};
+function upload(w,id,file){const dt=new w.DataTransfer();dt.items.add(file);const input=w.document.getElementById(id);input.files=dt.files;input.dispatchEvent(new w.Event('change',{bubbles:true}));}
+function edit(w,id,value){const input=w.document.getElementById(id);input.value=value;input.dispatchEvent(new w.Event('input',{bubbles:true}));}
+document.getElementById('run').onclick=async()=>{log.textContent='Running…';try{
+ const w=frame.contentWindow,d=w.document,$=id=>d.getElementById(id);await wait(()=>w.MaxCardLayout);
+ const base=await(await fetch('/__fixtures__/base.png')).blob(),rz=await(await fetch('/__fixtures__/renderz.webp')).blob();
+ w.MaxCardLayout.samePlayer=()=>false;const number=w.MaxCardLayout.readNumber;w.MaxCardLayout.readNumber=(text,c,min,max,label)=>{if(label==='pacing')throw Error('Simulated unreadable pace');return number(text,c,min,max,label);};
+ upload(w,'baseFile',new w.File([base],'base.png',{type:'image/png'}));await wait(()=>$('baseInfo').textContent.includes('Added'));upload(w,'renderFile',new w.File([rz],'rz.webp',{type:'image/webp'}));
+ await wait(()=>!$('review').hidden&&!$('baseFile').disabled);
+ assert($('reviewWarnings').textContent.includes('names did not match'),'Name mismatch blocked review');assert($('edit-pacing').value==='','Unreadable value was invented');assert($('edit-shooting').value==='137','Successful OCR value lost');assert($('result').hidden,'Unreviewed mismatch generated a card');
+ edit(w,'reviewName','Gabriel reviewed');edit(w,'edit-pacing','180');edit(w,'edit-ovr','128');
+ edit(w,'edit-skill-0','3');$('reviewForm').requestSubmit();await wait(()=>$('reviewError').textContent);assert($('reviewError').textContent.includes('five-point'),'Invalid skill total accepted');
+ edit(w,'edit-skill-0','2');$('reviewForm').requestSubmit();await wait(()=>!$('result').hidden&&!$('reviewFields').disabled);
+ assert($('summary').textContent.includes('128 OVR'),'Manual OVR not applied');assert($('summary').textContent.includes('Gabriel reviewed'),'Manual name not applied');const readout=[...d.querySelectorAll('.auto-readout strong')].map(n=>+n.textContent);assert(readout[1]===180,'Manual pace not applied');
+ const first=await(await fetch($('after').src)).arrayBuffer(),output=await w.MaxCardPNG.decode(first),source=await w.MaxCardPNG.decode(await base.arrayBuffer());
+ w.MaxCardCore.assertPreserved(source.data,output.data,source.width,source.height,Object.values(w.MaxCardLayout.regions([2,1,0,0,1,1],w.MaxCardLayout.detectProfile(source.data,source.width,source.height))));
+ edit(w,'edit-pacing','181');assert($('result').hidden,'Stale download remained after editing');$('reviewForm').requestSubmit();await wait(()=>!$('result').hidden&&!$('reviewFields').disabled);assert([...d.querySelectorAll('.auto-readout strong')][1].textContent==='181','Second edit not applied');
+ let download;const click=w.HTMLAnchorElement.prototype.click;w.HTMLAnchorElement.prototype.click=function(){download=this.href;};$('download').click();w.HTMLAnchorElement.prototype.click=click;assert(download=== $('after').src,'Download does not match edited preview');
+ log.textContent='PASS: name mismatch opens review; unreadable field blank; successful readings retained; manual name, OVR and pace applied; invalid skill total rejected; source pixels preserved; re-edit invalidates old result; PNG download matches corrected preview.\nALL CHECKS PASSED';
+ }catch(e){log.textContent+='\nFAIL: '+e.message;}};
+</script></html>

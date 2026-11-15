@@ -26,7 +26,7 @@ document.getElementById('run').onclick=async()=>{
    if(location.search.includes('cruyff'))assert($('detected').textContent.includes('Shadow Striker +2')&&$('detected').textContent.includes('Passing +1')&&$('detected').textContent.includes('Dribbling +1'),'Wrong Cruyff allocation');
    const check=w.MaxCardCore.assertPreserved(source.data,output.data,source.width,source.height,Object.values(w.MaxCardLayout.regions((location.search.includes('yamal')||location.search.includes('cruyff'))?[2,1,1,1,0,0]:[2,1,0,0,1,1],w.MaxCardLayout.detectProfile(source.data,source.width,source.height))));assert(check.changed>0,'No edits made');
    assert(JSON.stringify(source.metadata.map(m=>[m.type,[...m.data]]))===JSON.stringify(output.metadata.map(m=>[m.type,[...m.data]])),'Color profile changed');
-   assert(d.querySelectorAll('input[type=number],input[type=checkbox]').length===0,'Manual confirmation required');
+   assert(d.querySelectorAll('#review input[type=number]').length===13,'Editable stats and skills unavailable');
    result.textContent+=`\nPASS ${mode} real screenshots: ${output.width}×${output.height}, OVR ${numbers[0]}, all six stats and detected skills, 0 outside-mask pixel changes, no manual input.`;
 
   }
