@@ -42,3 +42,5 @@ The old manual-workflow test page points at `maxcard-manual.html`. Synthetic tes
 Deploy `maxcard.html`, `maxcard-png.js`, `maxcard-auto.js`, `maxcard-auto.css`, `maxcard-layout.js`, `maxcard-core.js`, existing shared styles/scripts and `assets/maxcard/{level30,rank-orange}.png`. Keep old manual-editor files available if its URL should continue working.
 
 PNG and compression references: [W3C PNG specification](https://www.w3.org/TR/png/) and [WHATWG Compression Streams](https://compression.spec.whatwg.org/). These require a modern browser supporting CompressionStream/DecompressionStream. Full reference screenshots remain local test fixtures.
+
+Scaled and shifted landscape profile panels are located from the continuous neon stats border. All base OCR crops and output edit masks follow the detected transform, preserving padding and the bottom navigation. Yamal 2796×1290 and Gabriel references pass original, resized, and canvas privacy cases.

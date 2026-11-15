@@ -16,9 +16,24 @@
     dribbling:[791,1214,104,65],defending:[1196,1214,104,65],physical:[1599,1214,104,65],
     name:[991,163,955,76],skills:[765,332,1199,190]
   };
-  function regions(allocation){
-    const result=Object.fromEntries(Object.entries(areas).map(([id,r])=>[id,normalize(r)]));
-    allocation.forEach((points,i)=>{if(points>0)result['skill'+i]=normalize([1808+130*i,978,124,139]);});
+  function detectProfile(data,width,height){
+    const neon=(x,y)=>{const p=(y*width+x)*4,r=data[p],g=data[p+1],b=data[p+2];return Math.max(g,b)>130&&Math.max(r,g,b)-Math.min(r,g,b)>65&&(g>r*1.4||b>g*1.4||(r>150&&b>130&&g<r*.8));};
+    const rows=[];
+    for(let y=Math.floor(height*.18);y<height*.65;y++){let count=0;for(let x=Math.floor(width*.26);x<width*.99;x++)if(neon(x,y))count++;if(count>width*.35)rows.push(y);}
+    const groups=[];for(const y of rows){if(!groups.length||y-groups.at(-1).at(-1)>3)groups.push([]);groups.at(-1).push(y);}
+    for(let i=0;i<groups.length;i++)for(let j=i+1;j<groups.length;j++){
+      const top=groups[i][0],bottom=groups[j].at(-1),ph=bottom-top;if(ph<height*.12||ph>height*.35)continue;
+      const columns=[];for(let x=Math.floor(width*.26);x<width*.99;x++){let n=0;for(let y=top+10;y<bottom-10;y++)if(neon(x,y))n++;if(n>(ph-20)*.75)columns.push(x);}
+      if(!columns.length)continue;const left=columns[0],right=columns.at(-1),sx=(right-left)/1940,sy=ph/316;
+      if(Math.abs(sx/sy-1)>.035)continue;
+      return {sx,sy,dx:left-790*sx,dy:top-358*sy,width,height};
+    }
+    throw Error('Could not locate the full player stats panel. Keep the card, all six stats, training and skills visible.');
+  }
+  function map(r,t){return t?normalize([r[0]*t.sx+t.dx,r[1]*t.sy+t.dy,r[2]*t.sx,r[3]*t.sy],t.width,t.height):normalize(r);}
+  function regions(allocation,transform){
+    const result=Object.fromEntries(Object.entries(areas).map(([id,r])=>[id,map(r,transform)]));
+    allocation.forEach((points,i)=>{if(points>0)result['skill'+i]=map([1808+130*i,978,124,139],transform);});
     return result;
   }
   function sizeMatches(w,h){return Math.abs((w/h)/(reference.width/reference.height)-1)<.015;}
@@ -43,6 +58,6 @@
     const tokens=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().match(/[A-Z]{3,}/g)||[];
     const a=tokens(baseName),b=tokens(targetName);return a.length>0&&a.some(t=>b.includes(t));
   }
-  const api={reference,normalize,areas,renderz,skills,regions,sizeMatches,checkAnchors,readNumber,validateTarget,samePlayer};
+  const api={reference,normalize,map,detectProfile,areas,renderz,skills,regions,sizeMatches,checkAnchors,readNumber,validateTarget,samePlayer};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.MaxCardLayout=api;
 })(globalThis);

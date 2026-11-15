@@ -27,3 +27,12 @@ test('automatic edit masks exclude the protected PlayStyles and stars panels',()
  const protectedAreas=[{x:.28,y:.69,w:.34,h:.28},{x:.01,y:.70,w:.24,h:.17},{x:.115,y:.19,w:.095,h:.28}];
  for(const mask of Object.values(r))for(const p of protectedAreas)assert(!(mask.x<p.x+p.w&&mask.x+mask.w>p.x&&mask.y<p.y+p.h&&mask.y+mask.h>p.y),'mask overlaps protected area');
 });
+test('detects translated and scaled panels without assuming screenshot aspect',()=>{
+ const width=1400,height=650,data=new Uint8ClampedArray(width*height*4);
+ const left=450,top=202,right=1240,bottom=331;
+ const ink=(x,y)=>{const p=(y*width+x)*4;data[p+1]=220;data[p+2]=180;data[p+3]=255;};
+ for(let x=left;x<=right;x++){ink(x,top);ink(x,bottom);}for(let y=top;y<=bottom;y++){ink(left,y);ink(right,y);}
+ const t=L.detectProfile(data,width,height),r=L.map(L.areas.cardOVR,t);
+ assert(Math.abs(r.x*width-213)<2);assert(Math.abs(r.y*height-119)<2);
+ assert.throws(()=>L.detectProfile(new Uint8Array(data.length),width,height));
+});

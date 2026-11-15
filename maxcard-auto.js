@@ -82,22 +82,22 @@
   const rzRect=r=>L.normalize(r,2048,2048);
   async function analyze(worker){
     const base=canvases.base,rz=canvases.render;
-    if(!L.sizeMatches(base.width,base.height))throw Error('Use the full landscape FC Mobile Player Profile layout. Cropped screenshots and other layouts are not supported yet.');
+    const transform=L.detectProfile(basePixels.data,base.width,base.height),area=r=>L.map(r,transform);
     if(rz.width<1600||rz.height<1600)throw Error('Use the full-resolution RenderZ export (at least 1600 × 1600). Small screenshots can lose a leading stat digit.');
     if(Math.abs(rz.width/rz.height-1)>.025)throw Error('Use the full square RenderZ export with all six attributes and skill levels visible.');
     message('Recognizing your player profile…',false,12);
-    const stats=await read(worker,base,{x:.421,y:.446,w:.548,h:.046});
-    const lower=await read(worker,base,{x:.28,y:.55,w:.695,h:.208});
-    const skillsHeading=await read(worker,base,L.normalize([1798,899,220,66]),'white');
+    const stats=await read(worker,base,area([1180,569,1537,59]));
+    const lower=await read(worker,base,area([785,702,1949,265]));
+    const skillsHeading=await read(worker,base,area([1798,899,220,66]),'white');
     L.checkAnchors(stats.text,lower.text+' '+skillsHeading.text);
-    const baseOVRData=await read(worker,base,L.normalize(L.areas.cardOVR),'white',true);
+    const baseOVRData=await read(worker,base,area(L.areas.cardOVR),'white',true);
     const baseOVR=L.readNumber(baseOVRData.text,baseOVRData.confidence,1,195,'Base OVR');
     const baseStats={};
-    for(const key of C.stats){const value=await read(worker,base,L.normalize(L.areas[key]),'plain',true);baseStats[key]=L.readNumber(value.text,value.confidence,1,999,'Base '+key);}
-    const baseName=await read(worker,base,{x:.28,y:.07,w:.26,h:.075});
+    for(const key of C.stats){const value=await read(worker,base,area(L.areas[key]),'plain',true);baseStats[key]=L.readNumber(value.text,value.confidence,1,999,'Base '+key);}
+    const baseName=await read(worker,base,area([780,76,1350,118]));
     const targetName=await read(worker,rz,rzRect(L.renderz.name));
     if(!L.samePlayer(baseName.text,targetName.text))throw Error('The player names could not be matched. Upload the full base and RenderZ screenshots for the same player.');
-    const target={name:baseName.text.trim().replace(/\s+/g,' '),allocation:[]};
+    const target={transform,name:baseName.text.trim().replace(/\s+/g,' '),allocation:[]};
     let i=0;
     for(const key of C.fields){
       message('Reading RenderZ '+key+'…',false,22+i*5);
@@ -144,7 +144,7 @@
   }
   async function loadAsset(path){const image=new Image();image.src=path;await image.decode();return image;}
   async function composite(target){
-    const source=canvases.base,w=source.width,h=source.height,out=makeCanvas(w,h),g=out.getContext('2d',{willReadFrequently:true}),original=basePixels,regions=L.regions(target.allocation);
+    const source=canvases.base,w=source.width,h=source.height,out=makeCanvas(w,h),g=out.getContext('2d',{willReadFrequently:true}),original=basePixels,regions=L.regions(target.allocation,target.transform);
     g.putImageData(new ImageData(new Uint8ClampedArray(original.data),w,h),0,0);
     const [badge,diamond]=await Promise.all([loadAsset('assets/maxcard/level30.png'),loadAsset('assets/maxcard/rank-orange.png')]);
     for(const id of ['cardOVR','panelOVR',...C.stats])bounded(g,regions[id],w,h,p=>{clearArea(source,out,regions[id]);writeNumber(g,target[id==='cardOVR'||id==='panelOVR'?'ovr':id],p,C.stats.includes(id)?'#00c72c':'#ffffff');});
