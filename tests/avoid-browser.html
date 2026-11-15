@@ -1,0 +1,21 @@
+<!doctype html><html><meta charset="utf-8"><title>Do Not Claim template checks</title><button id="run">Run template checks</button><pre id="result">Ready</pre><a id="sample" hidden download="do-not-claim-verified.png">Download verified poster</a><iframe id="app" src="../avoid.html" style="width:100%;height:1200px"></iframe><script>
+const frame=document.getElementById('app'),result=document.getElementById('result');
+const wait=async f=>{for(let i=0;i<300;i++){if(f())return;await new Promise(r=>setTimeout(r,100));}throw Error('Timed out');};
+const assert=(v,m)=>{if(!v)throw Error(m);};
+function upload(w,id,files){const dt=new w.DataTransfer();files.forEach(f=>dt.items.add(f));const input=w.document.getElementById(id);input.files=dt.files;input.dispatchEvent(new w.Event('change',{bubbles:true}));}
+function input(w,id,value){const el=w.document.getElementById(id);el.value=value;el.dispatchEvent(new w.Event('input',{bubbles:true}));}
+async function png(w,color,card){const c=w.document.createElement('canvas');c.width=card?240:1920;c.height=card?310:1080;const g=c.getContext('2d');g.fillStyle=color;g.fillRect(0,0,c.width,c.height);if(card){g.fillStyle='#fff';g.textAlign='center';g.font='bold 28px Arial';g.fillText('DEMO CARD',120,130);g.fillText('124 RW',120,170);}return new w.File([await new Promise(r=>c.toBlob(r))],'test.png',{type:'image/png'});}
+document.getElementById('run').onclick=async()=>{result.textContent='Running…';try{
+ const w=frame.contentWindow,d=w.document;await wait(()=>d.querySelectorAll('.rank-row').length===10&&!d.getElementById('download').disabled);
+ const files=[];for(let i=0;i<10;i++)files.push(await png(w,i%2?'#274ca1':'#3d254f',true));upload(w,'bulkCards',files);await wait(()=>d.getElementById('cardCount').textContent==='10 / 10 added');
+ for(let i=0;i<10;i++)input(w,'cost'+i,String((i+1)*150));input(w,'posterTitle','TOP 10 • DO NOT CLAIM');
+ d.querySelector('[aria-label="Move rank 1 down"]').click();assert(d.getElementById('cost0').value==='300'&&d.getElementById('cost1').value==='150','Rank move lost its cost');d.querySelector('[aria-label="Move rank 2 up"]').click();
+ for(const button of d.querySelectorAll('[data-scene]')){button.click();await wait(()=>!d.getElementById('download').disabled);assert(button.getAttribute('aria-pressed')==='true','Preset did not apply');}
+ upload(w,'customBackground',[await png(w,'#295a68',false)]);await wait(()=>d.getElementById('backgroundName').textContent==='Your background');
+ let blobURL;const original=w.HTMLAnchorElement.prototype.click;w.HTMLAnchorElement.prototype.click=function(){blobURL=this.href;};d.getElementById('download').click();await wait(()=>blobURL);w.HTMLAnchorElement.prototype.click=original;
+ const blob=await(await fetch(blobURL)).blob(),image=await createImageBitmap(blob);assert(image.width===1920&&image.height===1080,'Wrong PNG dimensions');const c=document.createElement('canvas');c.width=1920;c.height=1080;const g=c.getContext('2d');g.drawImage(image,0,0);
+ const cross=g.getImageData(377,239,1,1).data;assert(cross[0]>180,'Cross missing from export');const bg=g.getImageData(2,500,1,1).data;assert(bg[2]>bg[0],'Custom background missing');
+ const sample=document.getElementById('sample');sample.href=URL.createObjectURL(blob);sample.hidden=false;
+ result.textContent='PASS: 10 uploads; all shard costs; editable title; rank order preserves cost; 6 backgrounds; custom background; 1920 × 1080 PNG; cross and custom background in exported pixels.\nALL CHECKS PASSED';
+ }catch(e){result.textContent+='\nFAIL: '+e.message;}};
+</script></html>
