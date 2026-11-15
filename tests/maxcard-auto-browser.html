@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><title>Automatic Max Card reference test</title><style>body{background:#08111b;color:#d9ffe8;font:14px monospace}iframe{width:100%;height:900px;border:1px solid #234}pre{white-space:pre-wrap}</style><h1>Automatic Max Card — real Gabriel references</h1><p>Requires a localhost fixture server exposing /__fixtures__/base.png and renderz.webp. Full reference images are not included in the repository.</p><button id="run">Test automatic generation</button><pre id="result">Ready</pre><a id="sample" hidden download="Gabriel-auto-preview.png">Download generated reference PNG</a><iframe id="app" src="../maxcard.html"></iframe>
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Automatic Max Card reference test</title><style>body{background:#08111b;color:#d9ffe8;font:14px monospace}iframe{width:100%;height:900px;border:1px solid #234}pre{white-space:pre-wrap}</style><h1>Automatic Max Card — real player references</h1><p>Requires a localhost fixture server exposing /__fixtures__/base.png and renderz.webp. Full reference images are not included in the repository.</p><button id="run">Test automatic generation</button><pre id="result">Ready</pre><a id="sample" hidden download="Gabriel-auto-preview.png">Download generated reference PNG</a><iframe id="app" src="../maxcard.html?skills11"></iframe>
 <script>
 const frame=document.getElementById('app'),result=document.getElementById('result');
 const wait=async fn=>{for(let i=0;i<1500;i++){if(fn())return;await new Promise(r=>setTimeout(r,100));}throw Error('Timed out');};
@@ -8,28 +8,30 @@ async function resize(blob,width){const image=await createImageBitmap(blob),canv
 document.getElementById('run').onclick=async()=>{
  result.textContent='Reading the supplied references…';const started=performance.now();
  try{
-  const base=await fetch('/__fixtures__/'+(location.search.includes('yamal')?'yamal.png':'base.png')),renderz=await fetch('/__fixtures__/'+(location.search.includes('yamal')?'yamal.webp':'renderz.webp'));assert(base.ok&&renderz.ok,'Fixture server not available');
+  const base=await fetch('/__fixtures__/'+(location.search.includes('cruyff')?'cruyff.png':location.search.includes('yamal')?'yamal.png':'base.png')),renderz=await fetch('/__fixtures__/'+(location.search.includes('cruyff')?'cruyff.webp':location.search.includes('yamal')?'yamal.webp':'renderz.webp'));assert(base.ok&&renderz.ok,'Fixture server not available');
   const originalBase=await base.blob(),originalRenderz=await renderz.blob();
   for(const mode of ['original','resized','privacy']){
    const scaled=mode==='resized';
-   if(mode!=='original'){const loaded=new Promise(resolve=>frame.onload=resolve);frame.src='../maxcard.html?test='+mode;await loaded;}
+   if(mode!=='original'){const loaded=new Promise(resolve=>frame.onload=resolve);frame.src='../maxcard.html?skills11&test='+mode;await loaded;}
    await wait(()=>frame.contentWindow.MaxCardLayout);const w=frame.contentWindow,d=w.document,$=id=>d.getElementById(id);
    if(mode==='privacy'){const proto=w.CanvasRenderingContext2D.prototype,originalRead=proto.getImageData;let reads=0;proto.getImageData=function(...args){const image=originalRead.apply(this,args);if(image.data.length)image.data[(reads++%Math.max(1,image.data.length/4))*4]^=1;return image;};}
    const sourceBlob=scaled?await resize(originalBase,1862):originalBase,targetBlob=originalRenderz;
    upload(w,'baseFile',new w.File([sourceBlob],'base.png',{type:'image/png'}));await wait(()=>$('baseInfo').textContent.includes('Added'));
    upload(w,'renderFile',new w.File([targetBlob],'renderz.png',{type:'image/webp'}));
    await wait(()=>!$('result').hidden||$('status').classList.contains('error'));assert(!$('result').hidden,$('status').textContent);
-   const numbers=[...d.querySelectorAll('.auto-readout strong')].map(n=>+n.textContent);assert(JSON.stringify(numbers)===JSON.stringify((location.search.includes('yamal')?[129,216,207,194,224,95,142]:[127,179,137,138,158,231,222])),'Wrong target numbers: '+numbers);
+   const numbers=[...d.querySelectorAll('.auto-readout strong')].map(n=>+n.textContent);assert(JSON.stringify(numbers)===JSON.stringify((location.search.includes('cruyff')?[129,201,210,199,214,115,140]:location.search.includes('yamal')?[129,216,207,194,224,95,142]:[127,179,137,138,158,231,222])),'Wrong target numbers: '+numbers);
    assert($('detected').textContent.includes('+2'),'Wrong skills');
    const outBlob=await(await fetch($('after').src)).blob();if(!scaled){const sample=document.getElementById('sample');sample.href=URL.createObjectURL(outBlob);sample.hidden=false;}
    const output=await w.MaxCardPNG.decode(await outBlob.arrayBuffer()),source=await w.MaxCardPNG.decode(await sourceBlob.arrayBuffer());assert(output.width===source.width&&output.height===source.height,'Resolution changed');
-   const check=w.MaxCardCore.assertPreserved(source.data,output.data,source.width,source.height,Object.values(w.MaxCardLayout.regions(location.search.includes('yamal')?[2,1,1,1,0,0]:[2,1,0,0,1,1],w.MaxCardLayout.detectProfile(source.data,source.width,source.height))));assert(check.changed>0,'No edits made');
+   if(location.search.includes('cruyff'))assert($('detected').textContent.includes('Shadow Striker +2')&&$('detected').textContent.includes('Passing +1')&&$('detected').textContent.includes('Dribbling +1'),'Wrong Cruyff allocation');
+   const check=w.MaxCardCore.assertPreserved(source.data,output.data,source.width,source.height,Object.values(w.MaxCardLayout.regions((location.search.includes('yamal')||location.search.includes('cruyff'))?[2,1,1,1,0,0]:[2,1,0,0,1,1],w.MaxCardLayout.detectProfile(source.data,source.width,source.height))));assert(check.changed>0,'No edits made');
    assert(JSON.stringify(source.metadata.map(m=>[m.type,[...m.data]]))===JSON.stringify(output.metadata.map(m=>[m.type,[...m.data]])),'Color profile changed');
    assert(d.querySelectorAll('input[type=number],input[type=checkbox]').length===0,'Manual confirmation required');
    result.textContent+=`\nPASS ${mode} real screenshots: ${output.width}×${output.height}, OVR ${numbers[0]}, all six stats and detected skills, 0 outside-mask pixel changes, no manual input.`;
 
   }
   const w=frame.contentWindow,d=w.document;upload(w,'renderFile',new w.File([await resize(originalRenderz,1024)],'small.png',{type:'image/png'}));await wait(()=>d.getElementById('status').classList.contains('error'));assert(d.getElementById('result').hidden,'low-resolution screenshot generated a potentially incorrect result');assert(d.getElementById('status').textContent.includes('full-resolution'),'missing resolution guidance');result.textContent+='\nPASS low-resolution RenderZ is rejected instead of silently dropping a leading digit.';
+  const proof=document.createElement('img');proof.src=document.getElementById('sample').href;proof.alt='Verified generated max card';proof.style.width='100%';frame.before(proof);frame.hidden=true;
   result.textContent+=`\nElapsed ${((performance.now()-started)/1000).toFixed(1)} seconds.\nALL CHECKS PASSED`;
  }catch(e){result.textContent+='\nFAIL: '+e.message;}
 };

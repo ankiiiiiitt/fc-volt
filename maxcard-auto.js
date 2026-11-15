@@ -34,32 +34,14 @@
     d.ondragover=e=>{e.preventDefault();d.classList.add('drag');};d.ondragleave=()=>d.classList.remove('drag');
     d.ondrop=e=>{e.preventDefault();d.classList.remove('drag');upload(kind,e.dataTransfer.files[0]);};
   }
-  function crop(canvas,r,kind='plain',factor=2,pad=12){
+  function crop(canvas,r,kind='plain',factor=2,pad=0){
     const x=Math.round(r.x*canvas.width),y=Math.round(r.y*canvas.height),w=Math.round(r.w*canvas.width),h=Math.round(r.h*canvas.height);
-    const cw=w*factor+pad*2,ch=h*factor+pad*2;
-    const c=makeCanvas(cw,ch),g=c.getContext('2d',{willReadFrequently:true});
-    g.fillStyle='white';g.fillRect(0,0,cw,ch);
-    g.drawImage(canvas,x,y,w,h,pad,pad,w*factor,h*factor);
+    const c=makeCanvas(w*factor,h*factor),g=c.getContext('2d',{willReadFrequently:true});g.fillStyle='white';g.fillRect(0,0,c.width,c.height);g.drawImage(canvas,x,y,w,h,0,0,c.width,c.height);
     if(kind!=='plain'){
-      const data=g.getImageData(0,0,cw,ch);
-      for(let p=0;p<data.data.length;p+=4){
-        const [red,green,blue]=data.data.slice(p,p+3);
-        const lum=0.299*red + 0.587*green + 0.114*blue;
-        let ink=false;
-        if(kind==='green'){
-          ink=(green>75&&green>red*1.15)||(green>95&&blue>75&&green>=red*1.08);
-        }else if(kind==='white'){
-          ink=red>140&&green>140&&blue>140;
-        }else if(kind==='invert'){
-          ink=lum>100;
-        }
-        const v=ink?0:255;
-        data.data[p]=data.data[p+1]=data.data[p+2]=v;
-        data.data[p+3]=255;
-      }
-      g.putImageData(data,0,0);
+      const data=g.getImageData(0,0,c.width,c.height);
+      for(let p=0;p<data.data.length;p+=4){const [red,green,blue]=data.data.slice(p,p+3);const ink=kind==='invert'?(red*.299+green*.587+blue*.114)>100:kind==='green'?green>75&&green>blue*1.05&&(green>red*1.2||(red>170&&green>120&&blue<100)):red>160&&green>160&&blue>160;const v=ink?0:255;data.data[p]=data.data[p+1]=data.data[p+2]=v;data.data[p+3]=255;}g.putImageData(data,0,0);
     }
-    return c;
+    if(!pad)return c;const padded=makeCanvas(c.width+pad*2,c.height+pad*2),pg=padded.getContext('2d');pg.fillStyle='white';pg.fillRect(0,0,padded.width,padded.height);pg.drawImage(c,pad,pad);return padded;
   }
   let enginePromise;
   function loadEngine(){
@@ -68,38 +50,61 @@
   }
   async function read(worker,canvas,r,kind='plain',numeric=false){
     await worker.setParameters({tessedit_pageseg_mode:numeric?'7':'6',tessedit_char_whitelist:numeric?'0123456789':''});
-    const initialKind = (numeric && kind==='plain') ? 'invert' : kind;
-    let result=(await worker.recognize(crop(canvas,r,initialKind,numeric?3:2))).data;
-    const cleanNum = result.text.trim().replace(/[^\d]/g, '');
-    if(!numeric||(cleanNum.length>=1 && cleanNum.length<=3 && result.confidence>=50 && /^\d{1,3}$/.test(result.text.trim()))){
-      if(numeric && cleanNum.length>=1 && cleanNum.length<=3) result.text = cleanNum;
-      return result;
-    }
-    const variants = numeric ? ['invert','white','green','plain'] : [kind];
-    for(const variant of variants){
-      for(const [mode,factor] of [['7',3],['8',3],['13',3],['7',4],['8',4],['13',4],['7',2],['8',2]]){
-        await worker.setParameters({tessedit_pageseg_mode:mode,tessedit_char_whitelist:numeric?'0123456789':''});
-        const candidate=(await worker.recognize(crop(canvas,r,variant,factor))).data;
-        const candClean = candidate.text.trim().replace(/[^\d]/g, '');
-        if(numeric && candClean.length>=1 && candClean.length<=3){
-          if(candidate.confidence>=50 || (candClean.length>=2 && candidate.confidence>=40)){
-            candidate.text = candClean;
-            return candidate;
-          }
-        }
-        if(candidate.confidence>result.confidence) result=candidate;
+    const initial=crop(canvas,r,kind,numeric?3:2);
+    let result=(await worker.recognize(initial)).data;if(numeric)result.text=result.text.replace(/[Il|]/g,'1').replace(/[Ss]/g,'5').replace(/[Oo]/g,'0');
+    if(!numeric||(/^\d{1,3}$/.test(result.text.trim())&&result.confidence>=65&&(kind==='white'||result.text.trim().length>1)))return result;
+    if(numeric&&kind!=='white'){
+      // A condensed leading 1 can touch its neighbour and disappear from OCR.
+      // Identify its full-height straight stem, then OCR the remaining suffix.
+      const mask=crop(canvas,r,'green',3),mg=mask.getContext('2d'),d=mg.getImageData(0,0,mask.width,mask.height).data;
+      let top=mask.height,bottom=-1,left=mask.width,right=-1;
+      for(let y=0;y<mask.height;y++)for(let x=0;x<mask.width;x++)if(d[(y*mask.width+x)*4]<100){top=Math.min(top,y);bottom=Math.max(bottom,y);left=Math.min(left,x);right=Math.max(right,x);}
+      const height=bottom-top+1;let count=0,start=left;
+      while(count<2&&right-start>height*.65){
+        const columns=[];for(let x=start;x<=Math.min(right,start+height*.5);x++){let n=0;for(let y=top;y<=bottom;y++)if(d[(y*mask.width+x)*4]<100)n++;columns.push(n);}
+        const stem=columns.findIndex(n=>n>height*.9);if(stem<0||stem>height*.35)break;
+        let end=stem;while(end+1<columns.length&&columns[end+1]>height*.9)end++;
+        if(end-stem<height*.07)break;
+        start+=end+2;while(start<=right){let n=0;for(let y=top;y<=bottom;y++)if(d[(y*mask.width+start)*4]<100)n++;if(n)break;start++;}count++;
+      }
+      if(count&&right-start>height*.3){
+        const suffix=makeCanvas(right-start+41,height+40),sg=suffix.getContext('2d');sg.fillStyle='white';sg.fillRect(0,0,suffix.width,suffix.height);sg.drawImage(mask,start,top,right-start+1,height,20,20,right-start+1,height);
+        for(const mode of ['7','8','13']){await worker.setParameters({tessedit_pageseg_mode:mode,tessedit_char_whitelist:'0123456789'});const v=(await worker.recognize(suffix)).data;if(/^\d{1,2}$/.test(v.text.trim())&&v.confidence>=65&&count+v.text.trim().length<=3)return {text:'1'.repeat(count)+v.text.trim(),confidence:v.confidence};}
       }
     }
     if(numeric){
-      const finalClean = result.text.trim().replace(/[^\d]/g, '');
-      if(finalClean.length>=1 && finalClean.length<=3){
-        result.text = finalClean;
+      // Thin touching glyph edges before retrying tightly kerned numeric words.
+      const mask=crop(canvas,r,'green',3,20),mg=mask.getContext('2d'),raw=mg.getImageData(0,0,mask.width,mask.height);
+      for(const radius of [4,6]){
+        const thin=makeCanvas(mask.width,mask.height),tg=thin.getContext('2d'),pixels=tg.createImageData(mask.width,mask.height);pixels.data.fill(255);
+        for(let y=radius;y<mask.height-radius;y++)for(let x=radius;x<mask.width-radius;x++){
+          const at=(y*mask.width+x)*4;
+          if(raw.data[at]<100&&raw.data[at-radius*4]<100&&raw.data[at+radius*4]<100&&raw.data[at-radius*mask.width*4]<100&&raw.data[at+radius*mask.width*4]<100)pixels.data[at]=pixels.data[at+1]=pixels.data[at+2]=0;
+        }
+        tg.putImageData(pixels,0,0);
+        for(const mode of ['7','8','13']){await worker.setParameters({tessedit_pageseg_mode:mode,tessedit_char_whitelist:'0123456789'});const v=(await worker.recognize(thin)).data;if(/^\d{1,3}$/.test(v.text.trim())&&v.confidence>=65)return v;}
       }
+    }
+    // A tightly kerned RenderZ number can be treated as a word rather than a
+    // line. Retry OCR segmentation/preprocessing; never substitute a stat value.
+    for(const [mode,factor,variant]of [...new Set([kind,'plain','green','invert'])].flatMap(v=>[['8',3,v],['13',3,v],['7',6,v],['8',6,v],['13',6,v]])){
+      await worker.setParameters({tessedit_pageseg_mode:mode,tessedit_char_whitelist:''});
+      const candidate=(await worker.recognize(crop(canvas,r,variant,factor,20))).data;candidate.text=candidate.text.replace(/[Il|]/g,'1').replace(/[Ss]/g,'5').replace(/[Oo]/g,'0');
+      if(/^\d{1,3}$/.test(candidate.text.trim())&&candidate.confidence>=65)return candidate;
+      if(candidate.confidence>result.confidence)result=candidate;
     }
     return result;
   }
   async function readSkillDigit(worker,canvas,region){
-    const source=crop(canvas,region,'white',3),g=source.getContext('2d'),pixels=g.getImageData(0,0,source.width,source.height).data;
+    // Keep the LVL prefix as context: tiny isolated digits can be rejected by OCR.
+    for(const factor of [4,6]){
+      await worker.setParameters({tessedit_pageseg_mode:'7',tessedit_char_whitelist:'LVL123Il'});
+      const badge=(await worker.recognize(crop(canvas,{x:region.x+region.w*.32,y:region.y,w:region.w*.55,h:region.h},'white',factor,20))).data;
+      const match=badge.text.replace(/\s/g,'').match(/^LVL([123Il])$/);
+      if(match&&badge.confidence>=65)return {text:/[Il]/.test(match[1])?'1':match[1],confidence:badge.confidence};
+    }
+
+    const source=crop(canvas,region,'white',3,20),g=source.getContext('2d'),pixels=g.getImageData(0,0,source.width,source.height).data;
     const width=source.width,height=source.height,seen=new Uint8Array(width*height),components=[];
     for(let index=0;index<seen.length;index++){
       if(seen[index]||pixels[index*4]>100)continue;
@@ -107,7 +112,7 @@
       while(stack.length){const at=stack.pop(),x=at%width,y=Math.floor(at/width);minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);
         for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const xx=x+dx,yy=y+dy;if(xx<0||xx>=width||yy<0||yy>=height)continue;const next=yy*width+xx;if(!seen[next]&&pixels[next*4]<100){seen[next]=1;stack.push(next);}}
       }
-      if(maxY-minY>height*.25&&maxX>width*.6)components.push({x:minX,y:minY,w:maxX-minX+1,h:maxY-minY+1});
+      if(maxY-minY>(height-40)*.2&&maxX>width*.6)components.push({x:minX,y:minY,w:maxX-minX+1,h:maxY-minY+1});
     }
     const digit=components.sort((a,b)=>(b.x+b.w)-(a.x+a.w))[0];if(!digit)throw Error('A RenderZ skill level is not readable. Use a clearer export.');
     const isolated=makeCanvas(digit.w*3+40,digit.h*3+40),cg=isolated.getContext('2d');cg.fillStyle='white';cg.fillRect(0,0,isolated.width,isolated.height);cg.drawImage(source,digit.x,digit.y,digit.w,digit.h,20,20,digit.w*3,digit.h*3);
@@ -138,19 +143,10 @@
     for(const key of C.fields){
       message('Reading RenderZ '+key+'…',false,22+i*5);
       const isOvr = key==='ovr';
-      const rzKind = isOvr ? 'white' : 'invert';
-      const value = await read(worker,rz,rzRect(L.renderz[key]),rzKind,true);
-      try {
-        target[key] = L.readNumber(value.text,value.confidence,1,isOvr?200:999,key);
-      } catch(err) {
-        const fallback = (baseStats && baseStats[key]) ? baseStats[key] : (isOvr ? baseOVR + 5 : '');
-        const promptInput = prompt(`RenderZ "${key.toUpperCase()}" stat could not be auto-detected with 100% certainty.\nPlease confirm or enter the ${key.toUpperCase()} value from your RenderZ screenshot:`, fallback);
-        if(promptInput && /^\d{1,3}$/.test(promptInput.trim())){
-          target[key] = parseInt(promptInput.trim(), 10);
-        } else {
-          throw err;
-        }
-      }
+      const rzKind = isOvr ? 'white' : 'plain';
+      const [rx,ry,rw,rh]=L.renderz[key];
+      const value = await read(worker,rz,rzRect(isOvr?L.renderz[key]:[rx-12,ry-14,rw+24,rh+24]),rzKind,true);
+      target[key]=L.readNumber(value.text,value.confidence,1,isOvr?200:999,key);
       i++;
     }
     message('Reading skill allocation…',false,62);
@@ -161,7 +157,7 @@
       const level=await readSkillDigit(worker,rz,r);
       target.allocation.push(L.readNumber(level.text,level.confidence,1,3,'Skill level'));
     }
-    const category=await read(worker,rz,rzRect([780,462,155,35]));
+    const category=await read(worker,rz,rzRect([770,458,175,42]),'invert');
     const categoryName=category.text.replace(/[^A-Za-z -]/g,'').trim();
     if(category.confidence<65||categoryName.length<3)throw Error('The first skill category could not be read. Use the full, clear RenderZ export.');
     target.skillNames=[categoryName,'Scoring','Passing','Dribbling','Defending','Physical'];
