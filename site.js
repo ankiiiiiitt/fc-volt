@@ -2,7 +2,7 @@
 (() => {
   const tools = [
     ['maxcard','Max Card','↗'], ['tierlist','Tier List','▤'], ['team11','Best XI','⚽'],
-    ['top10','Top 10','№'], ['avoid','Do Not Claim','×'], ['shards','Compare Players','⇄'], ['claim','Must Claim','◇'], ['players','New Players','✧']
+    ['top10','Top 10','№'], ['shards','Compare Players','⇄'], ['claim','Must Claim','◇'], ['players','New Players','✧']
   ];
   const current = document.body.dataset.tool || 'home';
   const shell = document.getElementById('siteShell');
