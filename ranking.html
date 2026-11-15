@@ -430,7 +430,7 @@
       height: 1920px;
       min-width: 1080px;
       min-height: 1920px;
-      padding: 60px 40px 50px;
+      padding: 55px 36px 45px;
     }
 
     /* 1:1 Square Mode (1080 × 1080) */
@@ -439,7 +439,7 @@
       height: 1080px;
       min-width: 1080px;
       min-height: 1080px;
-      padding: 30px 25px 25px;
+      padding: 26px 20px 22px;
     }
 
     /* THEME BACKGROUNDS */
@@ -484,7 +484,7 @@
       box-shadow: none !important;
     }
 
-    /* GEOMETRIC FACETS & LIGHT RAYS (Matches reference image) */
+    /* GEOMETRIC FACETS & LIGHT RAYS */
     .canvas-bg-decor {
       position: absolute;
       inset: 0;
@@ -504,16 +504,16 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     #shortsCanvas.format-square .canvas-header-wrap {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .header-main-title {
       font-family: var(--font-headline);
-      font-size: 62px;
+      font-size: 60px;
       font-weight: 900;
       text-transform: uppercase;
       color: #ffffff;
@@ -525,13 +525,13 @@
     }
 
     #shortsCanvas.format-square .header-main-title {
-      font-size: 40px;
+      font-size: 38px;
       -webkit-text-stroke: 2.2px #000000;
     }
 
     .header-sub-title {
       font-family: var(--font-headline);
-      font-size: 48px;
+      font-size: 46px;
       font-weight: 900;
       text-transform: uppercase;
       color: #ffe600;
@@ -544,12 +544,12 @@
     }
 
     #shortsCanvas.format-square .header-sub-title {
-      font-size: 30px;
+      font-size: 28px;
       -webkit-text-stroke: 1.8px #000000;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
-    /* TOP-RIGHT CORNER CROSS SIGN (Symmetrical 45deg X cross) */
+    /* TOP-RIGHT CORNER CROSS SIGN */
     .canvas-corner-cross {
       position: absolute;
       top: 10px;
@@ -581,12 +581,12 @@
       display: flex;
       flex-direction: column;
       justify-content: space-around;
-      gap: 20px;
+      gap: 16px;
       width: 100%;
     }
 
     #shortsCanvas.format-square .cards-grid-layout {
-      gap: 10px;
+      gap: 8px;
     }
 
     .grid-row {
@@ -598,23 +598,23 @@
 
     /* Row 1: 3 Cards */
     .row-1 {
-      gap: 40px;
+      gap: 36px;
     }
     /* Row 2: 3 Cards */
     .row-2 {
-      gap: 40px;
+      gap: 36px;
     }
     /* Row 3: 4 Cards */
     .row-3 {
-      gap: 24px;
+      gap: 20px;
     }
 
     #shortsCanvas.format-square .row-1,
     #shortsCanvas.format-square .row-2 {
-      gap: 22px;
+      gap: 18px;
     }
     #shortsCanvas.format-square .row-3 {
-      gap: 14px;
+      gap: 12px;
     }
 
     /* SINGLE CARD ITEM WRAPPER */
@@ -629,7 +629,7 @@
     /* TOP LABEL (DON'T CLAIM / MUST CLAIM) */
     .card-top-label {
       font-family: var(--font-headline);
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 900;
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -675,19 +675,19 @@
     }
 
     #shortsCanvas.format-shorts .row-3 .card-top-label {
-      font-size: 28px;
+      font-size: 26px;
       -webkit-text-stroke: 1.8px #000000;
     }
 
     #shortsCanvas.format-square .row-1 .card-top-label,
     #shortsCanvas.format-square .row-2 .card-top-label {
-      font-size: 20px;
-      -webkit-text-stroke: 1.4px #000000;
+      font-size: 19px;
+      -webkit-text-stroke: 1.3px #000000;
       margin-bottom: 3px;
     }
     #shortsCanvas.format-square .row-3 .card-top-label {
-      font-size: 16px;
-      -webkit-text-stroke: 1.2px #000000;
+      font-size: 15px;
+      -webkit-text-stroke: 1.1px #000000;
       margin-bottom: 2px;
     }
 
@@ -701,29 +701,29 @@
     }
 
     .card-box:hover {
-      transform: translateY(-4px) scale(1.02);
+      transform: translateY(-3px) scale(1.02);
     }
 
     /* Sizing in 9:16 Shorts */
     #shortsCanvas.format-shorts .row-1 .card-box,
     #shortsCanvas.format-shorts .row-2 .card-box {
-      width: 290px;
-      height: 385px;
+      width: 280px;
+      height: 355px;
     }
     #shortsCanvas.format-shorts .row-3 .card-box {
-      width: 232px;
-      height: 310px;
+      width: 226px;
+      height: 290px;
     }
 
     /* Sizing in 1:1 Square */
     #shortsCanvas.format-square .row-1 .card-box,
     #shortsCanvas.format-square .row-2 .card-box {
-      width: 195px;
-      height: 255px;
+      width: 190px;
+      height: 235px;
     }
     #shortsCanvas.format-square .row-3 .card-box {
-      width: 155px;
-      height: 205px;
+      width: 150px;
+      height: 190px;
     }
 
     /* Card Image */
@@ -793,31 +793,100 @@
 
     #shortsCanvas.format-shorts .row-1 .card-bottom-badge,
     #shortsCanvas.format-shorts .row-2 .card-bottom-badge {
-      width: 58px;
-      height: 58px;
-      bottom: -20px;
+      width: 54px;
+      height: 54px;
+      bottom: -18px;
     }
     #shortsCanvas.format-shorts .row-3 .card-bottom-badge {
-      width: 50px;
-      height: 50px;
-      bottom: -16px;
+      width: 46px;
+      height: 46px;
+      bottom: -15px;
     }
 
     #shortsCanvas.format-square .row-1 .card-bottom-badge,
     #shortsCanvas.format-square .row-2 .card-bottom-badge {
-      width: 42px;
-      height: 42px;
-      bottom: -14px;
+      width: 38px;
+      height: 38px;
+      bottom: -13px;
     }
     #shortsCanvas.format-square .row-3 .card-bottom-badge {
-      width: 36px;
-      height: 36px;
-      bottom: -12px;
+      width: 32px;
+      height: 32px;
+      bottom: -11px;
     }
 
     .card-bottom-badge svg {
       width: 100%;
       height: 100%;
+    }
+
+    /* ========================================================
+       SHARDS PRICE PILL (Highly visible crystal/shard badge)
+       ======================================================== */
+    .card-shards-pill {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #020712;
+      border: 2px solid #00e5ff;
+      border-radius: 40px;
+      padding: 3px 14px 3px 6px;
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.65), 0 4px 12px rgba(0, 0, 0, 0.9);
+      z-index: 15;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card-shards-pill:hover {
+      transform: scale(1.08);
+      border-color: #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+    }
+
+    .shard-icon-img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px #00e5ff);
+    }
+
+    .shard-price-val {
+      font-family: var(--font-headline);
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #ffffff;
+      line-height: 1;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
+    }
+
+    #shortsCanvas.format-shorts .row-3 .card-shards-pill {
+      margin-top: 12px;
+      padding: 3px 11px 3px 5px;
+      gap: 6px;
+    }
+    #shortsCanvas.format-shorts .row-3 .shard-icon-img {
+      width: 24px;
+      height: 24px;
+    }
+    #shortsCanvas.format-shorts .row-3 .shard-price-val {
+      font-size: 22px;
+    }
+
+    #shortsCanvas.format-square .card-shards-pill {
+      margin-top: 8px;
+      padding: 2px 9px 2px 4px;
+      gap: 5px;
+      border-width: 1.5px;
+    }
+    #shortsCanvas.format-square .shard-icon-img {
+      width: 18px;
+      height: 18px;
+    }
+    #shortsCanvas.format-square .shard-price-val {
+      font-size: 16px;
     }
 
     /* CARD HOVER OVERLAY ACTIONS */
@@ -998,6 +1067,29 @@
         </div>
       </section>
 
+      <!-- SHARDS PRICE SETTINGS -->
+      <section class="panel-box">
+        <div class="panel-box-title">
+          <span>💎 Shards Price</span>
+          <label style="display:flex; align-items:center; gap:6px; font-size:11px; text-transform:none; cursor:pointer; color:#00e5ff;">
+            <input type="checkbox" id="chkShowShards" checked onchange="toggleShowShards(this.checked)"> Show Badges
+          </label>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Batch Set All Cards Shards</label>
+          <div style="display:flex; gap:6px;">
+            <input type="number" id="inputBatchShards" class="input-text" value="25000" style="flex:1;">
+            <button type="button" class="btn btn-secondary btn-mini" onclick="setAllShardsCustom()">Apply All</button>
+          </div>
+        </div>
+        <div class="preset-chips">
+          <button type="button" class="preset-chip" onclick="applyShardsLadder()">📉 Shards Ladder (52k→25k)</button>
+          <button type="button" class="preset-chip" onclick="applyBatchShards(25000)">25k All</button>
+          <button type="button" class="preset-chip" onclick="applyBatchShards(50000)">50k All</button>
+          <button type="button" class="preset-chip" onclick="applyBatchShards(52000)">52k All</button>
+        </div>
+      </section>
+
       <!-- BATCH ACTIONS -->
       <section class="panel-box">
         <div class="panel-box-title">
@@ -1070,7 +1162,7 @@
           <button type="button" class="btn btn-secondary btn-mini" onclick="resetZoom()">Auto Fit</button>
         </div>
         <div style="font-size:11px; color:#94a3b8;">
-          💡 Click any card to upload image, change label (DON'T CLAIM / MUST CLAIM), or toggle ❌ / ✅
+          💡 Click any card to upload image, change label, toggle ❌/✅, or click the shard pill to edit price!
         </div>
       </div>
 
@@ -1177,6 +1269,11 @@
       </div>
 
       <div class="input-group">
+        <label class="input-label">Shards Cost (e.g. 25000, 52000)</label>
+        <input type="number" id="modalShardsInput" class="input-text" placeholder="25000">
+      </div>
+
+      <div class="input-group">
         <label class="input-label">Bottom Status Mark</label>
         <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
           <button type="button" class="btn btn-secondary btn-mini" style="color:#ff1a24;" onclick="setModalStatus('cross')">❌ Cross</button>
@@ -1211,16 +1308,16 @@
        STATE MANAGEMENT
        ======================================================== */
     const DEFAULT_CARDS = [
-      { id: 1, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
-      { id: 2, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
-      { id: 3, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
-      { id: 4, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
-      { id: 5, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
-      { id: 6, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
-      { id: 7, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
-      { id: 8, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
-      { id: 9, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" },
-      { id: 10, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "" }
+      { id: 1, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 52000 },
+      { id: 2, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 52000 },
+      { id: 3, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 52000 },
+      { id: 4, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 40000 },
+      { id: 5, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 40000 },
+      { id: 6, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 40000 },
+      { id: 7, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 25000 },
+      { id: 8, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 25000 },
+      { id: 9, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 25000 },
+      { id: 10, label: "DON'T CLAIM", labelColor: "label-red", status: "cross", image: "", shards: 25000 }
     ];
 
     const state = {
@@ -1228,6 +1325,7 @@
       subTitle: "AND DON'T WASTE YOUR SHARDS",
       theme: "red",
       format: "shorts", // 'shorts' (9:16) or 'square' (1:1)
+      showShards: true,
       cards: JSON.parse(JSON.stringify(DEFAULT_CARDS)),
       scale: 0.5,
       currentEditingIndex: null,
@@ -1255,6 +1353,9 @@
       canvas.className = state.format === 'square' ? 'format-square' : 'format-shorts';
       document.getElementById('btnFmtShorts').classList.toggle('active', state.format === 'shorts');
       document.getElementById('btnFmtSquare').classList.toggle('active', state.format === 'square');
+
+      // Shards visibility checkbox
+      document.getElementById('chkShowShards').checked = state.showShards;
 
       // Cards Grid (Row 1: 0..2, Row 2: 3..5, Row 3: 6..9)
       renderRow('row1', state.cards.slice(0, 3), 0);
@@ -1292,6 +1393,18 @@
           `;
         }
 
+        // Shards Price Pill
+        let shardsHtml = '';
+        if (state.showShards) {
+          const shardsCost = Number(card.shards || 0).toLocaleString();
+          shardsHtml = `
+            <div class="card-shards-pill" onclick="event.stopPropagation(); quickEditShards(${globalIdx})" title="Click to edit shards price">
+              <img class="shard-icon-img" src="shard_icon_hq.png" alt="Shard">
+              <span class="shard-price-val">${shardsCost}</span>
+            </div>
+          `;
+        }
+
         return `
           <div class="card-item-slot" onclick="triggerCardUpload(${globalIdx})">
             <!-- Top Label -->
@@ -1318,6 +1431,9 @@
                 <button type="button" class="btn-card-action" onclick="event.stopPropagation(); openEditModal(${globalIdx})">✏️ Edit</button>
               </div>
             </div>
+
+            <!-- Shards Price Pill -->
+            ${shardsHtml}
           </div>
         `;
       }).join('');
@@ -1379,6 +1495,54 @@
       });
       render();
       showToast(`All cards set to ${status === 'cross' ? '❌ DON\'T CLAIM' : '✅ MUST CLAIM'}`);
+    }
+
+    function toggleShowShards(show) {
+      state.showShards = show;
+      render();
+      showToast(`Shards badges ${show ? 'enabled' : 'hidden'}`);
+    }
+
+    function quickEditShards(index) {
+      const current = state.cards[index].shards || 25000;
+      const entered = prompt(`Enter Shards price for Slot ${index + 1}:`, current);
+      if (entered !== null && !isNaN(parseInt(entered))) {
+        state.cards[index].shards = parseInt(entered, 10);
+        render();
+        showToast(`Slot ${index + 1} shards set to ${parseInt(entered, 10).toLocaleString()}`);
+      }
+    }
+
+    function setAllShardsCustom() {
+      const val = parseInt(document.getElementById('inputBatchShards').value, 10);
+      if (isNaN(val)) return;
+      applyBatchShards(val);
+    }
+
+    function applyBatchShards(val) {
+      state.cards.forEach(card => {
+        card.shards = val;
+      });
+      render();
+      showToast(`All 10 cards set to ${val.toLocaleString()} Shards!`);
+    }
+
+    function applyShardsLadder() {
+      // Row 1 (Ranks 1-3): 52,000
+      // Row 2 (Ranks 4-6): 40,000
+      // Row 3 (Ranks 7-10): 25,000
+      state.cards[0].shards = 52000;
+      state.cards[1].shards = 52000;
+      state.cards[2].shards = 52000;
+      state.cards[3].shards = 40000;
+      state.cards[4].shards = 40000;
+      state.cards[5].shards = 40000;
+      state.cards[6].shards = 25000;
+      state.cards[7].shards = 25000;
+      state.cards[8].shards = 25000;
+      state.cards[9].shards = 25000;
+      render();
+      showToast("Shards ladder applied (52k → 40k → 25k)!");
     }
 
     function handleBatchUpload(e) {
@@ -1462,6 +1626,7 @@
 
       document.getElementById('modalCardTitle').textContent = `Edit Card Slot ${index + 1}`;
       document.getElementById('modalLabelText').value = card.label || '';
+      document.getElementById('modalShardsInput').value = card.shards || 25000;
       document.getElementById('editModal').classList.add('is-open');
     }
 
@@ -1499,6 +1664,10 @@
       if (state.currentEditingIndex === null) return;
       const idx = state.currentEditingIndex;
       state.tempModalData.label = document.getElementById('modalLabelText').value;
+      const shardsVal = parseInt(document.getElementById('modalShardsInput').value, 10);
+      if (!isNaN(shardsVal)) {
+        state.tempModalData.shards = shardsVal;
+      }
       state.cards[idx] = { ...state.tempModalData };
       closeEditModal();
       render();
