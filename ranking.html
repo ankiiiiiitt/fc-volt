@@ -1000,6 +1000,285 @@
       from { transform: translateY(20px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+
+  /* ========================================================
+     BACKGROUND REMOVAL STUDIO MODAL
+     ======================================================== */
+  .bg-studio-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 12, 0.92);
+    backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    padding: 16px;
+  }
+  .bg-studio-backdrop.hidden {
+    display: none !important;
+  }
+  .bg-studio-modal {
+    background: #080d16;
+    border: 1.5px solid #a855f7;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(168, 85, 247, 0.35);
+    border-radius: 18px;
+    width: 1040px;
+    max-width: 96vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .bg-studio-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: #0d1524;
+    border-bottom: 1px solid #1f2b40;
+  }
+  .bg-studio-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bg-studio-title h3 {
+    margin: 0;
+    font-family: var(--font-headline);
+    font-size: 20px;
+    letter-spacing: 0.8px;
+    background: linear-gradient(90deg, #c084fc, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .bg-studio-title small {
+    display: block;
+    color: #8fa5c5;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .bg-studio-close {
+    background: #141f30;
+    border: 1px solid #28374d;
+    color: #cbd5e1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    line-height: 1;
+    padding: 0;
+  }
+  .bg-studio-close:hover {
+    background: #ff2a55;
+    border-color: #ff4466;
+    color: #fff;
+  }
+  .bg-studio-body {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    flex: 1;
+    overflow: hidden;
+    min-height: 480px;
+  }
+  .bg-preview-stage {
+    background: #040810;
+    border-right: 1px solid #1a2538;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .canvas-stage-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #0a101c;
+    border-bottom: 1px solid #182335;
+    z-index: 10;
+  }
+  .stage-theme-toggles {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .stage-theme-toggles button {
+    background: #131b2a;
+    border: 1px solid #233247;
+    color: #9cb1cb;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .stage-theme-toggles button:hover {
+    background: #1d293d;
+    color: #fff;
+  }
+  .stage-theme-toggles button.active {
+    background: #a855f7;
+    color: #fff;
+    border-color: #d8b4fe;
+    font-weight: 900;
+  }
+  .canvas-stage-viewport {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .canvas-stage-viewport.backdrop-checker {
+    background-color: #0d131f;
+    background-image: 
+      linear-gradient(45deg, #182233 25%, transparent 25%), 
+      linear-gradient(-45deg, #182233 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, #182233 75%), 
+      linear-gradient(-45deg, transparent 75%, #182233 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  }
+  .canvas-stage-viewport.backdrop-black { background: #000000; }
+  .canvas-stage-viewport.backdrop-white { background: #ffffff; }
+
+  #bgStudioCanvas {
+    max-width: 90%;
+    max-height: 85%;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.8));
+    transform-origin: center center;
+    cursor: crosshair;
+  }
+  .canvas-info-badge {
+    position: absolute;
+    bottom: 50px;
+    left: 16px;
+    background: rgba(8, 13, 22, 0.85);
+    border: 1px solid #23344d;
+    color: #9cb1cb;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+  }
+  .canvas-stage-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #090e18;
+    border-top: 1px solid #1a2538;
+    z-index: 10;
+  }
+  .touchup-btn {
+    background: #131c2b;
+    border: 1px solid #233349;
+    color: #cbd5e1;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .touchup-btn.active {
+    background: #a855f7;
+    border-color: #c084fc;
+    color: #fff;
+  }
+
+  /* Eraser Cursor Ring Indicator */
+  #eraserCursorRing {
+    position: fixed;
+    pointer-events: none;
+    border: 2px solid #ff2a55;
+    background: rgba(255, 42, 85, 0.22);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 100005;
+    box-shadow: 0 0 8px rgba(255, 42, 85, 0.7);
+  }
+
+  .bg-controls-panel {
+    background: #070c14;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+  }
+  .studio-section {
+    background: #0b111c;
+    border: 1px solid #182335;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .studio-section-title {
+    font-family: var(--font-tech);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #a855f7;
+    text-transform: uppercase;
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .mode-btn {
+    background: #131d2b;
+    border: 1px solid #24354c;
+    color: #cbd5e1;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+  }
+  .mode-btn.active {
+    background: #a855f7;
+    color: #fff;
+    border-color: #c084fc;
+  }
+  .range-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .range-row input[type="range"] {
+    flex: 1;
+    accent-color: #a855f7;
+  }
+  .range-val {
+    font-family: monospace;
+    font-weight: 800;
+    color: #c084fc;
+    min-width: 32px;
+    text-align: right;
+  }
+
   </style>
 </head>
 <body>
@@ -1038,6 +1317,25 @@
 
     <!-- LEFT SIDEBAR: CONTROLS -->
     <aside class="sidebar-panel">
+
+
+      <!-- BACKGROUND REMOVAL STUDIO -->
+      <section class="panel-box" style="border-color:rgba(168, 85, 247, 0.4);">
+        <div class="panel-box-title" style="color:#c084fc;">
+          <span>🪄 Card Background Remover</span>
+        </div>
+        <p style="font-size:11px; color:#8fa6c4; line-height:1.4;">
+          Card screenshots se solid background (white, black, etc.) auto-remove karein transparent PNG cutout banane ke liye!
+        </p>
+        <button type="button" class="btn" style="width:100%; justify-content:center; background:linear-gradient(135deg, #a855f7 0%, #6366f1 100%); color:#fff; border-color:#c084fc; box-shadow:0 0 16px rgba(168,85,247,0.4);" onclick="openBgStudio()">
+          🪄 Open Background Remover Studio
+        </button>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px;">
+          <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+            <input type="checkbox" id="chkAutoRemoveOnUpload" checked> Auto-remove BG on upload
+          </label>
+        </div>
+      </section>
 
       <!-- QUICK PRESETS -->
       <section class="panel-box">
@@ -1273,6 +1571,14 @@
         <input type="number" id="modalShardsInput" class="input-text" placeholder="25000">
       </div>
 
+
+      <div class="input-group">
+        <label class="input-label">Background Removal</label>
+        <button type="button" class="btn" style="background:linear-gradient(135deg, #a855f7 0%, #6366f1 100%); color:#fff; border-color:#c084fc; width:100%; justify-content:center;" onclick="openBgStudioForCurrentEditing()">
+          🪄 Remove / Erase Card Background
+        </button>
+      </div>
+
       <div class="input-group">
         <label class="input-label">Bottom Status Mark</label>
         <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
@@ -1429,6 +1735,7 @@
               <!-- Hover Action Buttons -->
               <div class="card-hover-actions">
                 <button type="button" class="btn-card-action" onclick="event.stopPropagation(); openEditModal(${globalIdx})">✏️ Edit</button>
+                <button type="button" class="btn-card-action" style="background:#7c3aed;" onclick="event.stopPropagation(); openBgStudio(${globalIdx})">🪄 BG Cutout</button>
               </div>
             </div>
 
@@ -1449,15 +1756,25 @@
       document.getElementById('singleCardFileInput').click();
     }
 
-    function handleSingleCardUpload(e) {
+    async function handleSingleCardUpload(e) {
       const file = e.target.files[0];
       if (!file || uploadTargetIndex === null) return;
 
       const reader = new FileReader();
-      reader.onload = (event) => {
-        state.cards[uploadTargetIndex].image = event.target.result;
+      reader.onload = async (event) => {
+        let finalImage = event.target.result;
+        const autoRemove = document.getElementById('chkAutoRemoveOnUpload')?.checked;
+        if (autoRemove) {
+          showToast('Auto-removing background...');
+          try {
+            finalImage = await processImageBackgroundRemoval(finalImage, { mode: 'auto', tolerance: 0.28, choke: 1, crop: true });
+          } catch (err) {
+            console.error('BG removal failed, using original', err);
+          }
+        }
+        state.cards[uploadTargetIndex].image = finalImage;
         render();
-        showToast(`Slot ${uploadTargetIndex + 1} card uploaded!`);
+        showToast(`Slot ${uploadTargetIndex + 1} card uploaded! 🎉`);
       };
       reader.readAsDataURL(file);
       e.target.value = '';
@@ -1793,10 +2110,637 @@
       }, 3000);
     }
 
+
+    /* ========================================================
+       BACKGROUND REMOVAL STUDIO SYSTEM & ALGORITHM
+       ======================================================== */
+    const studio = {
+      activeSlot: 0,
+      originalSrc: null,
+      workingDataUrl: null,
+      mode: 'auto',
+      tolerance: 0.28,
+      choke: 1,
+      autoCrop: true,
+      pickedColor: null,
+      tool: 'eraser',
+      eraserSize: 28,
+      zoom: 1.0,
+      history: [],
+      isErasing: false,
+      lastPoint: null
+    };
+
+    function openBgStudio(slotIdx = null) {
+      if (slotIdx === null) {
+        slotIdx = (state.currentEditingIndex !== null) ? state.currentEditingIndex : 0;
+      }
+      studio.activeSlot = slotIdx;
+
+      // Populate dropdown
+      const sel = document.getElementById('studioCardSelect');
+      sel.innerHTML = state.cards.map((c, i) => `
+        <option value="${i}" ${i === slotIdx ? 'selected' : ''}>Slot ${i + 1}: ${c.label || 'Player'} ${c.image ? '🖼️' : '(Empty)'}</option>
+      `).join('');
+
+      document.getElementById('bgStudioModal').classList.remove('hidden');
+      loadStudioCard(slotIdx);
+    }
+
+    function openBgStudioForCurrentEditing() {
+      if (state.currentEditingIndex === null) return;
+      closeEditModal();
+      openBgStudio(state.currentEditingIndex);
+    }
+
+    function closeBgStudio() {
+      document.getElementById('bgStudioModal').classList.add('hidden');
+      document.getElementById('eraserCursorRing').style.display = 'none';
+    }
+
+    function loadStudioCard(slotIdx) {
+      studio.activeSlot = slotIdx;
+      const card = state.cards[slotIdx];
+      studio.history = [];
+      document.getElementById('btnStudioUndo').style.display = 'none';
+
+      if (!card.image) {
+        studio.originalSrc = null;
+        studio.workingDataUrl = null;
+        const cvs = document.getElementById('bgStudioCanvas');
+        const ctx = cvs.getContext('2d');
+        ctx.clearRect(0, 0, cvs.width, cvs.height);
+        document.getElementById('studioInfoBadge').textContent = 'Selected slot is empty — upload an image to start!';
+        return;
+      }
+
+      studio.originalSrc = card.image;
+      runStudioProcess();
+    }
+
+    async function runStudioProcess() {
+      if (!studio.originalSrc) return;
+      document.getElementById('studioInfoBadge').textContent = 'Processing background removal...';
+
+      try {
+        const cutout = await processImageBackgroundRemoval(studio.originalSrc, {
+          mode: studio.mode,
+          tolerance: studio.tolerance,
+          choke: studio.choke,
+          crop: studio.autoCrop,
+          targetColor: studio.pickedColor
+        });
+
+        studio.workingDataUrl = cutout;
+        const img = new Image();
+        img.onload = () => {
+          const cvs = document.getElementById('bgStudioCanvas');
+          cvs.width = img.width;
+          cvs.height = img.height;
+          const ctx = cvs.getContext('2d');
+          ctx.clearRect(0, 0, img.width, img.height);
+          ctx.drawImage(img, 0, 0);
+          document.getElementById('studioInfoBadge').textContent = `${img.width} × ${img.height} px | Transparent Cutout Ready`;
+        };
+        img.src = cutout;
+      } catch (err) {
+        console.error(err);
+        document.getElementById('studioInfoBadge').textContent = 'Error processing image';
+      }
+    }
+
+    function processImageBackgroundRemoval(imgSource, options = {}) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onerror = reject;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+
+          const w = canvas.width;
+          const h = canvas.height;
+          if (w === 0 || h === 0) return resolve(imgSource);
+
+          const imgData = ctx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+
+          const mode = options.mode || 'auto';
+          const tolerance = options.tolerance !== undefined ? options.tolerance : 0.28;
+          const choke = options.choke !== undefined ? options.choke : 1;
+          const crop = options.crop !== undefined ? options.crop : true;
+
+          let tr = 0, tg = 0, tb = 0;
+          if (mode === 'white') {
+            tr = 255; tg = 255; tb = 255;
+          } else if (mode === 'black') {
+            tr = 0; tg = 0; tb = 0;
+          } else if (mode === 'color' && options.targetColor) {
+            tr = options.targetColor.r;
+            tg = options.targetColor.g;
+            tb = options.targetColor.b;
+          } else {
+            // Auto detect outer background from borders
+            let sumR = 0, sumG = 0, sumB = 0, validSamples = 0;
+            const step = Math.max(1, Math.floor(Math.min(w, h) / 40));
+            for (let x = 0; x < w; x += step) {
+              [0, h - 1].forEach(y => {
+                const pIdx = (y * w + x) * 4;
+                if (data[pIdx + 3] > 20) {
+                  sumR += data[pIdx]; sumG += data[pIdx + 1]; sumB += data[pIdx + 2];
+                  validSamples++;
+                }
+              });
+            }
+            for (let y = 0; y < h; y += step) {
+              [0, w - 1].forEach(x => {
+                const pIdx = (y * w + x) * 4;
+                if (data[pIdx + 3] > 20) {
+                  sumR += data[pIdx]; sumG += data[pIdx + 1]; sumB += data[pIdx + 2];
+                  validSamples++;
+                }
+              });
+            }
+            if (validSamples > 0) {
+              tr = Math.round(sumR / validSamples);
+              tg = Math.round(sumG / validSamples);
+              tb = Math.round(sumB / validSamples);
+            }
+          }
+
+          function colorDist(pIdx) {
+            const dr = data[pIdx] - tr;
+            const dg = data[pIdx + 1] - tg;
+            const db = data[pIdx + 2] - tb;
+            return Math.sqrt(dr * dr + dg * dg + db * db) / 441.673;
+          }
+
+          const visited = new Uint8Array(w * h);
+          const queue = new Int32Array(w * h);
+          let head = 0, tail = 0;
+
+          // Seed outer borders
+          for (let x = 0; x < w; x++) {
+            [0, h - 1].forEach(y => {
+              const idx = y * w + x;
+              const pIdx = idx * 4;
+              if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+                visited[idx] = 1;
+                queue[tail++] = idx;
+              }
+            });
+          }
+          for (let y = 0; y < h; y++) {
+            [0, w - 1].forEach(x => {
+              const idx = y * w + x;
+              const pIdx = idx * 4;
+              if (!visited[idx] && (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance)) {
+                visited[idx] = 1;
+                queue[tail++] = idx;
+              }
+            });
+          }
+
+          // Flood fill
+          while (head < tail) {
+            const curr = queue[head++];
+            const cx = curr % w;
+            const cy = Math.floor(curr / w);
+
+            const neighbors = [
+              cx > 0 ? curr - 1 : -1,
+              cx < w - 1 ? curr + 1 : -1,
+              cy > 0 ? curr - w : -1,
+              cy < h - 1 ? curr + w : -1
+            ];
+
+            for (let i = 0; i < 4; i++) {
+              const nIdx = neighbors[i];
+              if (nIdx !== -1 && !visited[nIdx]) {
+                const pIdx = nIdx * 4;
+                if (data[pIdx + 3] === 0 || colorDist(pIdx) <= tolerance) {
+                  visited[nIdx] = 1;
+                  queue[tail++] = nIdx;
+                }
+              }
+            }
+          }
+
+          for (let i = 0; i < w * h; i++) {
+            if (visited[i]) data[i * 4 + 3] = 0;
+          }
+
+          // Choke halo edges
+          if (choke > 0) {
+            for (let pass = 0; pass < choke; pass++) {
+              const toErase = [];
+              for (let y = 1; y < h - 1; y++) {
+                for (let x = 1; x < w - 1; x++) {
+                  const idx = y * w + x;
+                  const pIdx = idx * 4;
+                  if (data[pIdx + 3] > 0) {
+                    const hasTrans = 
+                      data[(idx - 1) * 4 + 3] === 0 ||
+                      data[(idx + 1) * 4 + 3] === 0 ||
+                      data[(idx - w) * 4 + 3] === 0 ||
+                      data[(idx + w) * 4 + 3] === 0;
+
+                    if (hasTrans && colorDist(pIdx) <= tolerance * 1.5) {
+                      toErase.push(pIdx);
+                    }
+                  }
+                }
+              }
+              toErase.forEach(p => { data[p + 3] = 0; });
+            }
+          }
+
+          ctx.putImageData(imgData, 0, 0);
+
+          // Auto crop bounding box
+          let outCanvas = canvas;
+          if (crop) {
+            let minX = w, minY = h, maxX = 0, maxY = 0;
+            let hasVisible = false;
+            for (let y = 0; y < h; y++) {
+              for (let x = 0; x < w; x++) {
+                const a = data[(y * w + x) * 4 + 3];
+                if (a > 15) {
+                  hasVisible = true;
+                  if (x < minX) minX = x;
+                  if (x > maxX) maxX = x;
+                  if (y < minY) minY = y;
+                  if (y > maxY) maxY = y;
+                }
+              }
+            }
+            if (hasVisible && (minX > 1 || minY > 1 || maxX < w - 2 || maxY < h - 2)) {
+              const pad = 4;
+              minX = Math.max(0, minX - pad);
+              minY = Math.max(0, minY - pad);
+              maxX = Math.min(w - 1, maxX + pad);
+              maxY = Math.min(h - 1, maxY + pad);
+              const cropW = Math.max(1, maxX - minX + 1);
+              const cropH = Math.max(1, maxY - minY + 1);
+              const croppedCanvas = document.createElement('canvas');
+              croppedCanvas.width = cropW;
+              croppedCanvas.height = cropH;
+              const croppedCtx = croppedCanvas.getContext('2d');
+              croppedCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+              outCanvas = croppedCanvas;
+            }
+          }
+
+          resolve(outCanvas.toDataURL('image/png'));
+        };
+        img.src = imgSource;
+      });
+    }
+
+    /* Studio Controls & Eraser */
+    function setStudioMode(m) {
+      studio.mode = m;
+      document.querySelectorAll('.mode-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === m);
+      });
+      runStudioProcess();
+    }
+
+    function updateStudioTolerance(val) {
+      studio.tolerance = parseFloat(val) / 100;
+      document.getElementById('dispTol').textContent = `${val}%`;
+      runStudioProcess();
+    }
+
+    function updateStudioChoke(val) {
+      studio.choke = parseInt(val, 10);
+      document.getElementById('dispChoke').textContent = `${val}px`;
+      runStudioProcess();
+    }
+
+    function updateStudioAutoCrop(chk) {
+      studio.autoCrop = chk;
+      runStudioProcess();
+    }
+
+    function revertStudioOriginal() {
+      if (!studio.originalSrc) return;
+      const cvs = document.getElementById('bgStudioCanvas');
+      const img = new Image();
+      img.onload = () => {
+        cvs.width = img.width;
+        cvs.height = img.height;
+        const ctx = cvs.getContext('2d');
+        ctx.clearRect(0, 0, img.width, img.height);
+        ctx.drawImage(img, 0, 0);
+        studio.workingDataUrl = studio.originalSrc;
+        document.getElementById('studioInfoBadge').textContent = 'Reverted to original source';
+      };
+      img.src = studio.originalSrc;
+    }
+
+    function setStudioBackdrop(type) {
+      const vp = document.getElementById('studioViewport');
+      vp.classList.remove('backdrop-checker', 'backdrop-black', 'backdrop-white');
+      ['Checker', 'Black', 'White'].forEach(name => {
+        const btn = document.getElementById('btnBackdrop' + name);
+        if (btn) btn.classList.toggle('active', name.toLowerCase() === type);
+      });
+      vp.classList.add('backdrop-' + type);
+    }
+
+    function setStudioTool(t) {
+      studio.tool = t;
+      document.getElementById('btnToolEraser').classList.toggle('active', t === 'eraser');
+      document.getElementById('btnToolPicker').classList.toggle('active', t === 'picker');
+      const ring = document.getElementById('eraserCursorRing');
+      if (t !== 'eraser') ring.style.display = 'none';
+    }
+
+    function updateEraserSize(val) {
+      studio.eraserSize = parseInt(val, 10);
+      document.getElementById('eraserSizeVal').textContent = `${val}px`;
+    }
+
+    function saveStudioUndo() {
+      const cvs = document.getElementById('bgStudioCanvas');
+      if (!cvs || cvs.width === 0) return;
+      const ctx = cvs.getContext('2d');
+      if (studio.history.length >= 12) studio.history.shift();
+      studio.history.push(ctx.getImageData(0, 0, cvs.width, cvs.height));
+      document.getElementById('btnStudioUndo').style.display = 'inline-flex';
+    }
+
+    function undoStudioErase() {
+      if (studio.history.length === 0) return;
+      const prev = studio.history.pop();
+      const cvs = document.getElementById('bgStudioCanvas');
+      const ctx = cvs.getContext('2d');
+      ctx.putImageData(prev, 0, 0);
+      studio.workingDataUrl = cvs.toDataURL('image/png');
+      if (studio.history.length === 0) {
+        document.getElementById('btnStudioUndo').style.display = 'none';
+      }
+      showToast('Undid last eraser stroke!');
+    }
+
+    function zoomStudio(delta) {
+      studio.zoom = Math.max(0.4, Math.min(2.5, studio.zoom + delta));
+      const cvs = document.getElementById('bgStudioCanvas');
+      cvs.style.transform = `scale(${studio.zoom})`;
+      document.getElementById('studioZoomVal').textContent = `${Math.round(studio.zoom * 100)}%`;
+    }
+
+    function applyStudioToCard() {
+      const cvs = document.getElementById('bgStudioCanvas');
+      if (!cvs || cvs.width === 0) return;
+      const dataUrl = cvs.toDataURL('image/png');
+      state.cards[studio.activeSlot].image = dataUrl;
+      closeBgStudio();
+      render();
+      showToast(`Slot ${studio.activeSlot + 1} updated with transparent cutout! 🎉`);
+    }
+
+    function downloadStudioPng() {
+      const cvs = document.getElementById('bgStudioCanvas');
+      if (!cvs || cvs.width === 0) return;
+      const a = document.createElement('a');
+      a.download = `cutout_card_${studio.activeSlot + 1}.png`;
+      a.href = cvs.toDataURL('image/png');
+      a.click();
+      showToast('Downloaded cutout PNG!');
+    }
+
+    function handleStudioCustomUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        state.cards[studio.activeSlot].image = ev.target.result;
+        studio.originalSrc = ev.target.result;
+        runStudioProcess();
+        showToast('New image loaded into Studio!');
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    }
+
+    // Canvas Mouse Events for Eraser & Color Picker
+    window.addEventListener('DOMContentLoaded', () => {
+      const cvs = document.getElementById('bgStudioCanvas');
+      const ring = document.getElementById('eraserCursorRing');
+
+      function getCanvasCoords(e) {
+        const rect = cvs.getBoundingClientRect();
+        const scaleX = cvs.width / rect.width;
+        const scaleY = cvs.height / rect.height;
+        return {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY
+        };
+      }
+
+      function eraseLine(p1, p2) {
+        const ctx = cvs.getContext('2d');
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = studio.eraserSize;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      cvs.addEventListener('mouseenter', () => {
+        if (studio.tool === 'eraser') ring.style.display = 'block';
+      });
+
+      cvs.addEventListener('mouseleave', () => {
+        ring.style.display = 'none';
+        studio.isErasing = false;
+        studio.lastPoint = null;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (studio.tool === 'eraser' && !document.getElementById('bgStudioModal').classList.contains('hidden')) {
+          const rect = cvs.getBoundingClientRect();
+          if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+            ring.style.display = 'block';
+            ring.style.left = e.clientX + 'px';
+            ring.style.top = e.clientY + 'px';
+            const displaySize = studio.eraserSize * (rect.width / cvs.width);
+            ring.style.width = displaySize + 'px';
+            ring.style.height = displaySize + 'px';
+          } else {
+            ring.style.display = 'none';
+          }
+        }
+      });
+
+      cvs.addEventListener('mousedown', (e) => {
+        if (studio.tool === 'eraser') {
+          saveStudioUndo();
+          studio.isErasing = true;
+          const pos = getCanvasCoords(e);
+          studio.lastPoint = pos;
+          eraseLine(pos, pos);
+        } else if (studio.tool === 'picker') {
+          const pos = getCanvasCoords(e);
+          const ctx = cvs.getContext('2d');
+          const p = ctx.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+          studio.pickedColor = { r: p[0], g: p[1], b: p[2] };
+          setStudioMode('color');
+          showToast(`Sampled color rgb(${p[0]}, ${p[1]}, ${p[2]})!`);
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (studio.isErasing) {
+          studio.isErasing = false;
+          studio.lastPoint = null;
+          studio.workingDataUrl = cvs.toDataURL('image/png');
+        }
+      });
+
+      cvs.addEventListener('mousemove', (e) => {
+        if (!studio.isErasing || studio.tool !== 'eraser') return;
+        const pos = getCanvasCoords(e);
+        if (studio.lastPoint) {
+          eraseLine(studio.lastPoint, pos);
+        }
+        studio.lastPoint = pos;
+      });
+    });
+
     // Initialize
     window.addEventListener('DOMContentLoaded', () => {
       render();
     });
   </script>
+
+  <!-- BACKGROUND REMOVAL STUDIO MODAL -->
+  <div class="bg-studio-backdrop hidden" id="bgStudioModal">
+    <div class="bg-studio-modal">
+      <div class="bg-studio-header">
+        <div class="bg-studio-title">
+          <span style="font-size:24px;">🪄</span>
+          <div>
+            <h3>BACKGROUND REMOVAL STUDIO</h3>
+            <small>Professional Cutout & Clean Eraser for Player Cards</small>
+          </div>
+        </div>
+        <button type="button" class="bg-studio-close" onclick="closeBgStudio()">✕</button>
+      </div>
+
+      <div class="bg-studio-body">
+        <!-- PREVIEW STAGE -->
+        <div class="bg-preview-stage">
+          <div class="canvas-stage-bar">
+            <div class="stage-theme-toggles">
+              <span style="font-size:10px; color:#8fa6c4; font-weight:700;">Backdrop:</span>
+              <button type="button" class="active" id="btnBackdropChecker" onclick="setStudioBackdrop('checker')">Checker</button>
+              <button type="button" id="btnBackdropBlack" onclick="setStudioBackdrop('black')">Black</button>
+              <button type="button" id="btnBackdropWhite" onclick="setStudioBackdrop('white')">White</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button type="button" class="touchup-btn" onclick="zoomStudio(-0.15)">-</button>
+              <span id="studioZoomVal" style="font-size:11px; font-weight:800; color:#c084fc;">100%</span>
+              <button type="button" class="touchup-btn" onclick="zoomStudio(0.15)">+</button>
+            </div>
+          </div>
+
+          <div class="canvas-stage-viewport backdrop-checker" id="studioViewport">
+            <canvas id="bgStudioCanvas"></canvas>
+            <div class="canvas-info-badge" id="studioInfoBadge">Ready</div>
+          </div>
+
+          <div class="canvas-stage-tools">
+            <span style="font-size:11px; font-weight:800; color:#8fa6c4;">Tools:</span>
+            <button type="button" class="touchup-btn active" id="btnToolEraser" onclick="setStudioTool('eraser')">
+              🧹 Eraser Brush
+            </button>
+            <button type="button" class="touchup-btn" id="btnToolPicker" onclick="setStudioTool('picker')">
+              🎯 Color Picker
+            </button>
+            <div id="eraserSizeGroup" style="display:inline-flex; align-items:center; gap:6px; margin-left:8px;">
+              <span style="font-size:10px; color:#8fa6c4;">Size:</span>
+              <input type="range" id="eraserSizeInput" min="6" max="150" value="28" style="width:90px; accent-color:#ff2a55;" oninput="updateEraserSize(this.value)">
+              <span id="eraserSizeVal" style="font-size:10px; font-weight:800; color:#ff8080; min-width:24px;">28px</span>
+            </div>
+            <button type="button" class="touchup-btn" id="btnStudioUndo" style="display:none; color:#ffd700;" onclick="undoStudioErase()">
+              ↩️ Undo
+            </button>
+          </div>
+        </div>
+
+        <!-- CONTROLS PANEL -->
+        <div class="bg-controls-panel">
+          <!-- CARD SELECTOR -->
+          <div class="studio-section">
+            <span class="studio-section-title">Select Card Slot</span>
+            <select id="studioCardSelect" class="input-text" style="font-size:12px; padding:6px 10px;" onchange="loadStudioCard(parseInt(this.value, 10))">
+              <!-- Dynamically populated -->
+            </select>
+            <button type="button" class="btn btn-secondary btn-mini" style="margin-top:4px;" onclick="document.getElementById('studioUploadFile').click()">
+              📁 Upload New Image to this Slot
+            </button>
+            <input type="file" id="studioUploadFile" accept="image/*" style="display:none;" onchange="handleStudioCustomUpload(event)">
+          </div>
+
+          <!-- REMOVAL MODE -->
+          <div class="studio-section">
+            <span class="studio-section-title">Cutout Mode</span>
+            <div class="mode-grid">
+              <button type="button" class="mode-btn active" data-mode="auto" onclick="setStudioMode('auto')">Auto Detect</button>
+              <button type="button" class="mode-btn" data-mode="white" onclick="setStudioMode('white')">Clean White</button>
+              <button type="button" class="mode-btn" data-mode="black" onclick="setStudioMode('black')">Clean Black</button>
+              <button type="button" class="mode-btn" data-mode="color" onclick="setStudioMode('color')">Picked Color</button>
+            </div>
+          </div>
+
+          <!-- FINE TUNING SLIDERS -->
+          <div class="studio-section">
+            <span class="studio-section-title">Fine Tuning</span>
+            <div class="range-row">
+              <span style="color:#8fa6c4;">Tolerance:</span>
+              <input type="range" id="studioTolInput" min="5" max="80" value="28" oninput="updateStudioTolerance(this.value)">
+              <span class="range-val" id="dispTol">28%</span>
+            </div>
+            <div class="range-row">
+              <span style="color:#8fa6c4;">Edge Trim:</span>
+              <input type="range" id="studioChokeInput" min="0" max="6" value="1" oninput="updateStudioChoke(this.value)">
+              <span class="range-val" id="dispChoke">1px</span>
+            </div>
+            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer; margin-top:4px;">
+              <input type="checkbox" id="studioAutoCropCheck" checked onchange="updateStudioAutoCrop(this.checked)"> Auto Crop to Bounds
+            </label>
+            <button type="button" class="btn btn-secondary btn-mini" style="margin-top:4px;" onclick="revertStudioOriginal()">
+              🔄 Revert to Original Image
+            </button>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="studio-section" style="margin-top:auto;">
+            <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:10px; font-size:13px;" onclick="applyStudioToCard()">
+              ✅ Apply Cutout to Card
+            </button>
+            <button type="button" class="btn btn-secondary btn-mini" style="width:100%; justify-content:center; margin-top:6px;" onclick="downloadStudioPng()">
+              📥 Download Transparent Cutout (PNG)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Eraser Cursor Ring Indicator Element -->
+  <div id="eraserCursorRing"></div>
+
 </body>
 </html>
