@@ -35,7 +35,8 @@
       if (!/^\d+$/.test(String(values[key])) || +values[key] < 1 || +values[key] > (key === 'ovr' ? 200 : 999)) throw Error(`Enter a valid ${key} value.`);
     }
     if (values.position && !positions.includes(values.position)) throw Error('Select a valid football position.');
-    if (!Array.isArray(values.skills) || !values.skills.length || values.skills.some(s => !s.name.trim() || !Number.isInteger(s.points) || s.points < 1 || s.points > 5) || values.skills.reduce((n,s) => n+s.points,0) !== 5) throw Error('Confirm skill allocations totaling exactly five points (for example Defender +2 and three +1 upgrades).');
+    const skillSum = Array.isArray(values.skills) ? values.skills.reduce((n,s) => n+s.points,0) : 0;
+    if (!Array.isArray(values.skills) || !values.skills.length || values.skills.some(s => !s.name.trim() || !Number.isInteger(s.points) || s.points < 1 || s.points > 5) || (skillSum !== 5 && skillSum !== 6)) throw Error('Confirm skill allocations totaling five or six points (for example Defender +2 and three +1 upgrades).');
     return values;
   }
   function rect(region, width, height) {

@@ -43,7 +43,7 @@
     try{const saved={};for(const d of definitions)if(regions[d.id]&&d.type!=='icon'&&d.id!=='position')saved[d.id]=regions[d.id];localStorage.setItem(cacheKey,JSON.stringify({version:2,aspect:source.width/source.height,regions:saved}));}catch{}
   }
   const labels = {ovr:'Target OVR', pacing:'Pacing', shooting:'Shooting', passing:'Passing', dribbling:'Dribbling', defending:'Defending', physical:'Physical'};
-  const fixed = [ ['cardOVR','Card OVR','text','ovr'], ['panelOVR','Stats-panel OVR','text','ovr'], ...C.stats.map(s=>[s,labels[s],'text',s]), ['training','Training 30/30','text','training'], ['bar','Training progress bar','bar'], ['badge','Orange level 30 badge','badge'], ['rank','Five orange rank diamonds','rank'], ['trainingControl','Active training control','control','TRAINING'], ['rankControl','Active rank-up control','control','RANK UP'] ];
+  const fixed = [ ['cardOVR','Card OVR','text','ovr'], ['panelOVR','Stats-panel OVR','text','ovr'], ...C.stats.map(s=>[s,labels[s],'text',s]), ['training','Training 30/30','text','training'], ['bar','Training progress bar','bar'], ['badge','Orange level 30 badge','badge'], ['rank','Six orange rank diamonds','rank'], ['trainingControl','Active training control','control','TRAINING'], ['rankControl','Active rank-up control','control','RANK UP'] ];
   function status(message, error=false) { $('status').textContent = message; $('status').classList.toggle('error', error); }
   function invalidate() {
     revision++;
@@ -261,8 +261,9 @@
     if(d.type==='bar'){g.fillStyle='#ff9b26';g.fillRect(r.x,r.y,r.w,r.h);}
     if(d.type==='badge'){g.fillStyle='#ed861b';g.fillRect(r.x,r.y,r.w,r.h);text(g,'30',r,'#ffffff');}
     if(d.type==='rank'){
-      const unit=r.w/5,rad=Math.min(unit*.38,r.h*.45);g.fillStyle='#ff9b26';
-      for(let i=0;i<5;i++){const x=r.x+unit*(i+.5),y=r.y+r.h/2;g.beginPath();g.moveTo(x,y-rad);g.lineTo(x+rad,y);g.lineTo(x,y+rad);g.lineTo(x-rad,y);g.closePath();g.fill();}
+      const rankCount=6;
+      const unit=r.w/rankCount,rad=Math.min(unit*.38,r.h*.45);g.fillStyle='#ff9b26';
+      for(let i=0;i<rankCount;i++){const x=r.x+unit*(i+.5),y=r.y+r.h/2;g.beginPath();g.moveTo(x,y-rad);g.lineTo(x+rad,y);g.lineTo(x,y+rad);g.lineTo(x-rad,y);g.closePath();g.fill();}
     }
     if(d.type==='control'){g.fillStyle='#f29626';g.fillRect(r.x,r.y,r.w,r.h);text(g,d.key,r,'#111821');}
     if(d.type==='icon'){

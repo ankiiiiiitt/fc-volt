@@ -50,8 +50,10 @@
   function validateTarget(values,baseOVR,baseStats){
     for(const key of ['ovr','pacing','shooting','passing','dribbling','defending','physical'])if(!Number.isInteger(values[key])||values[key]<1||values[key]>(key==='ovr'?200:999))throw Error('RenderZ is missing a reliable '+key+' value.');
     if(baseStats)for(const key of ['pacing','shooting','passing','dribbling','defending','physical'])if(!Number.isInteger(baseStats[key])||values[key]<baseStats[key])throw Error('A target stat is lower than the base card. Use matching full-resolution screenshots.');
-    if(values.ovr!==baseOVR+5)throw Error('Use an unranked base card and a matching five-rank RenderZ screenshot (target OVR must be base OVR +5).');
-    if(!Array.isArray(values.allocation)||values.allocation.length!==6||values.allocation.some(n=>!Number.isInteger(n)||n<0||n>3)||values.allocation.reduce((a,b)=>a+b,0)!==5)throw Error('RenderZ must show a complete five-point skill allocation.');
+    if(values.ovr!==baseOVR+5&&values.ovr!==baseOVR+6)throw Error('Use an unranked base card and a matching five or six rank RenderZ screenshot (target OVR must be base OVR +5 or +6).');
+    const skillSum=Array.isArray(values.allocation)?values.allocation.reduce((a,b)=>a+b,0):0;
+    if(!Array.isArray(values.allocation)||values.allocation.length!==6||values.allocation.some(n=>!Number.isInteger(n)||n<0||n>3)||(skillSum!==5&&skillSum!==6))throw Error('RenderZ must show a valid five or six point skill allocation.');
+    values.rankCount = (values.ovr === baseOVR + 5 && skillSum === 5) ? 5 : 6;
     return values;
   }
   function samePlayer(baseName,targetName){

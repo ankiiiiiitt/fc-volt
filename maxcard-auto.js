@@ -218,7 +218,7 @@
     bounded(g,regions.training,w,h,p=>{clearArea(source,out,regions.training);writeNumber(g,'30/30',p,'#ffffff','Arial, sans-serif',400);});
     bounded(g,regions.bar,w,h,p=>{g.fillStyle='#f4f6f7';g.fillRect(p.x,p.y,p.w,p.h);});
     bounded(g,regions.badge,w,h,p=>{g.drawImage(badge,p.x,p.y,p.w,p.h);});
-    bounded(g,regions.rank,w,h,p=>{g.fillStyle='#111719';g.fillRect(p.x,p.y,p.w,p.h);const unit=p.w/5;for(let i=0;i<5;i++)g.drawImage(diamond,p.x+unit*i+(unit-p.h*.85)/2,p.y,p.h*.85,p.h);});
+    bounded(g,regions.rank,w,h,p=>{g.fillStyle='#111719';g.fillRect(p.x,p.y,p.w,p.h);const rankCount=target.rankCount||6;const unit=p.w/rankCount;for(let i=0;i<rankCount;i++)g.drawImage(diamond,p.x+unit*i+(unit-p.h*.85)/2,p.y,p.h*.85,p.h);});
     for(const [id,label]of [['trainingControl','TRAINING'],['rankControl','RANK UP'],['editControl','EDIT']])bounded(g,regions[id],w,h,p=>button(g,p,label));
     target.allocation.forEach((points,index)=>{
       if(!points)return;bounded(g,regions['skill'+index],w,h,p=>{
@@ -240,7 +240,7 @@
   async function present(target,started){
     const {blob}=await composite(target);outputURL=URL.createObjectURL(blob);detected=target;
     $('before').src=urls.base;$('after').src=outputURL;$('compare').value=50;$('before').style.clipPath='inset(0 50% 0 0)';
-    $('summary').textContent=`${target.name} · ${target.ovr} OVR · Training 30/30 · Five ranks · Ready in ${((performance.now()-started)/1000).toFixed(1)}s`;
+    $('summary').textContent=`${target.name} · ${target.ovr} OVR · Training 30/30 · Six ranks · Ready in ${((performance.now()-started)/1000).toFixed(1)}s`;
     $('verification').textContent=`Verified ${images.base.width} × ${images.base.height} PNG · 0 changed pixels outside the detected upgrade regions.`;
     $('detected').replaceChildren();const list=document.createElement('div');list.className='auto-readout';for(const k of C.fields){const item=document.createElement('div');item.textContent=k.toUpperCase();const n=document.createElement('strong');n.textContent=target[k];item.append(n);list.append(item);}$('detected').append(list);
     const skills=document.createElement('p');skills.className='muted';skills.textContent=target.allocation.map((n,i)=>n?`${target.skillNames[i]} +${n}`:'').filter(Boolean).join(' · ');$('detected').append(skills);
