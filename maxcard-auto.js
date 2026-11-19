@@ -223,8 +223,8 @@
     target.allocation.forEach((points,index)=>{
       if(!points)return;bounded(g,regions['skill'+index],w,h,p=>{
         const r=rzRect([826+203.5*index,395,64,64]),sx=Math.round(r.x*canvases.render.width),sy=Math.round(r.y*canvases.render.height),sw=Math.round(r.w*canvases.render.width),sh=Math.round(r.h*canvases.render.height);
-        const size=p.w*.89,x=p.x+(p.w-size)/2,y=p.y+3;g.save();g.beginPath();g.moveTo(x+size/2,y);g.lineTo(x+size,y+size/2);g.lineTo(x+size/2,y+size);g.lineTo(x,y+size/2);g.closePath();g.clip();g.drawImage(canvases.render,sx,sy,sw,sh,x,y,size,size);g.restore();
-        const badge={x:p.x+p.w*.75,y:p.y+p.h*.79,w:p.w*.24,h:p.h*.21};g.fillStyle='#07090b';g.fillRect(badge.x,badge.y,badge.w,badge.h);writeNumber(g,points,badge,'#ffffff','Arial,sans-serif');
+        const size=Math.min(p.w,p.h)*.88,x=p.x+(p.w-size)/2,y=p.y+(p.h-size)/2;g.save();g.beginPath();g.moveTo(x+size/2,y);g.lineTo(x+size,y+size/2);g.lineTo(x+size/2,y+size);g.lineTo(x,y+size/2);g.closePath();g.clip();g.drawImage(canvases.render,sx,sy,sw,sh,x,y,size,size);g.restore();
+        const badge={x:p.x+p.w*.65,y:p.y+p.h*.65,w:p.w*.35,h:p.h*.32};g.fillStyle='#07090b';g.fillRect(badge.x,badge.y,badge.w,badge.h);writeNumber(g,points,badge,'#ffffff','Arial,sans-serif');
       });
     });
     // Assemble exact patches in CPU memory. Never read back a full output
