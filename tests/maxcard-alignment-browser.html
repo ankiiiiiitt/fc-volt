@@ -10,11 +10,20 @@ document.getElementById('run').onclick=async()=>{log.textContent='Running…';tr
  assert($('summary').textContent.includes('5 ranks'),'Wrong rank summary');
  const source=await w.MaxCardPNG.decode(await base.arrayBuffer()),output=await w.MaxCardPNG.decode(await(await fetch($('after').src)).arrayBuffer()),t=w.MaxCardLayout.detectProfile(source.data,source.width,source.height),regions=w.MaxCardLayout.regions(allocation,t);
  w.MaxCardCore.assertPreserved(source.data,output.data,source.width,source.height,Object.values(regions));
+ const native=w.MaxCardNative.boxes(t);for(const r of [...native.ranks,...native.skills,...native.badges]){const p=w.MaxCardCore.rect(r,source.width,source.height);for(let y=p.y;y<p.y+p.h;y++)for(let x=p.x;x<p.x+p.w;x++)for(let c=0;c<4;c++){const i=(y*source.width+x)*4+c;assert(source.data[i]===output.data[i],'Native rank/skill reference pixel changed at '+x+','+y);}}
  const at=(x,y)=>{const p=(y*source.width+x)*4;for(let c=0;c<4;c++)assert(source.data[p+c]===output.data[p+c],'Protected label pixel changed');};
  for(let y=700;y<730;y+=4)for(let x=1730;x<1930;x+=4)at(x,y);
  assert(Math.abs(regions.trainingControl.x*2796-1383)<7&&Math.abs(regions.trainingControl.y*1290-701)<7,'Training button displaced');assert(Math.abs(regions.skill0.y*1290-908)<7,'Skills displaced');
  $('reviewRankCount').value='6';allocation[1]=1;edit(w,'edit-skill-1','1');$('reviewForm').requestSubmit();await wait(()=>!$('result').hidden&&!$('reviewFields').disabled);assert($('summary').textContent.includes('6 ranks'),'Six-rank option lost');
  edit(w,'reviewRankCount','5');edit(w,'edit-skill-1','0');$('reviewForm').requestSubmit();await wait(()=>!$('result').hidden&&!$('reviewFields').disabled);
- document.getElementById('proof').src=$('after').src;document.getElementById('proof').hidden=false;frame.hidden=true;log.textContent='PASS: Lahm reference values; correctly mapped training/rank/edit buttons and skills; rank label preserved; five and six rank display; zero pixel changes outside upgrade regions. ALL CHECKS PASSED';
+ // Exercise real compositing, rather than just preservation of an already-maxed input.
+ const disabled=new Uint8ClampedArray(source.data);
+ for(const r of native.ranks.slice(0,5)){const p=w.MaxCardCore.rect(r,source.width,source.height);for(let y=p.y;y<p.y+p.h;y++)for(let x=p.x;x<p.x+p.w;x++){const k=(y*source.width+x)*4,v=Math.max(disabled[k],disabled[k+1],disabled[k+2])*.25;disabled[k]=disabled[k+1]=disabled[k+2]=v;}}
+ for(const i of [0,2,4,5]){const p=w.MaxCardCore.rect(native.skills[i],source.width,source.height);for(let y=p.y;y<p.y+p.h;y++)for(let x=p.x;x<p.x+p.w;x++){const k=(y*source.width+x)*4;for(let c=0;c<3;c++)disabled[k+c]*=.3;}}
+ const synthetic=await w.MaxCardPNG.encode({...source,data:disabled});upload(w,'baseFile',synthetic,'image/png');await wait(()=>!$('review').hidden&&!$('baseFile').disabled);edit(w,'reviewName','LAHM');edit(w,'reviewRankCount','5');w.MaxCardCore.fields.forEach((key,i)=>edit(w,'edit-'+key,numbers[i]));[2,0,1,0,1,1].forEach((n,i)=>edit(w,'edit-skill-'+i,n));$('reviewForm').requestSubmit();await wait(()=>!$('result').hidden&&!$('reviewFields').disabled);
+ const upgraded=await w.MaxCardPNG.decode(await(await fetch($('after').src)).arrayBuffer());
+ for(const i of [0,2,4,5]){const p=w.MaxCardCore.rect(native.skills[i],source.width,source.height);let error=0;for(let y=p.y;y<p.y+p.h;y++)for(let x=p.x;x<p.x+p.w;x++)for(let c=0;c<3;c++){const k=(y*source.width+x)*4+c;error+=Math.abs(upgraded.data[k]-source.data[k]);}assert(error/(p.w*p.h*3)<.1,'Disabled native skill failed to restore: '+i);}
+ w.MaxCardCore.assertPreserved(disabled,upgraded.data,source.width,source.height,Object.values(regions));
+ document.getElementById('proof').src=$('after').src;document.getElementById('proof').hidden=false;frame.hidden=true;log.textContent='PASS: Lahm reference values; correctly mapped training/rank/edit buttons and skills; rank label preserved; five and six rank display; pixel-identical native ranks and skills against the supplied max reference; zero pixel changes outside upgrade regions. disabled-icon upgrade checked against native reference. ALL CHECKS PASSED';
  }catch(e){log.textContent+='\nFAIL: '+e.message;}};
 </script></html>

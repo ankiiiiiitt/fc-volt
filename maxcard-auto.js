@@ -215,19 +215,42 @@
   async function composite(target){
     const source=canvases.base,w=source.width,h=source.height,out=makeCanvas(w,h),g=out.getContext('2d',{willReadFrequently:true}),original=basePixels,regions=L.regions(target.allocation,target.transform);
     g.putImageData(new ImageData(new Uint8ClampedArray(original.data),w,h),0,0);
-    const [badge,diamond]=await Promise.all([loadAsset('assets/maxcard/level30.png'),loadAsset('assets/maxcard/rank-orange.png')]);
+    const [badge,rank,rankSix,levelOne,levelTwo]=await Promise.all(['level30.png','rank-native.png','rank-six-inactive.png','skill-level-1.png','skill-level-2.png'].map(n=>loadAsset('assets/maxcard/'+n)));
+    const nativeIcons=await Promise.all([0,2,4,5].map(i=>loadAsset('assets/maxcard/skill-native-'+i+'.png')));
+    const native=MaxCardNative.boxes(target.transform),sg=source.getContext('2d',{willReadFrequently:true});
     for(const id of ['cardOVR','panelOVR',...C.stats])bounded(g,regions[id],w,h,p=>{clearArea(source,out,regions[id]);writeNumber(g,target[id==='cardOVR'||id==='panelOVR'?'ovr':id],p,C.stats.includes(id)?'#00c72c':'#ffffff');});
     bounded(g,regions.training,w,h,p=>{clearArea(source,out,regions.training);writeNumber(g,'30/30',p,'#ffffff','Arial, sans-serif',400);});
     // Preserve the game's native training bar styling.
     bounded(g,regions.badge,w,h,p=>{g.drawImage(badge,p.x,p.y,p.w,p.h);});
-    bounded(g,regions.rank,w,h,p=>{g.fillStyle='#111719';g.fillRect(p.x,p.y,p.w,p.h);const rankCount=target.rankCount||5,unit=p.w/6;for(let i=0;i<6;i++){g.save();if(i>=rankCount){g.globalAlpha=.4;g.filter='grayscale(1)';}g.drawImage(diamond,p.x+unit*i+(unit-p.h*.85)/2,p.y,p.h*.85,p.h);g.restore();}});
+    // Keep native slots (including the distinct sixth triangle) at their original
+    // size and spacing. Only change slots whose selected state actually changed.
+    native.ranks.forEach((r,i)=>bounded(g,r,w,h,p=>{
+      const pixels=sg.getImageData(p.x,p.y,p.w,p.h),enabled=i<(target.rankCount||5);
+      if(MaxCardNative.orange(pixels.data)===enabled)return;
+      if(i===5){g.drawImage(rankSix,p.x,p.y,p.w,p.h);if(enabled){const q=g.getImageData(p.x,p.y,p.w,p.h);for(let k=0;k<q.data.length;k+=4){const v=Math.max(q.data[k],q.data[k+1],q.data[k+2]);if(v>35){q.data[k]=Math.min(255,v*3.5);q.data[k+1]=Math.min(150,v*1.8);q.data[k+2]=0;}}g.putImageData(q,p.x,p.y);}}
+      else g.drawImage(rank,p.x,p.y,p.w,p.h);
+    }));
     for(const [id,label]of [['trainingControl','TRAINING'],['rankControl','RANK UP'],['editControl','EDIT']])bounded(g,regions[id],w,h,p=>button(g,p,label));
     target.allocation.forEach((points,index)=>{
-      if(!points)return;bounded(g,regions['skill'+index],w,h,p=>{
-        const r=rzRect([826+203.5*index,395,64,64]),sx=Math.round(r.x*canvases.render.width),sy=Math.round(r.y*canvases.render.height),sw=Math.round(r.w*canvases.render.width),sh=Math.round(r.h*canvases.render.height);
-        const size=Math.min(p.w,p.h)*.88,x=p.x+(p.w-size)/2,y=p.y+(p.h-size)/2;g.save();g.beginPath();g.moveTo(x+size/2,y);g.lineTo(x+size,y+size/2);g.lineTo(x+size/2,y+size);g.lineTo(x,y+size/2);g.closePath();g.clip();g.drawImage(canvases.render,sx,sy,sw,sh,x,y,size,size);g.restore();
-        const badge={x:p.x+p.w*.65,y:p.y+p.h*.65,w:p.w*.35,h:p.h*.32};g.fillStyle='#07090b';g.fillRect(badge.x,badge.y,badge.w,badge.h);writeNumber(g,points,badge,'#ffffff','Arial,sans-serif');
-      });
+      const p=C.rect(native.skills[index],w,h),bp=C.rect(native.badges[index],w,h),originalIcon=sg.getImageData(p.x,p.y,p.w,p.h),wasActive=MaxCardNative.active(originalIcon.data);
+      if(!points&&!wasActive)return;
+      const glyph=points===1?levelOne:points===2?levelTwo:null;
+      if(wasActive&&glyph){const c=makeCanvas(bp.w,bp.h),cg=c.getContext('2d');cg.drawImage(glyph,0,0,bp.w,bp.h);if(MaxCardNative.sameGlyph(sg.getImageData(bp.x,bp.y,bp.w,bp.h).data,cg.getImageData(0,0,bp.w,bp.h).data,bp.w))return;}
+      let restored=false;
+      if(!wasActive&&points){const n=[0,2,4,5].indexOf(index);if(n>=0){const c=makeCanvas(p.w,p.h),cg=c.getContext('2d');cg.drawImage(nativeIcons[n],0,0,p.w,p.h);if(index!==0||MaxCardNative.sameArtwork(originalIcon.data,cg.getImageData(0,0,p.w,p.h).data,p.w)){g.drawImage(nativeIcons[n],p.x,p.y,p.w,p.h);restored=true;}}}
+      if((!wasActive&&!restored)||!points){
+        // The disabled icon is the native artwork under a dimming layer. Restore
+        // that artwork inside its own diamond, rather than pasting a RenderZ icon.
+        const icon=sg.getImageData(p.x,p.y,p.w,p.h),factor=points?3.35:.30;
+        for(let y=0;y<p.h;y++)for(let x=0;x<p.w;x++){
+          const k=(y*p.w+x)*4,inside=Math.abs((x/p.w-.50)/.435)+Math.abs((y/p.h-.49)/.425)<=1;
+          if(inside){for(let ch=0;ch<3;ch++)icon.data[k+ch]=Math.min(255,icon.data[k+ch]*factor);}
+          else{icon.data[k]=points?17:36;icon.data[k+1]=points?23:38;icon.data[k+2]=points?25:38;}
+        }g.putImageData(icon,p.x,p.y);
+      }
+      if(restored&&points===(index===0?2:1))return;
+      if(points){if(glyph)g.drawImage(glyph,bp.x,bp.y,bp.w,bp.h);else{g.fillStyle='#000';g.fillRect(bp.x,bp.y,bp.w,bp.h);writeNumber(g,points,bp,'white','"Roboto Condensed",Arial,sans-serif',500,.95);}}
+      else {g.fillStyle='#111719';g.fillRect(bp.x,bp.y,bp.w,bp.h);}
     });
     // Assemble exact patches in CPU memory. Never read back a full output
     // canvas: privacy browsers may perturb those pixels independently per call.

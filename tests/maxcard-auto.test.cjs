@@ -23,7 +23,7 @@ test('names match across accents and expanded RenderZ names',()=>{
 });
 test('automatic edit masks exclude the protected PlayStyles and stars panels',()=>{
  const r=L.regions(target.allocation);
- assert(r.skill0&&r.skill1&&r.skill4&&r.skill5);assert(!r.skill2&&!r.skill3);
+ assert(r.skill0&&r.skill1&&r.skill4&&r.skill5);assert(r.skill2&&r.skill3);
  const protectedAreas=[{x:.28,y:.69,w:.34,h:.28},{x:.01,y:.70,w:.24,h:.17},{x:.115,y:.19,w:.095,h:.28}];
  for(const mask of Object.values(r))for(const p of protectedAreas)assert(!(mask.x<p.x+p.w&&mask.x+mask.w>p.x&&mask.y<p.y+p.h&&mask.y+mask.h>p.y),'mask overlaps protected area');
 });
