@@ -1,0 +1,20 @@
+<!doctype html><html><meta charset="utf-8"><title>Max Card alignment checks</title><style>body{background:#0b111a;color:white;font:14px Arial}pre{white-space:pre-wrap}iframe{width:100%;height:900px}#proof{width:100%}</style><button id="run">Check Lahm alignment</button><pre id="log">Ready</pre><img id="proof" hidden><iframe id="app" src="../maxcard.html?alignment2"></iframe><script>
+const frame=document.getElementById('app'),log=document.getElementById('log');
+const wait=async f=>{for(let i=0;i<600;i++){if(f())return;await new Promise(r=>setTimeout(r,100));}throw Error('Timed out');};const assert=(v,m)=>{if(!v)throw Error(m);};
+function upload(w,id,blob,type){const dt=new w.DataTransfer();dt.items.add(new w.File([blob],id,{type}));const el=w.document.getElementById(id);el.files=dt.files;el.dispatchEvent(new w.Event('change',{bubbles:true}));}
+function edit(w,id,v){const el=w.document.getElementById(id);el.value=v;el.dispatchEvent(new w.Event('input',{bubbles:true}));}
+document.getElementById('run').onclick=async()=>{log.textContent='Running…';try{
+ const w=frame.contentWindow,d=w.document,$=id=>d.getElementById(id);await wait(()=>w.MaxCardLayout);w.Tesseract={createWorker:async()=>{throw Error('Manual reference alignment test');}};
+ const base=await(await fetch('/__fixtures__/lahm.png')).blob(),rz=await(await fetch('/__fixtures__/lahm.webp')).blob();upload(w,'baseFile',base,'image/png');await wait(()=>$('baseInfo').textContent.includes('Added'));upload(w,'renderFile',rz,'image/webp');await wait(()=>!$('review').hidden&&!$('baseFile').disabled);
+ edit(w,'reviewName','LAHM');edit(w,'reviewRankCount','5');const numbers=[127,214,144,209,190,208,176],allocation=[2,0,1,0,1,1];w.MaxCardCore.fields.forEach((key,i)=>edit(w,'edit-'+key,numbers[i]));allocation.forEach((n,i)=>edit(w,'edit-skill-'+i,n));$('reviewForm').requestSubmit();await wait(()=>!$('result').hidden&&!$('reviewFields').disabled);
+ assert($('summary').textContent.includes('5 ranks'),'Wrong rank summary');
+ const source=await w.MaxCardPNG.decode(await base.arrayBuffer()),output=await w.MaxCardPNG.decode(await(await fetch($('after').src)).arrayBuffer()),t=w.MaxCardLayout.detectProfile(source.data,source.width,source.height),regions=w.MaxCardLayout.regions(allocation,t);
+ w.MaxCardCore.assertPreserved(source.data,output.data,source.width,source.height,Object.values(regions));
+ const at=(x,y)=>{const p=(y*source.width+x)*4;for(let c=0;c<4;c++)assert(source.data[p+c]===output.data[p+c],'Protected label pixel changed');};
+ for(let y=700;y<730;y+=4)for(let x=1730;x<1930;x+=4)at(x,y);
+ assert(Math.abs(regions.trainingControl.x*2796-1383)<7&&Math.abs(regions.trainingControl.y*1290-701)<7,'Training button displaced');assert(Math.abs(regions.skill0.y*1290-908)<7,'Skills displaced');
+ $('reviewRankCount').value='6';allocation[1]=1;edit(w,'edit-skill-1','1');$('reviewForm').requestSubmit();await wait(()=>!$('result').hidden&&!$('reviewFields').disabled);assert($('summary').textContent.includes('6 ranks'),'Six-rank option lost');
+ edit(w,'reviewRankCount','5');edit(w,'edit-skill-1','0');$('reviewForm').requestSubmit();await wait(()=>!$('result').hidden&&!$('reviewFields').disabled);
+ document.getElementById('proof').src=$('after').src;document.getElementById('proof').hidden=false;frame.hidden=true;log.textContent='PASS: Lahm reference values; correctly mapped training/rank/edit buttons and skills; rank label preserved; five and six rank display; zero pixel changes outside upgrade regions. ALL CHECKS PASSED';
+ }catch(e){log.textContent+='\nFAIL: '+e.message;}};
+</script></html>

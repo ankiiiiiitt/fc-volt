@@ -125,7 +125,7 @@
     const rz=canvases.render,transform=L.detectProfile(basePixels.data,canvases.base.width,canvases.base.height);
     if(rz.width<1600||rz.height<1600)throw Error('Use a full-resolution RenderZ export (at least 1600 × 1600).');
     if(Math.abs(rz.width/rz.height-1)>.025)throw Error('Use the full square RenderZ export.');
-    return {transform,name:'',allocation:Array(6).fill(null),skillNames:['Primary skill','Scoring','Passing','Dribbling','Defending','Physical'],warnings:[],...Object.fromEntries(C.fields.map(k=>[k,null]))};
+    return {transform,name:'',rankCount:5,allocation:Array(6).fill(null),skillNames:['Primary skill','Scoring','Passing','Dribbling','Defending','Physical'],warnings:[],...Object.fromEntries(C.fields.map(k=>[k,null]))};
   }
   async function analyze(worker,target){
     const base=canvases.base,rz=canvases.render,area=r=>L.map(r,target.transform);
@@ -144,7 +144,7 @@
       const [x,y,w,h]=L.renderz[key],isOVR=key==='ovr';
       target[key]=await safe(()=>number(rz,rzRect(isOVR?L.renderz[key]:[x-12,y-14,w+24,h+24]),isOVR?'white':'plain',1,isOVR?200:999,key),null,key.toUpperCase());
     }
-    if(baseOVR&&target.ovr&&target.ovr!==baseOVR+5)target.warnings.push('The detected OVR is not base OVR +5. Check the target OVR.');
+    if(baseOVR&&target.ovr&&target.ovr!==baseOVR+5&&target.ovr!==baseOVR+6)target.warnings.push('The detected OVR is not base OVR +5 or +6. Check the target OVR.');
     message('Reading skill allocation…',false,62);
     for(let index=0;index<6;index++){
       const r=rzRect([850+203.5*index,354,95,36]),c=crop(rz,r,'plain',1),data=c.getContext('2d').getImageData(0,0,c.width,c.height).data;
@@ -155,26 +155,28 @@
     const category=await safe(()=>read(worker,rz,rzRect([770,458,175,42]),'invert'),{text:'',confidence:0},'Primary skill label');
     const categoryName=category.text.replace(/[^A-Za-z -]/g,'').trim();
     if(category.confidence>=65&&categoryName.length>=3)target.skillNames[0]=categoryName;
-    if(target.allocation.some(n=>n===null)||target.allocation.reduce((a,b)=>a+(b||0),0)!==5)target.warnings.push('Check the skill allocation. The total must be five points.');
+    target.rankCount=target.allocation.reduce((a,b)=>a+(b||0),0)===6?6:5;
+    if(target.allocation.some(n=>n===null)||![5,6].includes(target.allocation.reduce((a,b)=>a+(b||0),0)))target.warnings.push('Check the skill allocation. The total must be five or six points.');
     return target;
   }
   function showReview(target){
     draft=target;$('review').hidden=false;
     $('reviewWarnings').replaceChildren();target.warnings.forEach(text=>{const p=document.createElement('p');p.textContent=text;$('reviewWarnings').append(p);});
     $('reviewNames').textContent=target.baseName||target.renderName?`Base: ${target.baseName||'Not read'} · RenderZ: ${target.renderName||'Not read'}`:'';
-    $('reviewName').value=target.name;
+    $('reviewName').value=target.name;$('reviewRankCount').value=target.rankCount||5;
     $('reviewStats').replaceChildren();$('reviewSkills').replaceChildren();
     for(const key of C.fields){const label=document.createElement('label');label.textContent=key.toUpperCase();const input=document.createElement('input');input.id='edit-'+key;input.type='number';input.min=1;input.max=key==='ovr'?200:999;input.step=1;input.required=true;input.value=target[key]??'';label.append(input);$('reviewStats').append(label);}
     target.skillNames.forEach((name,i)=>{const label=document.createElement('label');label.textContent=name;const input=document.createElement('input');input.id='edit-skill-'+i;input.type='number';input.min=0;input.max=3;input.step=1;input.required=true;input.value=target.allocation[i]??'';label.append(input);$('reviewSkills').append(label);});
     $('reviewError').textContent='';updateSkillTotal();
   }
-  function updateSkillTotal(){const inputs=[...$('reviewSkills').querySelectorAll('input')],sum=inputs.reduce((a,b)=>a+(+b.value||0),0);$('skillTotal').textContent=`${sum} / 5 skill points`;$('skillTotal').classList.toggle('review-invalid',sum!==5||inputs.some(n=>n.value===''));}
+  function updateSkillTotal(){const inputs=[...$('reviewSkills').querySelectorAll('input')],sum=inputs.reduce((a,b)=>a+(+b.value||0),0);$('skillTotal').textContent=`${sum} / ${$('reviewRankCount').value} skill points`;$('skillTotal').classList.toggle('review-invalid',sum!==+$('reviewRankCount').value||inputs.some(n=>n.value===''));}
   function reviewedTarget(){
-    const target={...draft,name:$('reviewName').value.trim(),allocation:[]};
+    const target={...draft,name:$('reviewName').value.trim(),rankCount:+$('reviewRankCount').value,allocation:[]};
     for(const key of C.fields)target[key]=Number($('edit-'+key).value);
     for(let i=0;i<6;i++)target.allocation.push(Number($('edit-skill-'+i).value));
     // Manual review replaces uncertain OCR comparisons; retain numeric and allocation validation.
-    return L.validateTarget(target,target.ovr-5);
+    if(target.allocation.reduce((a,b)=>a+b,0)!==target.rankCount)throw Error('Skill points must total the selected rank level.');
+    return L.validateTarget(target,target.ovr-target.rankCount);
   }
   $('reviewForm').oninput=()=>{
     updateSkillTotal();if(outputURL)URL.revokeObjectURL(outputURL);outputURL=null;detected=null;$('result').hidden=true;$('reviewError').textContent='';message('Values changed. Click Generate preview to apply them.');
@@ -216,9 +218,9 @@
     const [badge,diamond]=await Promise.all([loadAsset('assets/maxcard/level30.png'),loadAsset('assets/maxcard/rank-orange.png')]);
     for(const id of ['cardOVR','panelOVR',...C.stats])bounded(g,regions[id],w,h,p=>{clearArea(source,out,regions[id]);writeNumber(g,target[id==='cardOVR'||id==='panelOVR'?'ovr':id],p,C.stats.includes(id)?'#00c72c':'#ffffff');});
     bounded(g,regions.training,w,h,p=>{clearArea(source,out,regions.training);writeNumber(g,'30/30',p,'#ffffff','Arial, sans-serif',400);});
-    bounded(g,regions.bar,w,h,p=>{g.fillStyle='#f4f6f7';g.fillRect(p.x,p.y,p.w,p.h);});
+    // Preserve the game's native training bar styling.
     bounded(g,regions.badge,w,h,p=>{g.drawImage(badge,p.x,p.y,p.w,p.h);});
-    bounded(g,regions.rank,w,h,p=>{g.fillStyle='#111719';g.fillRect(p.x,p.y,p.w,p.h);const rankCount=target.rankCount||6;const unit=p.w/rankCount;for(let i=0;i<rankCount;i++)g.drawImage(diamond,p.x+unit*i+(unit-p.h*.85)/2,p.y,p.h*.85,p.h);});
+    bounded(g,regions.rank,w,h,p=>{g.fillStyle='#111719';g.fillRect(p.x,p.y,p.w,p.h);const rankCount=target.rankCount||5,unit=p.w/6;for(let i=0;i<6;i++){g.save();if(i>=rankCount){g.globalAlpha=.4;g.filter='grayscale(1)';}g.drawImage(diamond,p.x+unit*i+(unit-p.h*.85)/2,p.y,p.h*.85,p.h);g.restore();}});
     for(const [id,label]of [['trainingControl','TRAINING'],['rankControl','RANK UP'],['editControl','EDIT']])bounded(g,regions[id],w,h,p=>button(g,p,label));
     target.allocation.forEach((points,index)=>{
       if(!points)return;bounded(g,regions['skill'+index],w,h,p=>{
@@ -240,7 +242,7 @@
   async function present(target,started){
     const {blob}=await composite(target);outputURL=URL.createObjectURL(blob);detected=target;
     $('before').src=urls.base;$('after').src=outputURL;$('compare').value=50;$('before').style.clipPath='inset(0 50% 0 0)';
-    $('summary').textContent=`${target.name} · ${target.ovr} OVR · Training 30/30 · Six ranks · Ready in ${((performance.now()-started)/1000).toFixed(1)}s`;
+    $('summary').textContent=`${target.name} · ${target.ovr} OVR · Training 30/30 · ${target.rankCount||5} ranks · Ready in ${((performance.now()-started)/1000).toFixed(1)}s`;
     $('verification').textContent=`Verified ${images.base.width} × ${images.base.height} PNG · 0 changed pixels outside the detected upgrade regions.`;
     $('detected').replaceChildren();const list=document.createElement('div');list.className='auto-readout';for(const k of C.fields){const item=document.createElement('div');item.textContent=k.toUpperCase();const n=document.createElement('strong');n.textContent=target[k];item.append(n);list.append(item);}$('detected').append(list);
     const skills=document.createElement('p');skills.className='muted';skills.textContent=target.allocation.map((n,i)=>n?`${target.skillNames[i]} +${n}`:'').filter(Boolean).join(' · ');$('detected').append(skills);

@@ -12,7 +12,7 @@ document.getElementById('run').onclick=async()=>{log.textContent='Running…';tr
  await wait(()=>!$('review').hidden&&!$('baseFile').disabled);
  assert($('reviewWarnings').textContent.includes('names did not match'),'Name mismatch blocked review');assert($('edit-pacing').value==='','Unreadable value was invented');assert($('edit-shooting').value==='137','Successful OCR value lost');assert($('result').hidden,'Unreviewed mismatch generated a card');
  edit(w,'reviewName','Gabriel reviewed');edit(w,'edit-pacing','180');edit(w,'edit-ovr','128');
- edit(w,'edit-skill-0','3');$('reviewForm').requestSubmit();await wait(()=>$('reviewError').textContent);assert($('reviewError').textContent.includes('five-point'),'Invalid skill total accepted');
+ edit(w,'edit-skill-0','3');$('reviewForm').requestSubmit();await wait(()=>$('reviewError').textContent);assert($('reviewError').textContent.includes('Skill points'),'Invalid skill total accepted');
  edit(w,'edit-skill-0','2');$('reviewForm').requestSubmit();await wait(()=>!$('result').hidden&&!$('reviewFields').disabled);
  assert($('summary').textContent.includes('128 OVR'),'Manual OVR not applied');assert($('summary').textContent.includes('Gabriel reviewed'),'Manual name not applied');const readout=[...d.querySelectorAll('.auto-readout strong')].map(n=>+n.textContent);assert(readout[1]===180,'Manual pace not applied');
  const first=await(await fetch($('after').src)).arrayBuffer(),output=await w.MaxCardPNG.decode(first),source=await w.MaxCardPNG.decode(await base.arrayBuffer());

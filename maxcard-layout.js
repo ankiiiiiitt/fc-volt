@@ -8,7 +8,7 @@
     pacing:[1199,433,152,88],shooting:[1462,433,152,88],passing:[1724,433,152,88],
     dribbling:[1987,433,152,88],defending:[2250,433,152,88],physical:[2512,433,152,88],
     training:[1215,716,133,62],bar:[828,807,511,11],badge:[356,610,83,91],
-    rank:[1742,735,288,51],trainingControl:[1388,687,271,97],rankControl:[2188,687,271,97],editControl:[2188,1008,271,97]
+    rank:[1809,774,380,51],trainingControl:[1382,724,338,101],rankControl:[2361,724,338,101],editControl:[2361,1116,338,103]
   };
   const skills=['Defender','Scoring','Passing','Dribbling','Defending','Physical'];
   const renderz={
@@ -33,7 +33,7 @@
   function map(r,t){return t?normalize([r[0]*t.sx+t.dx,r[1]*t.sy+t.dy,r[2]*t.sx,r[3]*t.sy],t.width,t.height):normalize(r);}
   function regions(allocation,transform){
     const result=Object.fromEntries(Object.entries(areas).map(([id,r])=>[id,map(r,transform)]));
-    allocation.forEach((points,i)=>{if(points>0)result['skill'+i]=map([1742+77*i,903,74,92],transform);});
+    allocation.forEach((points,i)=>{if(points>0)result['skill'+i]=map([1808+130*i,978,124,139],transform);});
     return result;
   }
   function sizeMatches(w,h){return Math.abs((w/h)/(reference.width/reference.height)-1)<.015;}
@@ -53,7 +53,8 @@
     if(values.ovr!==baseOVR+5&&values.ovr!==baseOVR+6)throw Error('Use an unranked base card and a matching five or six rank RenderZ screenshot (target OVR must be base OVR +5 or +6).');
     const skillSum=Array.isArray(values.allocation)?values.allocation.reduce((a,b)=>a+b,0):0;
     if(!Array.isArray(values.allocation)||values.allocation.length!==6||values.allocation.some(n=>!Number.isInteger(n)||n<0||n>3)||(skillSum!==5&&skillSum!==6))throw Error('RenderZ must show a valid five or six point skill allocation.');
-    values.rankCount = (values.ovr === baseOVR + 5 && skillSum === 5) ? 5 : 6;
+    if(values.rankCount!==undefined&&![5,6].includes(values.rankCount))throw Error('Rank count must be five or six.');
+    values.rankCount=values.rankCount||(skillSum===6?6:5);
     return values;
   }
   function samePlayer(baseName,targetName){

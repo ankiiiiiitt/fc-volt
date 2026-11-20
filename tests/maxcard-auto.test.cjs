@@ -36,3 +36,12 @@ test('detects translated and scaled panels without assuming screenshot aspect',(
  assert(Math.abs(r.x*width-213)<2);assert(Math.abs(r.y*height-119)<2);
  assert.throws(()=>L.detectProfile(new Uint8Array(data.length),width,height));
 });
+test('lower controls follow the reference transform, rather than screenshot coordinates',()=>{
+ const t={sx:1580/1940,sy:256/316,dx:900-790*(1580/1940),dy:403-358*(256/316),width:2796,height:1290};
+ const r=L.regions([2,0,1,0,1,1],t),box=k=>({x:r[k].x*2796,y:r[k].y*1290,w:r[k].w*2796,h:r[k].h*1290});
+ assert(Math.abs(box('trainingControl').x-1384)<6);assert(Math.abs(box('trainingControl').y-700)<6);
+ assert(Math.abs(box('rankControl').x-2180)<8);assert(Math.abs(box('editControl').y-1017)<8);
+ assert(Math.abs(box('skill0').x-1730)<6);assert(Math.abs(box('skill0').y-905)<6);
+ const rank=L.validateTarget({...target,allocation:[2,0,1,0,1,1]},122);assert.equal(rank.rankCount,5);
+ assert.equal(L.validateTarget({...target,rankCount:6,allocation:[2,1,1,0,1,1]},121).rankCount,6);
+});
